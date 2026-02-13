@@ -1,0 +1,360 @@
+ID: 1
+Brand: Chevrolet [Hex: 43686576726f6c6574]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 2
+Brand: Chevrolet [Hex: 43686576726f6c6574]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 3
+Brand: Chevrolet [Hex: 43686576726f6c6574]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 4
+Brand: Chevrolet [Hex: 43686576726f6c6574]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 5
+Brand: Chevrolet [Hex: 43686576726f6c6574]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 6
+Brand: Chevrolet [Hex: 43686576726f6c6574]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 7
+Brand: Chevrolet [Hex: 43686576726f6c6574]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 8
+Brand: Chevrolet [Hex: 43686576726f6c6574]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 9
+Brand: Chevrolet [Hex: 43686576726f6c6574]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 10
+Brand: Chevrolet [Hex: 43686576726f6c6574]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 11
+Brand: Chevrolet [Hex: 43686576726f6c6574]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 12
+Brand: Chevrolet [Hex: 43686576726f6c6574]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 13
+Brand: Citro├½n [Hex: 436974726fe2949cc2bd6e]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 14
+Brand: Citro├½n [Hex: 436974726fe2949cc2bd6e]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 15
+Brand: Citro├½n [Hex: 436974726fe2949cc2bd6e]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 16
+Brand: Citro├½n [Hex: 436974726fe2949cc2bd6e]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 17
+Brand: Citro├½n [Hex: 436974726fe2949cc2bd6e]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 18
+Brand: Fiat [Hex: 46696174]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 19
+Brand: Fiat [Hex: 46696174]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 20
+Brand: Fiat [Hex: 46696174]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 21
+Brand: Fiat [Hex: 46696174]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 22
+Brand: Fiat [Hex: 46696174]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 23
+Brand: Fiat [Hex: 46696174]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 24
+Brand: Fiat [Hex: 46696174]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 25
+Brand: Fiat [Hex: 46696174]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 26
+Brand: Fiat [Hex: 46696174]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 27
+Brand: Fiat [Hex: 46696174]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 28
+Brand: Fiat [Hex: 46696174]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 29
+Brand: Fiat [Hex: 46696174]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 30
+Brand: Fiat [Hex: 46696174]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 31
+Brand: Fiat [Hex: 46696174]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 32
+Brand: Fiat [Hex: 46696174]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 33
+Brand: Fiat [Hex: 46696174]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 34
+Brand: Fiat [Hex: 46696174]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 35
+Brand: Fiat [Hex: 46696174]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 36
+Brand: Fiat [Hex: 46696174]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 37
+Brand: Fiat [Hex: 46696174]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 38
+Brand: Fiat [Hex: 46696174]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 39
+Brand: Fiat [Hex: 46696174]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 40
+Brand: Fiat [Hex: 46696174]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 41
+Brand: Fiat [Hex: 46696174]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 42
+Brand: Ford [Hex: 466f7264]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 43
+Brand: Ford [Hex: 466f7264]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 44
+Brand: Ford [Hex: 466f7264]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 45
+Brand: Ford [Hex: 466f7264]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 46
+Brand: Ford [Hex: 466f7264]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 47
+Brand: Ford [Hex: 466f7264]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 48
+Brand: Ford [Hex: 466f7264]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 49
+Brand: Ford [Hex: 466f7264]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 50
+Brand: Hyundai [Hex: 4879756e646169]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 51
+Brand: Hyundai [Hex: 4879756e646169]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 52
+Brand: Hyundai [Hex: 4879756e646169]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 53
+Brand: Hyundai [Hex: 4879756e646169]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 54
+Brand: Hyundai [Hex: 4879756e646169]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 55
+Brand: Hyundai [Hex: 4879756e646169]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 56
+Brand: Hyundai [Hex: 4879756e646169]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 57
+Brand: Jeep [Hex: 4a656570]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 58
+Brand: Jeep [Hex: 4a656570]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 59
+Brand: Jeep [Hex: 4a656570]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 60
+Brand: Kia [Hex: 4b6961]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 61
+Brand: Kia [Hex: 4b6961]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 62
+Brand: Kia [Hex: 4b6961]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 63
+Brand: Kia [Hex: 4b6961]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 64
+Brand: Kia [Hex: 4b6961]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 65
+Brand: Kia [Hex: 4b6961]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 66
+Brand: Kia [Hex: 4b6961]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 67
+Brand: Nissan [Hex: 4e697373616e]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 68
+Brand: Nissan [Hex: 4e697373616e]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 69
+Brand: Peugeot [Hex: 50657567656f74]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 70
+Brand: Peugeot [Hex: 50657567656f74]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 71
+Brand: Peugeot [Hex: 50657567656f74]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 72
+Brand: Peugeot [Hex: 50657567656f74]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 73
+Brand: Peugeot [Hex: 50657567656f74]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 74
+Brand: Peugeot [Hex: 50657567656f74]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 75
+Brand: Peugeot [Hex: 50657567656f74]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 76
+Brand: Peugeot [Hex: 50657567656f74]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 77
+Brand: Renault [Hex: 52656e61756c74]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 78
+Brand: Renault [Hex: 52656e61756c74]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 79
+Brand: Renault [Hex: 52656e61756c74]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 80
+Brand: Renault [Hex: 52656e61756c74]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 81
+Brand: Renault [Hex: 52656e61756c74]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 82
+Brand: Renault [Hex: 52656e61756c74]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 83
+Brand: Renault [Hex: 52656e61756c74]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 84
+Brand: Renault [Hex: 52656e61756c74]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 85
+Brand: Toyota [Hex: 546f796f7461]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 86
+Brand: Volkswagen [Hex: 566f6c6b73776167656e]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 87
+Brand: Volkswagen [Hex: 566f6c6b73776167656e]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 88
+Brand: Volkswagen [Hex: 566f6c6b73776167656e]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 89
+Brand: Volkswagen [Hex: 566f6c6b73776167656e]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------
+ID: 90
+Brand: Volkswagen [Hex: 566f6c6b73776167656e]
+City: C├│rdoba Capital [Hex: 43e2949ce2948272646f6261204361706974616c]
+-----------------------------------

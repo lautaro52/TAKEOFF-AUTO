@@ -1,0 +1,8 @@
+Connecting to MySQL with config: {
+  "host": "127.0.0.1",
+  "user": "root",
+  "password": "",
+  "database": "takeoffauto_db"
+}
+Error checking DB: connect ECONNREFUSED 127.0.0.1:3306
+Error Code: ECONNREFUSED

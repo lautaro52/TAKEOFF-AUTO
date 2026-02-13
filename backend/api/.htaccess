@@ -1,0 +1,9 @@
+# Forzar que archivos .php sean procesados como PHP
+AddHandler application/x-httpd-php .php
+
+# Habilitar CORS
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type, Authorization"
+</IfModule>

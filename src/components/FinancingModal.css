@@ -1,0 +1,535 @@
+﻿.financing-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+}
+
+.financing-modal-content {
+    background-color: #fff;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 800px;
+    padding: 32px;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.close-modal-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #666;
+    padding: 8px;
+    transition: color 0.2s;
+}
+
+.close-modal-btn:hover {
+    color: #000;
+}
+
+.modal-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.modal-header h2 {
+    font-size: 28px;
+    font-weight: 800;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+}
+
+.modal-header p {
+    color: #666;
+    font-size: 16px;
+    margin-bottom: 12px;
+}
+
+.plan-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.plan-tabs button {
+    padding: 8px 20px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    background-color: #f8f9fa;
+    color: #666;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.plan-tabs button.active {
+    background-color: #005CB9;
+    border-color: #005CB9;
+    color: #fff;
+}
+
+.plan-tabs button:hover:not(.active) {
+    background-color: #eee;
+}
+
+.info-text {
+    display: block;
+    margin-top: 6px;
+    font-size: 12px;
+    color: #28a745;
+    font-weight: 600;
+}
+
+.banks-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.bank-block {
+    border-radius: 16px;
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 1px solid #eef0f2;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+}
+
+.bank-block:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+.bank-logo-placeholder {
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+    font-weight: 900;
+    font-size: 24px;
+    width: 100%;
+}
+
+.bank-logo-placeholder img {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.bank-block:hover .bank-logo-placeholder img {
+    transform: scale(1.05);
+}
+
+.bank-block.galicia {
+    border-top: 4px solid #FF8200;
+}
+
+.bank-block.santander {
+    border-top: 4px solid #EC0000;
+}
+
+.bank-block.bancor {
+    border-top: 4px solid #005CB9;
+}
+
+.bank-block.bna {
+    border-top: 4px solid #003893;
+}
+
+.bank-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 16px;
+}
+
+.btn-calculate {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    border: none;
+    width: 100%;
+}
+
+.galicia .btn-calculate {
+    background-color: #FF8200;
+    color: #fff;
+}
+
+.santander .btn-calculate {
+    background-color: #EC0000;
+    color: #fff;
+}
+
+.bancor .btn-calculate {
+    background-color: #005CB9;
+    color: #fff;
+}
+
+.bna .btn-calculate {
+    background-color: #003893;
+    color: #fff;
+}
+
+.btn-calculate:hover {
+    opacity: 0.9;
+}
+
+/* Calculator Styles */
+.back-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    color: #666;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 24px;
+    transition: color 0.2s;
+}
+
+.back-btn:hover {
+    color: #FF8200;
+}
+
+.calc-header {
+    margin-bottom: 32px;
+}
+
+.calc-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
+
+.calc-field {
+    margin-bottom: 24px;
+}
+
+.calc-field label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 8px;
+}
+
+.static-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a1a1a;
+    padding: 12px 16px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+
+.input-with-symbol {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.currency-symbol {
+    position: absolute;
+    left: 16px;
+    color: #666;
+    font-weight: 600;
+}
+
+.input-with-symbol input {
+    width: 100%;
+    padding: 12px 16px 12px 32px;
+    font-size: 18px;
+    font-weight: 700;
+    border: 1px solid #d9d9d9;
+    border-radius: 8px;
+    transition: border-color 0.2s;
+}
+
+.input-with-symbol input:focus {
+    outline: none;
+    border-color: #FF8200;
+}
+
+.input-with-symbol input.error {
+    border-color: #ff4d4f;
+    background-color: #fff2f0;
+}
+
+.field-error {
+    display: block;
+    margin-top: 6px;
+    font-size: 12px;
+    color: #ff4d4f;
+}
+
+.term-selector {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.term-selector button {
+    flex: 1;
+    min-width: 60px;
+    padding: 10px;
+    border: 1px solid #d9d9d9;
+    border-radius: 8px;
+    background-color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.term-selector button.active {
+    background-color: #FF8200;
+    border-color: #FF8200;
+    color: #fff;
+}
+
+.result-card {
+    background-color: #fff9f0;
+    border: 2px solid #ffe7c1;
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.result-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #8a6d3b;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.result-value {
+    font-size: 32px;
+    font-weight: 800;
+    color: #FF8200;
+    margin-bottom: 12px;
+}
+
+.result-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 13px;
+    color: #666;
+}
+
+.disclaimer-text {
+    font-size: 12px;
+    color: #999;
+    line-height: 1.4;
+    margin-bottom: 24px;
+}
+
+.btn-primary-calc {
+    width: 100%;
+    padding: 16px;
+    background-color: #FF8200;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.btn-primary-calc:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* Lead Form Styles */
+.lead-form-container {
+    animation: fadeIn 0.3s ease;
+}
+
+.lead-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: left;
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #444;
+}
+
+.form-group input {
+    padding: 12px 16px;
+    border: 1px solid #d9d9d9;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #005CB9;
+}
+
+.lead-success {
+    text-align: center;
+    padding: 40px 20px;
+    animation: scaleUp 0.3s ease;
+}
+
+.success-icon {
+    font-size: 64px;
+    margin-bottom: 24px;
+}
+
+.lead-success h2 {
+    font-size: 28px;
+    color: #28a745;
+    margin-bottom: 16px;
+}
+
+.lead-success p {
+    color: #666;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scaleUp {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@media (max-width: 768px) {
+    .financing-modal-content {
+        padding: 24px 16px;
+        width: 100%;
+        height: 100%;
+        max-height: 100vh;
+        border-radius: 0;
+        overflow-y: auto;
+    }
+
+    .modal-header h2 {
+        font-size: 20px;
+        margin-top: 10px;
+    }
+
+    .calc-body {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .result-value {
+        font-size: 26px;
+    }
+
+    .banks-grid {
+        gap: 12px;
+        grid-template-columns: 1fr;
+    }
+
+    .bank-block {
+        padding: 16px;
+    }
+
+    .bank-logo-placeholder {
+        font-size: 18px;
+        height: 60px;
+        margin-bottom: 12px;
+    }
+
+    .lead-form {
+        gap: 12px;
+    }
+
+    .form-group input {
+        padding: 10px 12px;
+        font-size: 15px;
+    }
+
+    .lead-success {
+        padding: 20px 10px;
+    }
+
+    .lead-success h2 {
+        font-size: 22px;
+    }
+}
+
+@media (max-width: 480px) {
+    .financing-modal-content {
+        padding: 16px 12px;
+    }
+
+    .modal-header p {
+        font-size: 13px;
+    }
+
+    .btn-primary-calc {
+        padding: 14px;
+        font-size: 15px;
+    }
+
+    .back-btn {
+        margin-bottom: 16px;
+        font-size: 14px;
+    }
+}

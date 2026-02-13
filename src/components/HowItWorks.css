@@ -1,0 +1,202 @@
+.how-it-works {
+    padding: 80px 0;
+    background-color: #fff;
+}
+
+.how-grid-layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+.how-info-sidebar {
+    display: flex;
+    flex-direction: column;
+}
+
+.how-tabs {
+    display: flex;
+    background-color: #f1f3f5;
+    padding: 4px;
+    border-radius: 12px;
+    width: fit-content;
+    margin-bottom: 40px;
+}
+
+.how-tab {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #4e5e78;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.how-tab.active {
+    background-color: #fff;
+    color: #2161f2;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.how-title-area h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1.1;
+    color: #050b18;
+    margin-bottom: 24px;
+}
+
+.how-link {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #2161f2;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.how-link:hover {
+    color: #1651d2;
+}
+
+/* Steps Row */
+.how-steps-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.how-step-card {
+    background-color: #fcfcfc;
+    padding: 30px;
+    border-radius: 20px;
+    border: 1px solid #f5f7f9;
+    height: 100%;
+    transition: transform 0.3s ease;
+}
+
+.step-number {
+    width: 36px;
+    height: 36px;
+    background-color: #f8f9fa;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #adb5bd;
+    margin-bottom: 30px;
+}
+
+.how-step-card h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #050b18;
+    line-height: 1.25;
+}
+
+.how-step-card p {
+    font-size: 0.9rem;
+    color: #4e5e78;
+    line-height: 1.5;
+}
+
+/* Tablet and below */
+@media (max-width: 1200px) {
+    .how-grid-layout {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .how-info-sidebar {
+        max-width: 600px;
+    }
+
+    .how-it-works {
+        padding: 60px 0;
+    }
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+    .how-steps-row {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .how-step-card {
+        padding: 24px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .how-it-works {
+        padding: 40px 0;
+    }
+
+    .how-grid-layout {
+        gap: 30px;
+    }
+
+    .how-title-area h2 {
+        font-size: 1.6rem;
+        margin-bottom: 20px;
+    }
+
+    .how-tabs {
+        margin-bottom: 30px;
+    }
+
+    .how-tab {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+
+    .how-step-card {
+        padding: 20px;
+    }
+
+    .step-number {
+        width: 32px;
+        height: 32px;
+        font-size: 0.85rem;
+        margin-bottom: 20px;
+    }
+
+    .how-step-card h3 {
+        font-size: 1rem;
+        margin-bottom: 10px;
+    }
+
+    .how-step-card p {
+        font-size: 0.875rem;
+    }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+    .how-it-works {
+        padding: 30px 0;
+    }
+
+    .how-title-area h2 {
+        font-size: 1.4rem;
+    }
+
+    .how-tabs {
+        width: 100%;
+    }
+
+    .how-tab {
+        flex: 1;
+        padding: 10px 16px;
+    }
+
+    .how-step-card {
+        padding: 18px;
+    }
+}

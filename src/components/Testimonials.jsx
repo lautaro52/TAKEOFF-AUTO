@@ -1,0 +1,71 @@
+import React from 'react';
+import './Testimonials.css';
+
+const Testimonials = () => {
+    const row1 = [
+        { name: "Ricardo Lorza", date: "24 mayo 2022", text: "Excelente atención y ubicación. El servicio fue muy bueno y los precios por los autos son justos.", avatar: "https://i.pravatar.cc/100?u=ricardo" },
+        { name: "Cesar Perez", date: "17 abril 2023", text: "Muy bien todo, son muy amables y atentos, voy a regresar para cerrar mi financiamiento.", avatar: "https://i.pravatar.cc/100?u=cesar" },
+        { name: "Pablo Ojeda", date: "02 enero 2025", text: "Aunque el papeleo puede ser tardado, la atención es amable y eficiente. Sin duda volvería.", avatar: "https://i.pravatar.cc/100?u=pablo" },
+        { name: "Diego Flores", date: "22 abril 2024", text: "Me gustó la atención, el personal es amable y resuelven tus dudas. Revisé los autos sin presión.", avatar: "https://i.pravatar.cc/100?u=diego" },
+        { name: "Salvador Luna", date: "27 junio 2024", text: "Llevé mi auto para gestionar la venta y salí con el 100% del pago en el momento. Muy seguro.", avatar: "https://i.pravatar.cc/100?u=salvador" },
+        { name: "Román Montero", date: "22 noviembre 2022", text: "Atienden bien, me pagaron más que en otras partes por mi auto. El proceso fue muy ágil.", avatar: "https://i.pravatar.cc/100?u=roman" },
+        { name: "Lucía Méndez", date: "15 agosto 2023", text: "Super rápido todo, el financiamiento me lo aprobaron en el momento. Muy profesionales.", avatar: "https://i.pravatar.cc/100?u=lucia" },
+        { name: "Marcos Torres", date: "10 septiembre 2024", text: "El auto que compré está impecable. El servicio post-venta es excelente y muy atento.", avatar: "https://i.pravatar.cc/100?u=marcos" },
+        { name: "Elena Rivas", date: "05 diciembre 2024", text: "Muy profesionales. Me ayudaron con todo el trámite de la transferencia de forma gratuita.", avatar: "https://i.pravatar.cc/100?u=elena" },
+        { name: "Gabriel Soto", date: "12 marzo 2023", text: "La mejor opción para vender tu auto de forma segura y sin vueltas comerciales.", avatar: "https://i.pravatar.cc/100?u=gabriel" }
+    ];
+
+    const row2 = [
+        { name: "Ana Belén", date: "19 mayo 2023", text: "Increíble experiencia, el proceso de inspección fue muy detallado y transparente.", avatar: "https://i.pravatar.cc/100?u=ana" },
+        { name: "Jorge Ruiz", date: "28 julio 2024", text: "Me sorprendió la limpieza y el estado de los vehículos en exhibición. Parecen nuevos.", avatar: "https://i.pravatar.cc/100?u=jorge" },
+        { name: "Carla Díaz", date: "14 febrero 2024", text: "Vender mi auto fue súper sencillo, la tasación fue justa y el pago realmente rápido.", avatar: "https://i.pravatar.cc/100?u=carla" },
+        { name: "Mateo San", date: "30 octubre 2024", text: "Excelente trato desde que entramos hasta que nos fuimos con nuestro nuevo auto.", avatar: "https://i.pravatar.cc/100?u=mateo" },
+        { name: "Sofía Castro", date: "08 junio 2023", text: "Muy buena plataforma para buscar y comparar modelos. Muy intuitiva y fácil de usar.", avatar: "https://i.pravatar.cc/100?u=sofia" },
+        { name: "Andrés Gil", date: "21 enero 2025", text: "El equipo de ventas sabe lo que hace. Me asesoraron perfectamente con el seguro.", avatar: "https://i.pravatar.cc/100?u=andres" },
+        { name: "Valeria Paz", date: "17 septiembre 2024", text: "Comprar mi primer auto fue un sueño gracias a la facilidad que brindan en todo momento.", avatar: "https://i.pravatar.cc/100?u=valeria" },
+        { name: "Hugo Bossi", date: "03 abril 2023", text: "Me ahorré mucho tiempo con los trámites digitales. Proceso muy moderno y eficaz.", avatar: "https://i.pravatar.cc/100?u=hugo" },
+        { name: "Rocío Jara", date: "25 agosto 2024", text: "La garantía que ofrecen me dio mucha tranquilidad al comprar mi vehículo usado.", avatar: "https://i.pravatar.cc/100?u=rocio" },
+        { name: "Lucas Vera", date: "09 noviembre 2024", text: "100% recomendados, transparencia total en cada paso del proceso de compra.", avatar: "https://i.pravatar.cc/100?u=lucas" }
+    ];
+
+    const renderTestimonial = (review, index) => (
+        <div key={index} className="testimonial-card">
+            <div className="testimonial-header">
+                <img src={review.avatar} alt={review.name} className="testimonial-avatar" />
+                <div className="testimonial-info">
+                    <h4>{review.name}</h4>
+                    <span>{review.date}</span>
+                </div>
+            </div>
+            <p className="testimonial-text">{review.text}</p>
+        </div>
+    );
+
+    return (
+        <section className="testimonials">
+            <div className="testimonials-container">
+                <div className="container">
+                    <h2 className="section-title">Lo que opinan nuestros clientes</h2>
+                </div>
+
+                <div className="marquee-wrapper">
+                    <div className="marquee-content marquee-left">
+                        {row1.map(renderTestimonial)}
+                        {/* Duplicate for seamless loop */}
+                        {row1.map((r, i) => renderTestimonial(r, `r1-dup-${i}`))}
+                    </div>
+                </div>
+
+                <div className="marquee-wrapper">
+                    <div className="marquee-content marquee-right">
+                        {row2.map(renderTestimonial)}
+                        {/* Duplicate for seamless loop */}
+                        {row2.map((r, i) => renderTestimonial(r, `r2-dup-${i}`))}
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+};
+
+export default Testimonials;

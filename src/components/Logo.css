@@ -1,0 +1,60 @@
+.takeoff-logo {
+    display: flex;
+    align-items: center;
+    font-size: 1.75rem;
+    font-weight: 900;
+    letter-spacing: -1px;
+    user-select: none;
+    line-height: 1;
+}
+
+.takeoff-logo .take {
+    color: #2161f2;
+    /* Azul */
+}
+
+.takeoff-logo .off {
+    color: #000000;
+    /* Negro */
+    margin-right: 4px;
+}
+
+.takeoff-logo .auto-container {
+    background-color: #000000;
+    padding: 2px 8px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.takeoff-logo .auto {
+    color: #ffffff;
+    /* Blanco */
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+/* Variant for dark backgrounds (Footer) */
+.takeoff-logo.dark .off {
+    color: #ffffff;
+}
+
+.takeoff-logo.dark .auto-container {
+    background-color: #ffffff;
+}
+
+.takeoff-logo.dark .auto {
+    color: #000000;
+}
+
+@media (max-width: 768px) {
+    .takeoff-logo {
+        font-size: 1.4rem;
+    }
+
+    .takeoff-logo .auto {
+        font-size: 0.9rem;
+    }
+}

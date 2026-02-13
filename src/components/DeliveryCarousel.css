@@ -1,0 +1,95 @@
+.delivery-carousel-filmstrip {
+    width: 100%;
+    overflow: hidden;
+    padding: 30px 0;
+    position: relative;
+    background: linear-gradient(to bottom, #f9fafb 0%, #ffffff 100%);
+}
+
+.filmstrip-track {
+    display: flex;
+    gap: 20px;
+    animation: filmstripScroll 10s linear infinite;
+    will-change: transform;
+}
+
+/* Infinite scroll animation */
+@keyframes filmstripScroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-33.33%);
+        /* Move by 1/3 since we have 3x images */
+    }
+}
+
+.filmstrip-slide {
+    flex-shrink: 0;
+    width: 267px;
+    /* Reduced by 1/3 from 400px */
+    aspect-ratio: 4/5;
+    /* Taller ratio (was 16/9) */
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    cursor: default;
+    position: relative;
+}
+
+.filmstrip-slide::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.1) 100%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.filmstrip-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    user-select: none;
+    pointer-events: none;
+    transition: none;
+    /* Remove hover effects */
+}
+
+/* Keep animation running even on hover */
+.delivery-carousel-filmstrip:hover .filmstrip-track {
+    animation-play-state: running;
+}
+
+/* Tablet: Reduce slide width */
+@media (max-width: 968px) {
+    .filmstrip-slide {
+        width: 213px;
+    }
+
+    .filmstrip-track {
+        gap: 15px;
+    }
+}
+
+/* Mobile: Further reduce slide width */
+@media (max-width: 640px) {
+    .filmstrip-slide {
+        width: 187px;
+        aspect-ratio: 3/4;
+        /* Slightly less tall on mobile */
+    }
+
+    .filmstrip-track {
+        gap: 12px;
+    }
+
+    .delivery-carousel-filmstrip {
+        padding: 20px 0;
+    }
+}

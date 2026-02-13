@@ -1,0 +1,163 @@
+.tips-section {
+    padding: 60px 0;
+    background-color: #fff;
+}
+
+.tips-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #050b18;
+    margin-bottom: 32px;
+    letter-spacing: -0.02em;
+}
+
+.tips-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.tip-card {
+    position: relative;
+    aspect-ratio: 9 / 14;
+    /* Taller aspect ratio for mobile-style tips */
+    border-radius: 12px;
+    overflow: hidden;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #f8f9fa;
+    /* Light background for any potential gaps */
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.tip-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+.tip-hover-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.tip-card:hover .tip-hover-overlay {
+    opacity: 1;
+}
+
+.play-icon-wrapper {
+    width: 60px;
+    height: 60px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.tip-card:hover .play-icon-wrapper {
+    transform: scale(1);
+}
+
+.play-icon {
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 15px solid #050b18;
+    margin-left: 4px;
+}
+
+/* Tablet and below */
+@media (max-width: 1100px) {
+    .tips-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+
+    .tips-section {
+        padding: 50px 0;
+    }
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+    .tips-section {
+        padding: 40px 0;
+    }
+
+    .tips-title {
+        font-size: 1.8rem;
+        margin-bottom: 24px;
+    }
+
+    .tips-grid {
+        gap: 14px;
+    }
+
+    .tip-card {
+        aspect-ratio: 9 / 13;
+    }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+    .tips-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .tips-title {
+        font-size: 1.6rem;
+    }
+
+    .tips-section {
+        padding: 30px 0;
+    }
+
+    .tip-card {
+        aspect-ratio: 16 / 10;
+        max-height: 300px;
+    }
+
+    .play-icon-wrapper {
+        width: 50px;
+        height: 50px;
+    }
+
+    .play-icon {
+        border-top: 8px solid transparent;
+        border-bottom: 8px solid transparent;
+        border-left: 12px solid #050b18;
+        margin-left: 3px;
+    }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+    .tips-title {
+        font-size: 1.4rem;
+        margin-bottom: 20px;
+    }
+
+    .tips-section {
+        padding: 24px 0;
+    }
+
+    .tip-card {
+        max-height: 250px;
+    }
+}

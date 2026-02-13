@@ -1,0 +1,62 @@
+.product-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.product-card-refined {
+    background: #fff;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: var(--transition);
+    border: 1px solid var(--border-color);
+    text-align: left;
+}
+
+.product-card-refined:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-medium);
+}
+
+.product-image-container {
+    background-color: #f8f9fa;
+    /* Light grey background for cars */
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.car-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.product-details {
+    padding: 20px;
+}
+
+.car-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.car-price {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--primary-black);
+    margin-bottom: 4px;
+}
+
+.monthly-payment {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    font-weight: 500;
+}

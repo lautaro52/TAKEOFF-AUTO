@@ -1,0 +1,106 @@
+.brand-grid-section {
+    padding: 60px 0;
+    background-color: #fff;
+    border-bottom: none;
+}
+
+.section-title-types {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #050b18;
+    margin-bottom: 40px;
+    text-align: left;
+    letter-spacing: -0.02em;
+}
+
+.types-grid-single-line {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 12px;
+}
+
+.types-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 16px;
+}
+
+.type-item {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    min-width: 0;
+    /* Prevents overflow in narrow containers */
+}
+
+.type-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 16px 8px;
+    text-align: center;
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.type-item:hover .type-card {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    border-color: #e0e0e0;
+}
+
+.type-image-box {
+    width: 100%;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.type-image-box img {
+    width: 100%;
+    max-width: 90px;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.05));
+    transition: transform 0.3s ease;
+}
+
+.type-item:hover .type-image-box img {
+    transform: scale(1.08);
+}
+
+.type-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #050b18;
+    white-space: nowrap;
+}
+
+@media (max-width: 1024px) {
+    .types-grid-single-line {
+        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+        gap: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .types-grid {
+        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+        gap: 12px;
+    }
+
+    .section-title-types {
+        font-size: 1.6rem;
+        margin-bottom: 24px;
+    }
+
+    .type-card {
+        padding: 12px 4px;
+    }
+}

@@ -1,0 +1,290 @@
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 64px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #eaeaea;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s ease-in-out;
+}
+
+.navbar-hidden {
+    transform: translateY(-100%);
+}
+
+.navbar-container {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 30px;
+}
+
+/* Logo */
+.navbar-logo .logo-text {
+    font-weight: 900;
+    font-size: 1.75rem;
+    letter-spacing: -1.5px;
+    color: #050b18;
+}
+
+/* Desktop Menu */
+.navbar-menu {
+    display: flex;
+    list-style: none;
+    gap: 18px;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-menu li {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-menu a {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: #050b18;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.2s ease;
+}
+
+.navbar-menu a:hover {
+    color: #2161f2;
+}
+
+.chevron-icon {
+    margin-left: 2px;
+}
+
+/* Desktop Actions */
+.navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-left: auto;
+}
+
+.country-flag {
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.nav-location-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: #2161f2;
+    background: transparent;
+    border: 1px solid #eaeaea;
+    border-radius: 100px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.nav-location-btn:hover {
+    background-color: #f8fafc;
+    border-color: #2161f2;
+}
+
+.nav-icon-btn {
+    color: #2161f2;
+    background: transparent;
+    border: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.nav-icon-btn:hover {
+    transform: scale(1.1);
+}
+
+.btn-ingresar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: #2161f2;
+    transition: all 0.2s ease;
+}
+
+.btn-ingresar:hover {
+    opacity: 0.8;
+}
+
+/* Mobile Menu Button - Hidden on desktop */
+.mobile-menu-btn {
+    display: none;
+    color: #050b18;
+    padding: 8px;
+    cursor: pointer;
+    z-index: 1002;
+}
+
+/* Mobile Menu Overlay */
+.mobile-menu-overlay {
+    display: none;
+    position: fixed;
+    top: 64px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1001;
+    animation: fadeIn 0.3s ease;
+}
+
+/* Mobile Menu */
+.mobile-menu {
+    display: none;
+    position: fixed;
+    top: 64px;
+    right: 0;
+    width: 80%;
+    max-width: 320px;
+    height: calc(100vh - 64px);
+    background: white;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1002;
+    overflow-y: auto;
+    animation: slideIn 0.3s ease;
+}
+
+.mobile-menu-list {
+    list-style: none;
+    padding: 1rem 0;
+    margin: 0;
+}
+
+.mobile-menu-list li {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.mobile-menu-list li a,
+.mobile-menu-list li button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #050b18;
+    width: 100%;
+    text-align: center;
+    transition: background 0.2s ease;
+}
+
+.mobile-menu-list li a:hover,
+.mobile-menu-list li button:hover {
+    background: #f8fafc;
+}
+
+.mobile-divider {
+    height: 8px;
+    background: #f5f5f7;
+    border: none;
+}
+
+.mobile-location-btn,
+.mobile-login-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #2161f2;
+    font-weight: 600;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1024px) {
+
+    /* Hide desktop menu and actions on tablets and mobile */
+    .navbar-menu {
+        display: none;
+    }
+
+    .navbar-actions {
+        display: none;
+    }
+
+    /* Show mobile menu button */
+    .mobile-menu-btn {
+        display: flex;
+    }
+
+    /* Show mobile menu and overlay when open */
+    .mobile-menu-overlay {
+        display: block;
+    }
+
+    .mobile-menu {
+        display: block;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar-container {
+        padding: 0 16px;
+    }
+
+    .navbar-logo .logo-text {
+        font-size: 1.5rem;
+    }
+
+    .mobile-menu {
+        width: 85%;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar-container {
+        padding: 0 12px;
+    }
+
+    .navbar-logo .logo-text {
+        font-size: 1.3rem;
+    }
+
+    .mobile-menu {
+        width: 90%;
+    }
+}

@@ -1,0 +1,60 @@
+.trust-section {
+    background-color: #f7f9fb;
+    /* Slightly off-white background from image 0 */
+    padding: 80px 0;
+}
+
+.trust-main-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--primary-black);
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.trust-grid-refined {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    /* To show internal borders if needed, or use gap */
+    background-color: var(--border-color);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+.trust-card-white {
+    background-color: #fff;
+    padding: 40px;
+    text-align: left;
+    transition: var(--transition);
+}
+
+.trust-card-white:hover {
+    background-color: #fcfcfc;
+}
+
+.trust-icon-refined {
+    margin-bottom: 24px;
+    color: var(--primary-blue);
+}
+
+.trust-card-white h3 {
+    font-size: 1.25rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+    color: var(--primary-black);
+}
+
+.trust-card-white p {
+    font-size: 1rem;
+    color: var(--text-medium);
+    line-height: 1.5;
+}
+
+@media (max-width: 992px) {
+    .trust-grid-refined {
+        grid-template-columns: 1fr;
+        gap: 1px;
+    }
+}

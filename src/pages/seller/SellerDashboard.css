@@ -1,0 +1,102 @@
+.seller-dashboard {
+    min-height: 100vh;
+    background: #f8f9fa;
+    color: #333;
+    padding: 30px;
+    font-family: 'Inter', sans-serif;
+}
+
+.seller-header {
+    margin-bottom: 40px;
+}
+
+.lead-inbox {
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.lead-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.lead-table th {
+    text-align: left;
+    padding: 15px 20px;
+    background: #f1f3f5;
+    font-weight: 600;
+    color: #666;
+}
+
+.lead-table td {
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.mini-note-container {
+    margin-left: 5px;
+}
+
+.mini-note-input {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background: #fff;
+    font-size: 0.85rem;
+    width: 180px;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.mini-note-input:focus {
+    border-color: #0072ff;
+    box-shadow: 0 0 0 2px rgba(0, 114, 255, 0.1);
+}
+
+.status-btn {
+    padding: 8px 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background: #fff;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.status-btn:hover {
+    background: #f8fafc;
+    border-color: #0072ff;
+    color: #0072ff;
+}
+
+.status-btn.active {
+    background: #0072ff;
+    color: #fff;
+    border-color: #0072ff;
+}
+
+.partner-tag {
+    background: #eef2ff;
+    color: #4f46e5;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.notification-badge {
+    background: #ff4757;
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    margin-left: 10px;
+}

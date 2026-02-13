@@ -1,0 +1,1000 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap');
+
+.credit-page {
+    background-color: #fff;
+    font-family: 'Outfit', sans-serif;
+}
+
+/* SECTION UTILS */
+.section {
+    padding: 60px 0;
+}
+
+.gray-bg {
+    background-color: #f7fafc;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 36px;
+    font-weight: 800;
+    margin-bottom: 12px;
+    color: #1a202c;
+    letter-spacing: -0.5px;
+}
+
+.section-subtitle {
+    text-align: center;
+    color: #4a5568;
+    margin-bottom: 30px;
+    font-size: 20px;
+}
+
+.link-arrow {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #0052FF;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.link-arrow:hover {
+    text-decoration: underline;
+}
+
+/* HERO SECTION */
+.credit-hero {
+    height: 520px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    align-items: center;
+    color: #fff;
+    margin-top: -1px;
+    text-align: center;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.hero-content h1 {
+    font-size: 48px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    letter-spacing: -1px;
+}
+
+.hero-content p {
+    font-size: 20px;
+    margin-bottom: 30px;
+    opacity: 0.95;
+    font-weight: 400;
+}
+
+.hero-search-label {
+    font-size: 18px;
+    margin-top: 30px;
+    font-weight: 600;
+    opacity: 0.9;
+}
+
+.hero-cards {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.hero-card {
+    background: #fff;
+    color: #1a202c;
+    padding: 20px 45px;
+    border-radius: 24px;
+    width: 380px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    border: none;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.hero-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.hero-card.active {
+    box-shadow: 0 0 0 3px #0052FF;
+}
+
+.card-brand-tag {
+    font-size: 13px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    color: #1a202c;
+}
+
+.blue-text {
+    color: #0052FF;
+}
+
+.teal-text {
+    color: #26ab8d;
+}
+
+.hero-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    line-height: 1.3;
+}
+
+.card-link {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 600;
+    color: #0052FF;
+    font-size: 16px;
+}
+
+/* TABS SELECTOR */
+.tabs-container {
+    display: flex;
+    justify-content: center;
+    padding: 30px 0;
+    border-bottom: 1px solid #e2e8f0;
+    background-color: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.tabs-switcher {
+    display: flex;
+    background-color: #eef2f6;
+    padding: 6px;
+    border-radius: 50px;
+}
+
+.tab-btn {
+    padding: 14px 35px;
+    border: none;
+    background: transparent;
+    font-weight: 800;
+    font-size: 14px;
+    cursor: pointer;
+    color: #718096;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+}
+
+.tab-btn.active {
+    background-color: #fff;
+    color: #1a202c;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.tab-blue {
+    color: #0052FF;
+}
+
+.tab-teal {
+    color: #26ab8d;
+}
+
+/* STAGGERED FINANCING GRID */
+.financing-staggered-grid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    margin-top: 30px;
+    padding: 10px 0;
+}
+
+.financing-staggered-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 25px 20px;
+    width: 280px;
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.04);
+    transition: all 0.4s ease;
+    z-index: 1;
+    text-align: left;
+    border: 1px solid #f0f0f0;
+}
+
+.financing-staggered-card.featured {
+    width: 330px;
+    padding: 35px 30px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+    z-index: 2;
+    transform: scale(1.05);
+}
+
+.car-top-label {
+    font-size: 13px;
+    color: #718096;
+    margin-bottom: 12px;
+}
+
+.staggered-img-container {
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+
+.staggered-img-container img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.staggered-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a202c;
+    margin-bottom: 20px;
+}
+
+.staggered-monthly {
+    margin-bottom: 25px;
+}
+
+.monthly-val {
+    font-size: 28px;
+    font-weight: 800;
+    color: #1a202c;
+}
+
+.staggered-footer {
+    font-size: 14px;
+    color: #718096;
+}
+
+.blue-link-text {
+    color: #0052FF;
+    font-weight: 700;
+    background: #eef2f6;
+    padding: 2px 8px;
+    border-radius: 6px;
+}
+
+.btn-primary-k.big-blue {
+    background-color: #0052FF;
+    padding: 20px 100px;
+    font-size: 18px;
+    box-shadow: 0 4px 15px rgba(0, 82, 255, 0.3);
+}
+
+.loading-grid-cars {
+    padding: 100px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.center-btn {
+    display: flex;
+    justify-content: center;
+}
+
+.btn-primary-k {
+    background-color: #0052FF;
+    color: #fff;
+    padding: 18px 45px;
+    border-radius: 50px;
+    border: none;
+    font-weight: 800;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.btn-primary-k:hover {
+    transform: scale(1.02);
+}
+
+.btn-secondary {
+    background: none;
+    border: 1px solid #e2e8f0;
+    color: #0052FF;
+    padding: 10px 25px;
+    border-radius: 50px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* STEPS SECTION STAGGERED */
+.steps-section-staggered {
+    padding: 100px 0;
+    background-color: #fff;
+}
+
+.steps-split-layout {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.steps-main-title {
+    font-size: 42px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    color: #1a202c;
+    letter-spacing: -1px;
+}
+
+.comenzar-ahora-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #0052FF;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.comenzar-ahora-link:hover {
+    text-decoration: underline;
+}
+
+.steps-right-col {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.step-card-k {
+    background: #fff;
+    padding: 40px 30px;
+    border-radius: 24px;
+    border: 1px solid #f0f4f8;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    position: relative;
+    height: 100%;
+    transition: transform 0.3s ease;
+}
+
+.step-card-k:hover {
+    transform: translateY(-5px);
+}
+
+.step-badge {
+    width: 32px;
+    height: 32px;
+    background-color: #f8fafd;
+    color: #a0aec0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+.step-card-k h4 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #1a202c;
+    line-height: 1.3;
+}
+
+.step-card-k p {
+    font-size: 15px;
+    color: #718096;
+    line-height: 1.5;
+}
+
+/* BENEFITS SECTIONS */
+.benefits-blue {
+    background: #0052FF;
+    color: #fff;
+}
+
+.benefits-green {
+    background: #26ab8d;
+    color: #fff;
+}
+
+.benefits-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 60px;
+}
+
+.benefits-header h2 {
+    font-size: 32px;
+    font-weight: 800;
+    max-width: 600px;
+}
+
+.link-white {
+    color: #fff;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none;
+}
+
+.benefits-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 50px;
+    border-radius: 30px;
+}
+
+.benefit-col {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.benefit-col p {
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+/* LOANS SECTION (SIMPLE STYLE) */
+.loans-section {
+    background-color: #fff;
+    padding: 40px 0;
+    /* Reducido de 60px */
+}
+
+.loan-static-visual {
+    width: 100%;
+    max-width: 750px;
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+}
+
+.loan-visual-img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: 20px;
+}
+
+.benefits-teal {
+    background: #26ab8d;
+    color: #fff;
+}
+
+/* VIDEO TESTIMONIALS */
+.testimonials-grid-video {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.video-card {
+    border-radius: 20px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.video-thumb {
+    position: relative;
+    height: 350px;
+}
+
+.video-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.play-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.2);
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.play-overlay:hover {
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.video-info {
+    padding: 20px;
+}
+
+.video-info h4 {
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.video-info p {
+    font-size: 14px;
+    color: #718096;
+}
+
+/* WHY CHOOSE US */
+.why-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.why-item {
+    text-align: left;
+    padding: 40px;
+    background: #fff;
+    border-radius: 24px;
+    border: 1px solid #f0f4f8;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    transition: transform 0.3s ease;
+}
+
+.why-item:hover {
+    transform: translateY(-5px);
+}
+
+.icon-teal {
+    color: #26ab8d;
+    width: 32px;
+    height: 32px;
+    margin-bottom: 25px;
+}
+
+.why-item h4 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #1a202c;
+}
+
+.why-item p {
+    font-size: 15px;
+    color: #718096;
+    line-height: 1.6;
+}
+
+/* FAQ SECTION */
+.faq-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.faq-item {
+    background: #fff;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.faq-question {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 700;
+}
+
+.faq-arrow {
+    transition: transform 0.3s;
+}
+
+.faq-item.open .faq-arrow {
+    transform: rotate(180deg);
+}
+
+.faq-answer {
+    padding: 0 20px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s;
+    white-space: pre-line;
+}
+
+.faq-item.open .faq-answer {
+    max-height: 500px;
+    padding: 0 20px 20px;
+}
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 1024px) {
+    .benefits-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .financing-grid,
+    .why-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+
+    /* Container - prevent overflow */
+    .container {
+        padding-left: 20px;
+        padding-right: 20px;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    /* Hero Section */
+    .credit-hero {
+        height: auto;
+        min-height: 400px;
+        padding: 40px 0;
+    }
+
+    .hero-content h1 {
+        font-size: 32px;
+        padding: 0 10px;
+    }
+
+    .hero-content p {
+        font-size: 18px;
+        padding: 0 10px;
+    }
+
+    .hero-cards {
+        flex-direction: column;
+        padding: 0 10px;
+    }
+
+    .hero-card {
+        width: 100%;
+        max-width: 100%;
+        padding: 20px 25px;
+    }
+
+    /* Tabs */
+    .tabs-switcher {
+        width: calc(100% - 20px);
+        max-width: 100%;
+    }
+
+    .tab-btn {
+        padding: 12px 20px;
+        font-size: 13px;
+    }
+
+    /* Financing Section */
+    .financing-staggered-grid {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 20px;
+    }
+
+    .financing-staggered-card,
+    .financing-staggered-card.featured {
+        width: 100%;
+        max-width: 100%;
+        transform: scale(1);
+        padding: 25px 20px;
+    }
+
+    .staggered-img-container {
+        height: 150px;
+    }
+
+    /* Steps and layout sections */
+    .steps-wrapper {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .steps-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .steps-split-layout {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .steps-right-col {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .steps-main-title {
+        font-size: 32px;
+        text-align: center;
+    }
+
+    .comenzar-ahora-link {
+        justify-content: center;
+    }
+
+    .step-card-k {
+        padding: 30px 20px;
+    }
+
+    /* Benefits */
+    .benefits-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .benefits-row {
+        grid-template-columns: 1fr;
+        padding: 30px 25px;
+        gap: 30px;
+    }
+
+    /* Grids */
+    .financing-grid,
+    .why-grid,
+    .testimonials-grid-video {
+        grid-template-columns: 1fr;
+    }
+
+    .why-item {
+        padding: 30px 25px;
+    }
+
+    /* Buttons */
+    .btn-primary-k.big-blue {
+        padding: 16px 50px;
+        font-size: 16px;
+    }
+
+    /* General sections */
+    .section {
+        padding: 40px 0;
+    }
+
+    .section-title {
+        font-size: 28px;
+        padding: 0 15px;
+    }
+
+    .section-subtitle {
+        font-size: 18px;
+        padding: 0 15px;
+    }
+
+    .valuation-card-main {
+        width: 90%;
+    }
+
+    .person-1,
+    .person-3 {
+        display: none;
+    }
+}
+
+/* Additional mobile optimizations for very small screens */
+@media (max-width: 640px) {
+
+    /* Prevent any horizontal overflow */
+    .credit-page {
+        overflow-x: hidden;
+        max-width: 100vw;
+    }
+
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    /* Hero adjustments */
+    .credit-hero {
+        min-height: 350px;
+        padding: 30px 0;
+    }
+
+    .hero-content h1 {
+        font-size: 26px;
+        line-height: 1.2;
+    }
+
+    .hero-content p {
+        font-size: 16px;
+    }
+
+    .hero-card {
+        padding: 18px 20px;
+    }
+
+    .hero-card h3 {
+        font-size: 16px;
+    }
+
+    /* Tabs - ensure they fit */
+    .tabs-container {
+        padding: 20px 10px;
+    }
+
+    .tab-btn {
+        padding: 10px 15px;
+        font-size: 12px;
+    }
+
+    /* Section spacing */
+    .section {
+        padding: 35px 0;
+    }
+
+    .section-title {
+        font-size: 24px;
+        margin-bottom: 10px;
+        line-height: 1.3;
+    }
+
+    .section-subtitle {
+        font-size: 15px;
+        margin-bottom: 25px;
+    }
+
+    /* Steps section */
+    .steps-section-staggered {
+        padding: 40px 0;
+    }
+
+    .steps-main-title {
+        font-size: 26px;
+        padding: 0 10px;
+    }
+
+    .comenzar-ahora-link {
+        font-size: 16px;
+    }
+
+    .step-card-k {
+        padding: 25px 18px;
+    }
+
+    .step-card-k h4 {
+        font-size: 17px;
+    }
+
+    .step-card-k p {
+        font-size: 14px;
+    }
+
+    /* Benefits */
+    .benefits-header h2 {
+        font-size: 24px;
+        padding: 0 10px;
+    }
+
+    .benefits-row {
+        padding: 25px 15px;
+        gap: 25px;
+    }
+
+    .benefit-col p {
+        font-size: 14px;
+    }
+
+    /* Financing cards */
+    .financing-staggered-card {
+        padding: 20px 15px;
+    }
+
+    .monthly-val {
+        font-size: 24px;
+    }
+
+    .staggered-title {
+        font-size: 15px;
+    }
+
+    /* Buttons */
+    .btn-primary-k.big-blue {
+        padding: 14px 35px;
+        font-size: 15px;
+        white-space: nowrap;
+    }
+
+    .btn-primary-k {
+        padding: 12px 25px;
+        font-size: 14px;
+    }
+
+    /* Why section */
+    .why-item {
+        padding: 25px 20px;
+    }
+
+    .why-item h4 {
+        font-size: 18px;
+    }
+
+    .why-item p {
+        font-size: 14px;
+    }
+
+    /* FAQ */
+    .faq-question {
+        padding: 15px;
+        font-size: 14px;
+    }
+
+    .faq-answer {
+        font-size: 13px;
+        padding: 0 15px;
+    }
+
+    .faq-item.open .faq-answer {
+        padding: 0 15px 15px;
+    }
+
+    /* Loan section */
+    .loan-static-visual {
+        margin: -20px auto -30px;
+    }
+}
+
+/* SCROLL REVEAL ANIMATIONS */
+.reveal {
+    opacity: 0;
+    transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+    will-change: transform, opacity;
+}
+
+.reveal-bottom {
+    transform: translateY(40px);
+}
+
+.reveal-left {
+    transform: translateX(-60px);
+}
+
+.reveal-right {
+    transform: translateX(60px);
+}
+
+.reveal-scale {
+    transform: scale(0.9);
+}
+
+.reveal.is-visible {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+}
+
+/* STAGGERED DELAYS */
+.delay-100 { transition-delay: 0.1s; }
+.delay-200 { transition-delay: 0.2s; }
+.delay-300 { transition-delay: 0.3s; }
+.delay-400 { transition-delay: 0.4s; }
+.delay-500 { transition-delay: 0.5s; }
+.delay-600 { transition-delay: 0.6s; }
+.delay-700 { transition-delay: 0.7s; }
+.delay-800 { transition-delay: 0.8s; }

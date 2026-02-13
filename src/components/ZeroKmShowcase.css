@@ -1,0 +1,219 @@
+.zerokm-showcase {
+    width: 100%;
+    padding: 40px 0;
+    background: #fff;
+}
+
+.carousel-section {
+    margin-bottom: 70px;
+    position: relative;
+}
+
+/* Brand Logo - Top Right Corner */
+.brand-logo-corner {
+    position: absolute;
+    top: 0;
+    right: 20px;
+    z-index: 5;
+}
+
+.brand-logo-corner .brand-text {
+    font-size: 60px;
+    font-weight: 900;
+    font-family: 'Arial Black', sans-serif;
+    color: #1a1a1a;
+    letter-spacing: 2px;
+}
+
+/* Header */
+.carousel-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+.carousel-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1a1a1a;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+/* Carousel Wrapper */
+.carousel-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    padding: 20px 0;
+}
+
+.carousel-container {
+    overflow: hidden;
+    width: 100%;
+    max-width: 1000px;
+}
+
+.carousel-track {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.carousel-card {
+    min-width: calc(100% / 3);
+    padding: 0 15px;
+    box-sizing: border-box;
+}
+
+/* Card Styling */
+.carousel-image-wrapper {
+    width: 100%;
+    height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.carousel-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.carousel-card:hover .carousel-image {
+    transform: scale(1.08);
+}
+
+.carousel-name {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a1a;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* Navigation Arrows */
+.carousel-arrow {
+    background: #fff;
+    border: 2px solid #e0e0e0;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    z-index: 10;
+}
+
+.carousel-arrow:hover {
+    background: #f5f5f5;
+    border-color: #1a1a1a;
+    transform: scale(1.1);
+}
+
+.carousel-arrow svg {
+    color: #1a1a1a;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .carousel-card {
+        min-width: 50%;
+    }
+
+    .carousel-title {
+        font-size: 26px;
+    }
+
+    .brand-logo-corner .brand-text {
+        font-size: 50px;
+    }
+}
+
+@media (max-width: 768px) {
+    .carousel-header {
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 30px;
+    }
+
+    .carousel-title {
+        font-size: 20px;
+        text-align: center;
+    }
+
+    .brand-logo-corner {
+        right: 10px;
+        top: 5px;
+    }
+
+    .brand-logo-corner .brand-text {
+        font-size: 36px;
+    }
+
+    .carousel-card {
+        min-width: 100%;
+    }
+
+    .carousel-image-wrapper {
+        height: 200px;
+    }
+
+    .carousel-name {
+        font-size: 16px;
+    }
+
+    .carousel-arrow {
+        width: 40px;
+        height: 40px;
+    }
+
+    .carousel-arrow svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .carousel-wrapper {
+        gap: 15px;
+    }
+
+    .btn-ver-mas {
+        padding: 12px 40px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .carousel-title {
+        font-size: 18px;
+    }
+
+    .brand-logo-corner .brand-text {
+        font-size: 28px;
+    }
+
+    .carousel-image-wrapper {
+        height: 160px;
+    }
+
+    .carousel-name {
+        font-size: 14px;
+    }
+
+    .carousel-section {
+        margin-bottom: 50px;
+    }
+}
