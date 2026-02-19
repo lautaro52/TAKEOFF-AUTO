@@ -5,6 +5,14 @@ import './PurchaseProcess.css';
 
 const PurchaseProcess = () => {
     const navigate = useNavigate();
+    const [activeStep, setActiveStep] = React.useState(1);
+
+    React.useEffect(() => {
+        const interval = setInterval(() => {
+            setActiveStep((prev) => (prev % 3) + 1);
+        }, 2000);
+        return () => clearInterval(interval);
+    }, []);
 
     const handleStep1Click = () => {
         navigate('/catalogo');
@@ -35,14 +43,14 @@ const PurchaseProcess = () => {
             number: 2,
             title: "Elegí la cuota que más te convenga",
             icon: <Calculator size={48} strokeWidth={1.5} />,
-            color: "#e0e0e0",
+            color: "#0066FF",
             onClick: handleStep2Click
         },
         {
             number: 3,
             title: "Agendá tu cita",
             icon: <Headset size={48} strokeWidth={1.5} />,
-            color: "#e0e0e0",
+            color: "#0066FF",
             onClick: handleStep3Click
         }
     ];
@@ -56,7 +64,7 @@ const PurchaseProcess = () => {
                         {steps.map((step, index) => (
                             <div
                                 key={index}
-                                className={`step-indicator ${step.number === 1 ? 'active heartbeat' : ''} ${step.onClick ? 'clickable' : ''}`}
+                                className={`step-indicator ${step.number === activeStep ? 'active heartbeat' : ''} ${step.onClick ? 'clickable' : ''}`}
                                 onClick={step.onClick}
                             >
                                 {step.number}
@@ -69,10 +77,11 @@ const PurchaseProcess = () => {
                     {steps.map((step, index) => (
                         <div
                             key={index}
-                            className={`process-item ${step.onClick ? 'clickable' : ''}`}
+                            className={`process-item ${step.number === activeStep ? 'active' : ''} ${step.onClick ? 'clickable' : ''}`}
                             onClick={step.onClick}
                         >
-                            <div className="icon-container" style={{ color: step.number === 1 ? '#0066FF' : '#999' }}>
+                            <div className={`mobile-step-number ${step.number === activeStep ? 'active heartbeat' : ''}`}>{step.number}</div>
+                            <div className="icon-container" style={{ color: step.number === activeStep ? '#0066FF' : '#999' }}>
                                 {step.icon}
                             </div>
                             <h3>{step.title}</h3>

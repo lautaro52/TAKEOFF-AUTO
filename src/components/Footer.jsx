@@ -41,7 +41,7 @@ const Footer = () => {
                     <div className="footer-col">
                         <h4>Nosotros</h4>
                         <ul>
-                            <li><a href="#">Conócenos</a></li>
+                            <li><a href="/nosotros">Conócenos</a></li>
                             <li><a href="#">Trabaja con nosotros</a></li>
                             <li><a href="#">Blog</a></li>
                             <li><a href="#">Sustentabilidad</a></li>

@@ -4,7 +4,23 @@ import './ZeroKmShowcase.css';
 
 const CarouselSection = ({ title, cars, brandLogo }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
-    const carsPerView = 3;
+    const [carsPerView, setCarsPerView] = useState(3);
+
+    React.useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth <= 768) {
+                setCarsPerView(1);
+            } else if (window.innerWidth <= 1024) {
+                setCarsPerView(2);
+            } else {
+                setCarsPerView(3);
+            }
+        };
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     const maxIndex = Math.max(0, cars.length - carsPerView);
 
     const nextSlide = () => {
@@ -35,10 +51,17 @@ const CarouselSection = ({ title, cars, brandLogo }) => {
                 <div className="carousel-container">
                     <div
                         className="carousel-track"
-                        style={{ transform: `translateX(-${currentIndex * (100 / carsPerView)}%)` }}
+                        style={{
+                            transform: `translateX(-${currentIndex * (100 / carsPerView)}%)`,
+                            transition: 'transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1)'
+                        }}
                     >
                         {cars.map((car, index) => (
-                            <div key={index} className="carousel-card">
+                            <div
+                                key={index}
+                                className="carousel-card"
+                                style={{ minWidth: `${100 / carsPerView}%` }}
+                            >
                                 <div className="carousel-image-wrapper">
                                     <img src={car.image} alt={car.name} className="carousel-image" />
                                 </div>

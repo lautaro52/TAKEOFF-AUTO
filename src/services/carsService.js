@@ -1,3 +1,8 @@
+import { API_CONFIG } from '../config';
+
+const API_URL = API_CONFIG.API_URL;
+const UPLOAD_URL = API_CONFIG.UPLOAD_URL;
+
 // Utility to clean mis-encoded strings
 const fixEncoding = (obj) => {
     try {

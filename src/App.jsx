@@ -12,6 +12,7 @@ import Analytics from './pages/Analytics'
 import PartnersLanding from './pages/partner/PartnersLanding'
 import PartnerDashboard from './pages/partner/PartnerDashboard'
 import SellerDashboard from './pages/seller/SellerDashboard'
+import Nosotros from './pages/Nosotros'
 import Footer from './components/Footer'
 import Chatbot from './components/Chatbot'
 import './index.css'
@@ -40,6 +41,8 @@ function App() {
 
             {/* Rutas de Vendedores */}
             <Route path="/vendedor/dashboard" element={<SellerDashboard />} />
+
+            <Route path="/nosotros" element={<Nosotros />} />
           </Routes>
         </main>
         <Footer />

@@ -1,15 +1,17 @@
-const isLocal = window.location.hostname === 'localhost' ||
-    window.location.hostname === '127.0.0.1' ||
-    window.location.hostname.startsWith('192.168.');
-
-// When accessing from mobile/network, use the PC's IP
-const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const hostname = window.location.hostname;
+const isLocal = hostname === 'localhost' ||
+    hostname === '127.0.0.1' ||
+    hostname.startsWith('192.168.') ||
+    hostname.startsWith('10.') ||
+    hostname.startsWith('172.');
 
 const ROOT_URL = isLocal
-    ? 'http://localhost:8000'
+    ? `http://${hostname}:8080`
     : 'https://takeoffauto.online';
 
-const BASE_URL = `${ROOT_URL}/api`;
+const BASE_URL = isLocal
+    ? `${ROOT_URL}/api`
+    : `${ROOT_URL}/takeoffauto-api/api`;
 
 export const USD_QUOTATION = 1500;
 
@@ -22,4 +24,3 @@ export const API_CONFIG = {
     ANALYTICS_URL: `${BASE_URL}/analytics.php`,
     SEND_EMAIL_URL: `${BASE_URL}/send_new_user_email.php`
 };
-

@@ -53,16 +53,11 @@ const Navbar = () => {
 
                 {/* Desktop Menu */}
                 <ul className="navbar-menu">
-                    <li><Link to="/credito">Obtén un crédito</Link></li>
+                    <li><Link to="/credito">Usado o 0km</Link></li>
                     <li><Link to="/catalogo">Compra un auto</Link></li>
                     {/* <li><Link to="/vender">Vende tu auto</Link></li>
                     <li><a href="#">Cuida tu auto</a></li> */}
-                    <li className="menu-dropdown">
-                        <a href="#nosotros">
-                            Nosotros
-                            <ChevronDown size={16} className="chevron-icon" />
-                        </a>
-                    </li>
+                    <li><Link to="/nosotros">Nosotros</Link></li>
                 </ul>
 
                 {/* Desktop Actions */}
@@ -97,11 +92,11 @@ const Navbar = () => {
                     <div className="mobile-menu-overlay" onClick={closeMobileMenu}></div>
                     <div className="mobile-menu">
                         <ul className="mobile-menu-list">
-                            <li><Link to="/credito" onClick={closeMobileMenu}>Obtén un crédito</Link></li>
+                            <li><Link to="/credito" onClick={closeMobileMenu}>Usado o 0km</Link></li>
                             <li><Link to="/catalogo" onClick={closeMobileMenu}>Compra un auto</Link></li>
                             {/* <li><Link to="/vender" onClick={closeMobileMenu}>Vende tu auto</Link></li>
                             <li><a href="#" onClick={closeMobileMenu}>Cuida tu auto</a></li> */}
-                            <li><a href="#nosotros" onClick={closeMobileMenu}>Nosotros</a></li>
+                            <li><Link to="/nosotros" onClick={closeMobileMenu}>Nosotros</Link></li>
                             <li className="mobile-divider"></li>
                             <li>
                                 <button className="mobile-location-btn">

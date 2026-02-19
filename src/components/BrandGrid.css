@@ -104,3 +104,76 @@
         padding: 12px 4px;
     }
 }
+
+/* ─── Carousel wrapper: neutral on desktop ─── */
+.types-carousel-outer {
+    width: 100%;
+}
+
+.types-carousel-track {
+    display: block;
+    /* neutral on desktop – the inner grid handles layout */
+}
+
+/* Hide duplicate set on desktop */
+.types-grid-single-line[aria-hidden="true"] {
+    display: none;
+}
+
+/* ─── Mobile: infinite marquee ─── */
+@keyframes types-marquee {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+@media (max-width: 768px) {
+    .types-carousel-outer {
+        overflow: hidden;
+        -webkit-mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
+        mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
+    }
+
+    .types-carousel-track {
+        display: flex;
+        flex-wrap: nowrap;
+        width: max-content;
+        animation: types-marquee 10s linear infinite;
+    }
+
+    .types-carousel-track:hover {
+        animation-play-state: paused;
+    }
+
+    /* Show the duplicate set on mobile */
+    .types-grid-single-line[aria-hidden="true"] {
+        display: flex !important;
+    }
+
+    /* On mobile, the grid becomes a horizontal flex strip */
+    .types-grid-single-line {
+        display: flex !important;
+        flex-wrap: nowrap;
+        gap: 12px;
+        padding-right: 12px;
+        grid-template-columns: none;
+    }
+
+    .type-item {
+        flex-shrink: 0;
+        width: 110px;
+    }
+
+    .type-card {
+        padding: 12px 8px;
+        height: 100%;
+    }
+
+    .type-image-box img {
+        max-width: 70px;
+    }
+}

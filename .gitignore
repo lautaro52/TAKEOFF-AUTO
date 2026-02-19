@@ -13,8 +13,8 @@ dist-ssr
 *.local
 
 # Backend uploads and temporary files
-backend/api/uploads/*
-!backend/api/uploads/.gitkeep
+backend/api/uploads/quotes/*
+!backend/api/uploads/quotes/.gitkeep
 *.tmp
 
 # Editor directories and files
