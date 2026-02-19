@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import { User, ChevronDown, MapPin, Heart, Menu, X } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { User, ChevronDown, MapPin, Heart, Menu, X, LayoutDashboard, LogOut } from 'lucide-react';
 import Logo from './Logo';
+import { useAuth } from '../contexts/AuthContext';
 import './Navbar.css';
 
 const Navbar = () => {
+    const { user, isAuthenticated, logout } = useAuth();
+    const navigate = useNavigate();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isVisible, setIsVisible] = useState(true);
     const scrollTimeout = useRef(null);
@@ -42,6 +45,12 @@ const Navbar = () => {
         setIsMobileMenuOpen(false);
     };
 
+    const handleLogout = async () => {
+        await logout();
+        navigate('/');
+        closeMobileMenu();
+    };
+
     return (
         <nav className={`navbar ${!isVisible ? 'navbar-hidden' : ''}`}>
             <div className="navbar-container">
@@ -55,8 +64,9 @@ const Navbar = () => {
                 <ul className="navbar-menu">
                     <li><Link to="/credito">Obtén un crédito</Link></li>
                     <li><Link to="/catalogo">Compra un auto</Link></li>
-                    {/* <li><Link to="/vender">Vende tu auto</Link></li>
-                    <li><a href="#">Cuida tu auto</a></li> */}
+                    {isAuthenticated && (
+                        <li><Link to="/crm/dashboard">CRM</Link></li>
+                    )}
                     <li className="menu-dropdown">
                         <a href="#nosotros">
                             Nosotros
@@ -72,13 +82,26 @@ const Navbar = () => {
                         <MapPin size={16} />
                         <span>Ubicación</span>
                     </button>
-                    <button className="nav-icon-btn">
+                    {/* <button className="nav-icon-btn">
                         <Heart size={22} />
-                    </button>
-                    <Link to="/login" className="btn-ingresar">
-                        <User size={18} />
-                        <span>Ingresar</span>
-                    </Link>
+                    </button> */}
+
+                    {isAuthenticated ? (
+                        <div className="auth-actions" style={{ display: 'flex', gap: '0.5rem' }}>
+                            <Link to="/crm/dashboard" className="btn-ingresar" style={{ backgroundColor: '#2563eb', color: 'white', border: 'none' }}>
+                                <LayoutDashboard size={18} />
+                                <span>Dashboard</span>
+                            </Link>
+                            <button onClick={handleLogout} className="nav-icon-btn" title="Cerrar Sessión">
+                                <LogOut size={20} />
+                            </button>
+                        </div>
+                    ) : (
+                        <Link to="/login" className="btn-ingresar">
+                            <User size={18} />
+                            <span>Ingresar</span>
+                        </Link>
+                    )}
                 </div>
 
                 {/* Mobile Hamburger Button */}
@@ -99,8 +122,9 @@ const Navbar = () => {
                         <ul className="mobile-menu-list">
                             <li><Link to="/credito" onClick={closeMobileMenu}>Obtén un crédito</Link></li>
                             <li><Link to="/catalogo" onClick={closeMobileMenu}>Compra un auto</Link></li>
-                            {/* <li><Link to="/vender" onClick={closeMobileMenu}>Vende tu auto</Link></li>
-                            <li><a href="#" onClick={closeMobileMenu}>Cuida tu auto</a></li> */}
+                            {isAuthenticated && (
+                                <li><Link to="/crm/dashboard" onClick={closeMobileMenu}>CRM Dashboard</Link></li>
+                            )}
                             <li><a href="#nosotros" onClick={closeMobileMenu}>Nosotros</a></li>
                             <li className="mobile-divider"></li>
                             <li>
@@ -110,10 +134,17 @@ const Navbar = () => {
                                 </button>
                             </li>
                             <li>
-                                <Link to="/login" onClick={closeMobileMenu} className="mobile-login-btn">
-                                    <User size={18} />
-                                    <span>Ingresar</span>
-                                </Link>
+                                {isAuthenticated ? (
+                                    <button onClick={handleLogout} className="mobile-login-btn">
+                                        <LogOut size={18} />
+                                        <span>Cerrar Sesión</span>
+                                    </button>
+                                ) : (
+                                    <Link to="/login" onClick={closeMobileMenu} className="mobile-login-btn">
+                                        <User size={18} />
+                                        <span>Ingresar</span>
+                                    </Link>
+                                )}
                             </li>
                         </ul>
                     </div>

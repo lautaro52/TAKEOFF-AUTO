@@ -20,6 +20,13 @@ export const API_CONFIG = {
     UPLOADS_URL: `${BASE_URL}/uploads/`, // Direct access to uploads in api/uploads
     IMAGE_BASE_URL: `${BASE_URL}/`, // Images are served relative to api/
     ANALYTICS_URL: `${BASE_URL}/analytics.php`,
-    SEND_EMAIL_URL: `${BASE_URL}/send_new_user_email.php`
+    SEND_EMAIL_URL: `${BASE_URL}/send_new_user_email.php`,
+
+    // CRM API Endpoints
+    CUSTOMERS_URL: `${BASE_URL}/customers.php`,
+    OPPORTUNITIES_URL: `${BASE_URL}/opportunities.php`,
+    ACTIVITIES_URL: `${BASE_URL}/activities.php`,
+    TASKS_URL: `${BASE_URL}/tasks.php`,
+    USERS_URL: `${BASE_URL}/users.php`
 };
 
