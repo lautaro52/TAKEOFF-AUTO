@@ -4,8 +4,11 @@ import { ChevronRight, ChevronDown, CheckCircle, Shield, Clock, TrendingUp, MapP
 import { getCars } from '../services/carsService';
 import DeliveryCarousel from '../components/DeliveryCarousel';
 import ZeroKmShowcase from '../components/ZeroKmShowcase';
+import PromiseCarousel from '../components/PromiseCarousel';
 import './Credit.css';
 import creditHero from '../assets/credit-hero.jpg';
+import videoCredit from '../assets/video-credit.mp4';
+import creditPoster from '../assets/credit-poster.jpg';
 
 // Para evitar que la página falle si las fotos aún no existen, 
 // usaremos las rutas como texto. Una vez subas las fotos, aparecerán solas.
@@ -18,6 +21,7 @@ const Credit = () => {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('usados'); // 'usados' o '0km'
     const [openFaq, setOpenFaq] = useState(null);
+    const [carouselIndex, setCarouselIndex] = useState(0);
 
     useEffect(() => {
         const observerOptions = {
@@ -42,6 +46,121 @@ const Credit = () => {
             revealElements.forEach(el => observer.unobserve(el));
         };
     }, [activeTab]); // Reiniciar observador cuando cambie el tab ya que el contenido cambia
+
+    // Track carousel scroll position for indicators + Auto-play (infinite loop)
+    useEffect(() => {
+        const carousel = document.querySelector('.financing-staggered-grid');
+        if (!carousel) return;
+
+        let autoPlayTimer;
+        let lastInteraction = Date.now();
+        let isResetting = false;
+
+        const getCardWidth = () => 296; // 280px card + 16px gap
+
+        const handleScroll = () => {
+            if (isResetting) return;
+            const scrollLeft = carousel.scrollLeft;
+            const cardWidth = getCardWidth();
+            const index = Math.round(scrollLeft / cardWidth);
+            // Map clone positions (3,4,5) back to real dot positions (0,1,2)
+            setCarouselIndex(index % 3);
+
+            // Clone trick: if user manually scrolled into the duplicate section,
+            // instantly teleport to the real card so looping feels seamless
+            if (index >= 3) {
+                isResetting = true;
+                carousel.scrollTo({ left: (index - 3) * cardWidth, behavior: 'instant' });
+                setTimeout(() => { isResetting = false; }, 50);
+            }
+        };
+
+        const handleUserInteraction = () => {
+            lastInteraction = Date.now();
+        };
+
+        const autoAdvance = () => {
+            const timeSinceLastInteraction = Date.now() - lastInteraction;
+            if (timeSinceLastInteraction < 2000 || isResetting) return;
+
+            const cardWidth = getCardWidth();
+            const currentIndex = Math.round(carousel.scrollLeft / cardWidth);
+            const nextIndex = currentIndex + 1;
+
+            if (nextIndex >= 3) {
+                // Scroll smoothly to the duplicate (looks identical to card 0)
+                carousel.scrollTo({ left: nextIndex * cardWidth, behavior: 'smooth' });
+                // After animation finishes, silently snap back to real card 0
+                setTimeout(() => {
+                    isResetting = true;
+                    carousel.scrollTo({ left: 0, behavior: 'instant' });
+                    setCarouselIndex(0);
+                    setTimeout(() => { isResetting = false; }, 50);
+                }, 500);
+            } else {
+                carousel.scrollTo({ left: nextIndex * cardWidth, behavior: 'smooth' });
+            }
+        };
+
+        // Start auto-play interval
+        autoPlayTimer = setInterval(autoAdvance, 2500);
+
+        carousel.addEventListener('scroll', handleScroll, { passive: true });
+        carousel.addEventListener('touchstart', handleUserInteraction, { passive: true });
+        carousel.addEventListener('mousedown', handleUserInteraction);
+
+        return () => {
+            clearInterval(autoPlayTimer);
+            carousel.removeEventListener('scroll', handleScroll);
+            carousel.removeEventListener('touchstart', handleUserInteraction);
+            carousel.removeEventListener('mousedown', handleUserInteraction);
+        };
+    }, []);
+
+    // Auto-play for "Why Choose Us" carousel (Mobile only)
+    useEffect(() => {
+        const whyCarousel = document.querySelector('.why-grid');
+        if (!whyCarousel) return;
+
+        let autoPlayTimer;
+        let lastInteraction = Date.now();
+        const AUTOPLAY_INTERVAL = 4000; // 4 seconds
+        const PAUSE_AFTER_INTERACTION = 5000; // Pause for 5s after user interaction
+
+        const handleUserInteraction = () => {
+            lastInteraction = Date.now();
+        };
+
+        const autoAdvance = () => {
+            const timeSinceLastInteraction = Date.now() - lastInteraction;
+
+            // Only auto-advance if user hasn't interacted recently
+            if (timeSinceLastInteraction >= PAUSE_AFTER_INTERACTION) {
+                const cardWidth = 280 + 16; // card width + gap
+                const currentScroll = whyCarousel.scrollLeft;
+                const currentIndex = Math.round(currentScroll / cardWidth);
+                const nextIndex = (currentIndex + 1) % 3; // Loop: 0 -> 1 -> 2 -> 0
+
+                whyCarousel.scrollTo({
+                    left: nextIndex * cardWidth,
+                    behavior: 'smooth'
+                });
+            }
+        };
+
+        // Start auto-play interval
+        autoPlayTimer = setInterval(autoAdvance, AUTOPLAY_INTERVAL);
+
+        // Listen to touch/mouse events to pause auto-play
+        whyCarousel.addEventListener('touchstart', handleUserInteraction);
+        whyCarousel.addEventListener('mousedown', handleUserInteraction);
+
+        return () => {
+            clearInterval(autoPlayTimer);
+            whyCarousel.removeEventListener('touchstart', handleUserInteraction);
+            whyCarousel.removeEventListener('mousedown', handleUserInteraction);
+        };
+    }, []);
 
     const toggleFaq = (index) => {
         setOpenFaq(openFaq === index ? null : index);
@@ -93,27 +212,38 @@ const Credit = () => {
     return (
         <div className="credit-page">
             {/* HER0 SECTION */}
-            <section
-                className="credit-hero"
-                style={{ backgroundImage: `url(${creditHero})` }}
-            >
+            <section className="credit-hero">
+                <video
+                    className="hero-video-bg"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="auto"
+                    poster={creditPoster}
+                    onLoadedData={(e) => e.target.play()}
+                >
+                    <source src={videoCredit} type="video/mp4" />
+                </video>
                 <div className="hero-overlay"></div>
                 <div className="container hero-content">
-                    <h1>Llegaste a TAKEOFF AUTO CRÉDITO</h1>
-                    <p>No miramos tu historial, miramos tu historia</p>
+                    <h1 className="hero-title">Dos caminos, la misma seguridad.</h1>
+                    <p className="hero-subtitle">Comprá tu usado certificado o estrená un 0km con confianza.</p>
+
+                    <div className="hero-search-label">¿Qué estás buscando?</div>
+
                     <div className="hero-cards">
-                        <div className={`hero-card ${activeTab === 'usados' ? 'active' : ''}`} onClick={() => setActiveTab('usados')}>
-                            <div className="card-brand-tag">TAKEOFF <span className="blue-text">USADOS</span></div>
-                            <h3>Usados certificados con financiación del 100%.</h3>
-                            <span className="card-link">Conoce más <ChevronRight size={16} /></span>
+                        <div className={`hero-card-k ${activeTab === 'usados' ? 'active' : ''}`} onClick={() => setActiveTab('usados')}>
+                            <div className="card-brand-tag">TAKEOFF <span className="blue-text">USADO</span></div>
+                            <h3>Usados certificados con financiación del 100%</h3>
+                            <span className="card-link-blue">Ver catálogo <ChevronRight size={16} /></span>
                         </div>
-                        <div className={`hero-card ${activeTab === '0km' ? 'active' : ''}`} onClick={() => setActiveTab('0km')}>
-                            <div className="card-brand-tag">TAKEOFF <span className="teal-text">0KM</span></div>
-                            <h3>Tu 0km con transparencia y Pacto Claro.</h3>
-                            <span className="card-link">Ver unidades <ChevronRight size={16} /></span>
+                        <div className={`hero-card-k ${activeTab === '0km' ? 'active' : ''}`} onClick={() => setActiveTab('0km')}>
+                            <div className="card-brand-tag">TAKEOFF <span className="teal-text">0km</span></div>
+                            <h3>Tu 0km con transparencia y pacto claro</h3>
+                            <span className="card-link-blue">Ver unidades <ChevronRight size={16} /></span>
                         </div>
                     </div>
-                    <div className="hero-search-label">¿Qué estás buscando?</div>
                 </div>
             </section>
 
@@ -121,16 +251,16 @@ const Credit = () => {
             <div className="tabs-container">
                 <div className="tabs-switcher">
                     <button
-                        className={`tab-btn ${activeTab === 'usados' ? 'active' : ''}`}
+                        className={`tab-btn-pill ${activeTab === 'usados' ? 'active' : ''}`}
                         onClick={() => setActiveTab('usados')}
                     >
-                        TAKEOFF <span className="tab-blue">USADOS</span>
+                        TAKEOFF <span className="tab-blue">USADO</span>
                     </button>
                     <button
-                        className={`tab-btn ${activeTab === '0km' ? 'active' : ''}`}
+                        className={`tab-btn-pill ${activeTab === '0km' ? 'active' : ''}`}
                         onClick={() => setActiveTab('0km')}
                     >
-                        TAKEOFF <span className="tab-teal">0KM</span>
+                        TAKEOFF <span className="tab-teal">0km</span>
                     </button>
                 </div>
             </div>
@@ -144,7 +274,6 @@ const Credit = () => {
                             <p className="section-subtitle reveal reveal-bottom delay-100">Sin entrega inicial. Hasta 72 cuotas. Llevate tu auto hoy.</p>
 
                             <div className="financing-staggered-grid">
-                                {/* CARD 1: FIAT CRONOS */}
                                 <div className="financing-staggered-card reveal reveal-left delay-200">
                                     <div className="car-top-label">Usado Certificado</div>
                                     <div className="staggered-img-container">
@@ -161,7 +290,6 @@ const Credit = () => {
                                     </div>
                                 </div>
 
-                                {/* CARD 2: FIAT TORO (FEATURED) */}
                                 <div className="financing-staggered-card featured reveal reveal-bottom delay-400">
                                     <div className="car-top-label">Usado Certificado</div>
                                     <div className="staggered-img-container">
@@ -178,7 +306,6 @@ const Credit = () => {
                                     </div>
                                 </div>
 
-                                {/* CARD 3: VW GOL */}
                                 <div className="financing-staggered-card reveal reveal-right delay-600">
                                     <div className="car-top-label">Usado Certificado</div>
                                     <div className="staggered-img-container">
@@ -194,9 +321,65 @@ const Credit = () => {
                                         </div>
                                     </div>
                                 </div>
+
+                                {/* === CLONES FOR INFINITE LOOP (mobile only, hidden on desktop) === */}
+                                <div className="financing-staggered-card financing-carousel-dup" aria-hidden="true">
+                                    <div className="car-top-label">Usado Certificado</div>
+                                    <div className="staggered-img-container">
+                                        <img src={car1} alt="" />
+                                    </div>
+                                    <div className="staggered-info">
+                                        <div className="staggered-title">Fiat Cronos Drive 2021 • $21.560.000</div>
+                                        <div className="staggered-monthly">
+                                            <span className="monthly-val">$ 475.998/mes</span>
+                                        </div>
+                                        <div className="staggered-footer">
+                                            Págalo en <span className="blue-link-text">60 meses</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="financing-staggered-card featured financing-carousel-dup" aria-hidden="true">
+                                    <div className="car-top-label">Usado Certificado</div>
+                                    <div className="staggered-img-container">
+                                        <img src={car2} alt="" />
+                                    </div>
+                                    <div className="staggered-info">
+                                        <div className="staggered-title">Fiat Toro Freedom 2021 • $32.340.000</div>
+                                        <div className="staggered-monthly">
+                                            <span className="monthly-val">$ 952.150/mes</span>
+                                        </div>
+                                        <div className="staggered-footer">
+                                            Págalo en <span className="blue-link-text">72 meses (Tasa 0%)</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="financing-staggered-card financing-carousel-dup" aria-hidden="true">
+                                    <div className="car-top-label">Usado Certificado</div>
+                                    <div className="staggered-img-container">
+                                        <img src={car3} alt="" />
+                                    </div>
+                                    <div className="staggered-info">
+                                        <div className="staggered-title">Volkswagen Gol Power 2013 • $11.760.000</div>
+                                        <div className="staggered-monthly">
+                                            <span className="monthly-val">$ 291.577/mes</span>
+                                        </div>
+                                        <div className="staggered-footer">
+                                            Págalo en <span className="blue-link-text">48 meses (Línea UVA)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Carousel Indicators (Mobile Only) */}
+                            <div className="carousel-indicators">
+                                <div className={`indicator-dot ${carouselIndex === 0 ? 'active' : ''}`}></div>
+                                <div className={`indicator-dot ${carouselIndex === 1 ? 'active' : ''}`}></div>
+                                <div className={`indicator-dot ${carouselIndex === 2 ? 'active' : ''}`}></div>
                             </div>
                             <div className="center-btn" style={{ marginTop: '30px' }}>
-                                <button className="btn-primary-k big-blue" onClick={() => navigate('/login')}>Solicitar financiamiento</button>
+                                <button className="btn-primary-k big-blue" onClick={() => navigate('/catalogo')}>Ver catálogo de Usados</button>
                             </div>
                         </div>
                     </section>
@@ -214,18 +397,24 @@ const Credit = () => {
                                 <div className="steps-right-col">
                                     <div className="step-card-k reveal reveal-right delay-100">
                                         <div className="step-badge">1</div>
-                                        <h4>Elige tu ingreso y simula tu plan de pagos</h4>
-                                        <p>Ingresa tus datos y descubre las opciones que tenemos para ti</p>
+                                        <div>
+                                            <h4>Busca tu auto en nuestro catálogo</h4>
+                                            <p>Filtra y encuentra autos para tu presupuesto</p>
+                                        </div>
                                     </div>
                                     <div className="step-card-k reveal reveal-right delay-200">
                                         <div className="step-badge">2</div>
-                                        <h4>Busca tu auto en nuestro catálogo</h4>
-                                        <p>Filtra y encuentra autos para tu presupuesto</p>
+                                        <div>
+                                            <h4>Elige tu ingreso y simula tu plan de pagos</h4>
+                                            <p>Ingresa tus datos y descubre las opciones que tenemos para ti</p>
+                                        </div>
                                     </div>
                                     <div className="step-card-k reveal reveal-right delay-300">
                                         <div className="step-badge">3</div>
-                                        <h4>Compra tu auto</h4>
-                                        <p>Personaliza tu plan y decide a cuantos meses quieres pagar</p>
+                                        <div>
+                                            <h4>Compra tu auto</h4>
+                                            <p>Personaliza tu plan y decide a cuantos meses quieres pagar</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -291,18 +480,24 @@ const Credit = () => {
                                 <div className="steps-right-col">
                                     <div className="step-card-k reveal reveal-right delay-100">
                                         <div className="step-badge">1</div>
-                                        <h4>ELEGÍ TU UNIDAD 0KM</h4>
-                                        <p>Explorá el catálogo con stock real de las mejores marcas y seleccioná el modelo que buscás.</p>
+                                        <div>
+                                            <h4>ELEGÍ TU UNIDAD 0KM</h4>
+                                            <p>Explorá el catálogo con stock real de las mejores marcas y seleccioná el modelo que buscás.</p>
+                                        </div>
                                     </div>
                                     <div className="step-card-k reveal reveal-right delay-200">
                                         <div className="step-badge">2</div>
-                                        <h4>SIMULÁ TU TASA 0%</h4>
-                                        <p>Usá nuestra calculadora para armar tu plan en 18 cuotas fijas y sin interés de forma inmediata.</p>
+                                        <div>
+                                            <h4>SIMULÁ TU TASA 0%</h4>
+                                            <p>Usá nuestra calculadora para armar tu plan en 18 cuotas fijas y sin interés de forma inmediata.</p>
+                                        </div>
                                     </div>
                                     <div className="step-card-k reveal reveal-right delay-300">
                                         <div className="step-badge">3</div>
-                                        <h4>RESERVÁ Y RETIRÁ</h4>
-                                        <p>Pre-calificá con nuestra IA, agendá tu cita en el salón y retirá tu unidad con garantía oficial.</p>
+                                        <div>
+                                            <h4>RESERVÁ Y RETIRÁ</h4>
+                                            <p>Pre-calificá con nuestra IA, agendá tu cita en el salón y retirá tu unidad con garantía oficial.</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -339,11 +534,12 @@ const Credit = () => {
                 </>
             )}
 
-            {/* DELIVERY CAROUSEL SECTION */}
             <section className="section deliveries-section">
                 <div className="container">
-                    <h2 className="section-title">Entregas que nos enorgullecen</h2>
-                    <DeliveryCarousel />
+                    <h2 className="section-title reveal reveal-bottom">Nuestra promesa TakeOff</h2>
+                    <div className="reveal reveal-bottom delay-100">
+                        <PromiseCarousel />
+                    </div>
                 </div>
             </section>
 

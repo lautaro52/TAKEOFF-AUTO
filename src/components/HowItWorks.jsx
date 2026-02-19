@@ -1,10 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import './HowItWorks.css';
 import QuoteModal from './QuoteModal';
 
 const HowItWorks = () => {
     const [activeTab, setActiveTab] = useState('compra');
     const [showQuoteModal, setShowQuoteModal] = useState(false);
+    const [isHighlighted, setIsHighlighted] = useState(false);
+    const location = useLocation();
+
+    useEffect(() => {
+        if (location.hash === '#renova') {
+            const element = document.getElementById('renova');
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                setIsHighlighted(true);
+                // Clear highlight after a few seconds
+                const timer = setTimeout(() => setIsHighlighted(false), 3000);
+                return () => clearTimeout(timer);
+            }
+        }
+    }, [location]);
 
     const stepsCompra = [
         {
@@ -49,7 +65,7 @@ const HowItWorks = () => {
     const linkText = activeTab === 'compra' ? 'Ver autos que puedo pagar →' : 'Cotizar →';
 
     return (
-        <section className="how-it-works">
+        <section id="renova" className={`how-it-works ${isHighlighted ? 'highlight' : ''}`}>
             <div className="container">
                 <div className="how-grid-layout">
                     {/* Left Info Column */}
@@ -61,12 +77,6 @@ const HowItWorks = () => {
                             >
                                 Cotizá tu Auto
                             </button>
-                            {/* <button
-                                className={`how-tab ${activeTab === 'vende' ? 'active' : ''}`}
-                                onClick={() => setActiveTab('vende')}
-                            >
-                                Vende
-                            </button> */}
                         </div>
 
                         <div className="how-title-area">

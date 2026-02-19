@@ -40,70 +40,73 @@
 }
 
 @media (max-width: 600px) {
+
+    /* Reset section styling */
     .product-section {
-        padding: 32px 0;
+        padding: 40px 0;
+        overflow: visible;
     }
 
-    .product-grid-window {
-        overflow: hidden;
-        margin: 0 -12px;
-        padding: 0 12px;
-    }
-
-    .product-grid {
-        display: flex;
-        gap: 16px;
-        width: max-content;
-        padding: 10px 0 20px 0;
-        animation-duration: 40s;
-        animation-iteration-count: infinite;
-        animation-timing-function: linear;
-        scroll-snap-type: none;
-        /* Disable snapping while auto-scrolling */
-        pointer-events: none;
-        /* Optional: allows touch through or just visual */
-    }
-
-    /* Left scrolling sections */
-    #best-sellers .product-grid,
-    #unbeatable-price .product-grid {
-        animation-name: scroll-left;
-    }
-
-    /* Right scrolling section */
-    #featured-cars .product-grid {
-        animation-name: scroll-right;
-    }
-
-    .product-grid>* {
-        flex: 0 0 260px;
-    }
-
-    @keyframes scroll-left {
-        0% {
-            transform: translateX(0);
-        }
-
-        100% {
-            /* Scroll by 1/3 since we have 3 sets of items */
-            transform: translateX(calc(-33.333% - 5.33px));
-            /* Minor gap correction */
-        }
-    }
-
-    @keyframes scroll-right {
-        0% {
-            transform: translateX(calc(-33.333% - 5.33px));
-        }
-
-        100% {
-            transform: translateX(0);
-        }
-    }
-
+    /* Section title */
     .section-title {
-        font-size: 1.25rem;
-        margin-bottom: 20px;
-        padding: 0 4px;
+        font-size: 1.4rem;
+        margin-bottom: 24px;
+        padding: 0 16px;
+    }
+
+    /* Scroll container - full width bleed */
+    .product-grid-window {
+        width: 100vw;
+        margin-left: calc(-50vw + 50%);
+        overflow-x: scroll;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        scroll-snap-type: x mandatory;
+        padding: 0 16px;
+        box-sizing: border-box;
+
+        /* Show scrollbar for clarity */
+        scrollbar-width: thin;
+        scrollbar-color: #ddd transparent;
+    }
+
+    .product-grid-window::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    .product-grid-window::-webkit-scrollbar-track {
+        background: transparent;
+        margin: 0 16px;
+    }
+
+    .product-grid-window::-webkit-scrollbar-thumb {
+        background: #ddd;
+        border-radius: 2px;
+    }
+
+    /* Flex grid for cards - OVERRIDE grid from 900px breakpoint */
+    .product-grid {
+        display: flex !important;
+        grid-template-columns: unset !important;
+        gap: 12px;
+        padding: 8px 0 16px;
+    }
+
+    /* Individual cards */
+    .product-grid>* {
+        flex: 0 0 calc(85vw - 32px);
+        min-width: calc(85vw - 32px);
+        max-width: 320px;
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+    }
+
+    /* Remove any animations */
+    .product-grid,
+    #best-sellers .product-grid,
+    #unbeatable-price .product-grid,
+    #featured-cars .product-grid {
+        animation: none !important;
+        transform: none !important;
     }
 }

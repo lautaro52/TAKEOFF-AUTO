@@ -5,7 +5,7 @@ import SimulationSection from '../components/SimulationSection'
 import TrustSection from '../components/TrustSection'
 import ProductGrid from '../components/ProductGrid'
 import HowItWorks from '../components/HowItWorks'
-import TipsSection from '../components/TipsSection'
+import PromiseFilmstrip from '../components/PromiseFilmstrip'
 import Testimonials from '../components/Testimonials'
 import BrandGrid from '../components/BrandGrid'
 import FinancingModal from '../components/FinancingModal'
@@ -55,9 +55,10 @@ const Home = () => {
                 monthly: `$ ${Math.round(Number(car.price) / 60).toLocaleString('es-AR')}${Number(car.price) < 100000 ? ' USD' : ''}`
             });
 
-            let sellers = availableCars.filter(car => car.home_section === 'vendidos');
-            if (sellers.length === 0) sellers = availableCars.slice(0, 4);
-            else sellers = sellers.slice(0, 4);
+            let sellers = availableCars
+                .filter(car => Number(car.price) >= 1000000) // ARS prices have 7+ digits
+                .sort((a, b) => Number(a.price) - Number(b.price)) // cheapest first
+                .slice(0, 4);
             setBestSellers(sellers.map(formatCar));
 
             let featured = availableCars.filter(car => car.home_section === 'destacados');
@@ -96,7 +97,7 @@ const Home = () => {
                     {bestSellers.length > 0 && (
                         <ProductGrid
                             id="best-sellers"
-                            title="Los más vendidos"
+                            title="Los más económicos"
                             products={bestSellers}
                         />
                     )}
@@ -109,7 +110,7 @@ const Home = () => {
                         />
                     )}
 
-                    <TipsSection />
+                    <PromiseFilmstrip />
                     <HowItWorks />
                 </>
             )}

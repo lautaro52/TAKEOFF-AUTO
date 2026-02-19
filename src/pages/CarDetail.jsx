@@ -1,72 +1,90 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
-    ChevronRight,
-    Share2,
-    Heart,
-    ShieldCheck,
-    RotateCcw,
-    Clock,
-    MapPin,
-    Calendar,
-    Gauge,
-    Fuel,
-    Settings2,
-    ChevronDown,
-    ChevronUp,
-    Info
+    ChevronRight, ChevronLeft, ChevronDown, Share2, Heart,
+    Fuel, Settings2, Calendar, Gauge, Users, DoorClosed,
+    Check, MapPin, Shield, Clock, RotateCcw, Search
 } from 'lucide-react';
-import { getCarById } from '../services/carsService';
+import { getCarById, getCars } from '../services/carsService';
 import { API_CONFIG } from '../config';
 import FinancingModal from '../components/FinancingModal';
+import QuoteModal from '../components/QuoteModal';
 import './CarDetail.css';
 
 const CarDetail = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
     const [car, setCar] = useState(null);
+    const [allCars, setAllCars] = useState([]);
     const [loading, setLoading] = useState(true);
     const [activeImage, setActiveImage] = useState(0);
-    const [activeAccordion, setActiveAccordion] = useState('General');
     const [isFinancingModalOpen, setIsFinancingModalOpen] = useState(false);
-    const thumbnailRef = React.useRef(null);
+    const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
+    const [isFavorite, setIsFavorite] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [showSearchResults, setShowSearchResults] = useState(false);
+    const [filteredCars, setFilteredCars] = useState([]);
+    const searchRef = useRef(null);
+    const thumbnailRef = useRef(null);
 
-    //Load car data from API
+    // Fetch Car Data
     useEffect(() => {
-        const loadCar = async () => {
+        const loadData = async () => {
             try {
                 setLoading(true);
-                const carData = await getCarById(id);
+                const [carData, carsData] = await Promise.all([
+                    getCarById(id),
+                    getCars()
+                ]);
                 setCar(carData);
+                setAllCars(carsData);
             } catch (error) {
                 console.error('Error loading car:', error);
             } finally {
                 setLoading(false);
             }
         };
-
-        loadCar();
+        loadData();
     }, [id]);
 
     // Auto-scroll thumbnails
     useEffect(() => {
-        if (thumbnailRef.current) {
+        if (thumbnailRef.current && car?.images) {
             const activeThumb = thumbnailRef.current.children[activeImage];
             if (activeThumb) {
                 const containerWidth = thumbnailRef.current.offsetWidth;
                 const thumbOffset = activeThumb.offsetLeft;
                 const thumbWidth = activeThumb.offsetWidth;
-
                 thumbnailRef.current.scrollTo({
                     left: thumbOffset - (containerWidth / 2) + (thumbWidth / 2),
                     behavior: 'smooth'
                 });
             }
         }
-    }, [activeImage]);
+    }, [activeImage, car]);
 
-    const toggleAccordion = (section) => {
-        setActiveAccordion(activeAccordion === section ? null : section);
-    };
+    // Live Search logic
+    useEffect(() => {
+        if (!searchQuery.trim()) {
+            setFilteredCars([]);
+            return;
+        }
+        const filtered = allCars.filter(c =>
+            `${c.brand} ${c.model} ${c.version || ''}`.toLowerCase().includes(searchQuery.toLowerCase())
+        ).slice(0, 5); // Limit to top 5 results
+        setFilteredCars(filtered);
+    }, [searchQuery, allCars]);
+
+    // Close search results when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (searchRef.current && !searchRef.current.contains(event.target)) {
+                setShowSearchResults(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     const getImageUrl = (imagePath) => {
         if (!imagePath) return 'https://via.placeholder.com/800x600?text=No+Image';
@@ -74,489 +92,380 @@ const CarDetail = () => {
         return `${API_CONFIG.IMAGE_BASE_URL}${imagePath}?t=${Date.now()}`;
     };
 
-    if (loading) {
-        return (
-            <div className="car-detail-page">
-                <div className="container">
-                    <div style={{ padding: '60px 0', textAlign: 'center' }}>
-                        <p>Cargando auto...</p>
-                    </div>
-                </div>
-            </div>
-        );
-    }
+    const handleShare = () => {
+        if (navigator.share) {
+            navigator.share({
+                title: `${car.brand} ${car.model}`,
+                text: `Check out this ${car.brand} ${car.model} ${car.year}`,
+                url: window.location.href
+            });
+        } else {
+            navigator.clipboard.writeText(window.location.href);
+            alert('Link copiado al portapapeles');
+        }
+    };
 
-    if (!car) {
-        return (
-            <div className="car-detail-page">
-                <div className="container">
-                    <div style={{ padding: '60px 0', textAlign: 'center' }}>
-                        <h2>Auto no encontrado</h2>
-                        <Link to="/catalogo" className="btn-primary" style={{ marginTop: '20px' }}>
-                            Volver al catálogo
-                        </Link>
-                    </div>
-                </div>
-            </div>
-        );
-    }
+    if (loading) return <div className="loading-state">Cargando...</div>;
+    if (!car) return <div className="error-state">Auto no encontrado. <Link to="/catalogo">Volver</Link></div>;
 
     const images = car.images && car.images.length > 0 ? car.images : [''];
 
-    return (
-        <div className="car-detail-page">
-            <div className="container">
-                {/* Breadcrumbs */}
-                <nav className="breadcrumbs">
-                    <Link to="/">Inventario</Link> <ChevronRight size={14} />
-                    <Link to="/catalogo">{car.brand}</Link> <ChevronRight size={14} />
-                    <span>{car.brand} {car.model}</span>
-                </nav>
+    // Get similar cars (same brand, different id)
+    const similarCars = allCars
+        .filter(c => c.brand === car.brand && c.id !== car.id)
+        .slice(0, 4);
 
-                <div className="detail-layout">
-                    {/* Main Content */}
-                    <div className="detail-main">
-                        <div className="gallery-section">
-                            <div className="main-image-container">
-                                {car.status === 'apartado' && (
-                                    <span className="badge-reacondicionado" style={{ background: '#f59e0b' }}>
-                                        <Clock size={14} /> Apartado
-                                    </span>
-                                )}
-                                {car.featured && (
-                                    <span className="badge-reacondicionado">
-                                        <ShieldCheck size={14} /> Destacado
-                                    </span>
-                                )}
+    // Get recommended cars for sidebar
+    const sidebarCars = similarCars.slice(0, 2);
+
+    // Car features (placeholder - will be populated from DB later)
+    // List of features to check against DB boolean fields
+    const featureMapping = [
+        { label: 'Aire acondicionado', field: 'air_conditioning' },
+        { label: 'Frenos ABS', field: 'abs_brakes' },
+        { label: 'Airbags', field: 'airbags', isBoolean: false },
+        { label: 'Computadora de abordo', field: 'onboard_computer' },
+        { label: 'Control de crucero', field: 'cruise_control' },
+        { label: 'Bluetooth', field: 'bluetooth' },
+        { label: 'Radio AM/FM', field: 'am_fm_radio' },
+        { label: 'Reproductor MP3', field: 'mp3_player' },
+        { label: 'Porta vasos', field: 'cup_holders' }
+    ];
+
+    const carFeatures = featureMapping
+        .filter(f => {
+            const val = car[f.field];
+            if (f.isBoolean === false) return val && val !== '0' && val !== 'No';
+            return val === 1 || val === true || val === '1';
+        })
+        .map(f => f.label);
+
+    const getVal = (val, suffix = '') => {
+        if (val === null || val === undefined || val === '' || val === 0 || val === '0') return '-';
+        return `${val}${suffix}`;
+    };
+
+    return (
+        <div className="kavak-car-detail">
+            <div className="kavak-container no-padding-top">
+                <div className="kavak-search-bar-container" ref={searchRef}>
+                    <div className="kavak-search-input-wrapper">
+                        <Search className="kavak-search-icon" size={18} />
+                        <input
+                            type="text"
+                            placeholder="Busca tu próximo auto..."
+                            value={searchQuery}
+                            onChange={(e) => {
+                                setSearchQuery(e.target.value);
+                                setShowSearchResults(true);
+                            }}
+                            onFocus={() => setShowSearchResults(true)}
+                        />
+                    </div>
+                    {showSearchResults && filteredCars.length > 0 && (
+                        <div className="kavak-search-results">
+                            {filteredCars.map(res => (
+                                <Link
+                                    key={res.id}
+                                    to={`/car/${res.id}`}
+                                    className="kavak-search-item"
+                                    onClick={() => {
+                                        setShowSearchResults(false);
+                                        setSearchQuery('');
+                                    }}
+                                >
+                                    <div className="kavak-search-item-thumb">
+                                        <img src={getImageUrl(res.images?.[0])} alt={res.model} />
+                                    </div>
+                                    <div className="kavak-search-item-info">
+                                        <div className="kavak-search-item-name">{res.brand} {res.model}</div>
+                                        <div className="kavak-search-item-meta">
+                                            {res.year} • {Number(res.km).toLocaleString('es-AR')} km • ${Number(res.price).toLocaleString('es-AR')}
+                                        </div>
+                                    </div>
+                                    <ChevronRight size={16} className="kavak-search-arrow" />
+                                </Link>
+                            ))}
+                        </div>
+                    )}
+                </div>
+
+                <div className="kavak-detail-grid">
+                    {/* 1. GALLERY (Part of the grid to align with right column on desktop) */}
+                    <div className="kavak-gallery-top">
+                        <div className="kavak-gallery">
+                            <div className="kavak-gallery-main-v2">
                                 <img
                                     src={getImageUrl(images[activeImage])}
                                     alt={`${car.brand} ${car.model}`}
-                                    onError={(e) => { e.target.src = 'https://via.placeholder.com/800x600?text=No+Image' }}
+                                    className="kavak-main-image"
                                 />
                                 {images.length > 1 && (
-                                    <div className="gallery-controls">
+                                    <>
                                         <button
-                                            className="btn-gallery-nav prev"
+                                            className="kavak-gallery-nav prev"
                                             onClick={() => setActiveImage(prev => prev > 0 ? prev - 1 : images.length - 1)}
                                         >
-                                            <ChevronRight style={{ transform: 'rotate(180deg)' }} />
+                                            <ChevronLeft size={24} />
                                         </button>
                                         <button
-                                            className="btn-gallery-nav next"
+                                            className="kavak-gallery-nav next"
                                             onClick={() => setActiveImage(prev => prev < images.length - 1 ? prev + 1 : 0)}
                                         >
-                                            <ChevronRight />
+                                            <ChevronRight size={24} />
                                         </button>
-                                    </div>
+                                    </>
                                 )}
                             </div>
+
+                            {/* Thumbnails */}
                             {images.length > 1 && (
-                                <div className="thumbnail-slider-container">
-                                    <div className="thumbnail-slider" ref={thumbnailRef}>
-                                        {images.map((img, i) => (
-                                            <div
-                                                key={i}
-                                                className={`thumb ${i === activeImage ? 'active' : ''}`}
-                                                onClick={() => setActiveImage(i)}
-                                                style={{ cursor: 'pointer' }}
-                                            >
-                                                <img
-                                                    src={getImageUrl(img)}
-                                                    alt=""
-                                                    onError={(e) => { e.target.src = 'https://via.placeholder.com/150?text=No+Image' }}
-                                                />
-                                            </div>
-                                        ))}
-                                    </div>
-                                    <div className="gallery-indicator-bar-container">
-                                        <div className="gallery-indicator-bar">
-                                            <div
-                                                className="indicator-active"
-                                                style={{
-                                                    width: `${100 / images.length}%`,
-                                                    left: `${(100 / images.length) * activeImage}%`
-                                                }}
-                                            ></div>
+                                <div className="kavak-gallery-thumbnails" ref={thumbnailRef}>
+                                    {images.map((img, index) => (
+                                        <div
+                                            key={index}
+                                            className={`kavak-thumbnail ${activeImage === index ? 'active' : ''}`}
+                                            onClick={() => setActiveImage(index)}
+                                        >
+                                            <img src={getImageUrl(img)} alt={`Vista ${index + 1}`} />
                                         </div>
-                                    </div>
+                                    ))}
                                 </div>
                             )}
                         </div>
 
-                        <div className="guarantees-banner">
-                            <p>
-                                <strong>¿Qué certificamos en este auto?</strong> <br />
-                                Todos nuestros autos pasan por una inspección de 240 puntos, cuentan con <strong>7 días o 300 km de prueba</strong> y garantía mecánica por 3 meses.
-                            </p>
-                        </div>
-
-                        <section className="detail-section">
-                            <h2 className="section-title-alt">Descripción general</h2>
-                            <div className="quick-specs-grid">
-                                <div className="spec-item">
-                                    <Calendar size={20} />
-                                    <div>
-                                        <span className="spec-label">Año</span>
-                                        <span className="spec-value">{car.year}</span>
+                        {/* 1b. Descripción General (Relocated from left column) */}
+                        <section className="kavak-section-gallery">
+                            <h2 className="kavak-section-title-small">Descripción general</h2>
+                            <div className="kavak-specs-main-grid-v2">
+                                <div className="kavak-spec-item">
+                                    <Gauge className="kavak-spec-icon" />
+                                    <div className="kavak-spec-info">
+                                        <div className="kavak-spec-value">{getVal(Number(car.km).toLocaleString('es-AR'), ' km')}</div>
+                                        <div className="kavak-spec-label">Kilometraje</div>
                                     </div>
                                 </div>
-                                <div className="spec-item">
-                                    <Gauge size={20} />
-                                    <div>
-                                        <span className="spec-label">Kilometraje</span>
-                                        <span className="spec-value">{car.km ? `${Number(car.km).toLocaleString('es-AR')} km` : 'N/A'}</span>
+                                <div className="kavak-spec-item">
+                                    <Settings2 className="kavak-spec-icon" />
+                                    <div className="kavak-spec-info">
+                                        <div className="kavak-spec-value">{car.transmission === 'automatico' ? 'Automática' : (car.transmission === 'manual' ? 'Manual' : '-')}</div>
+                                        <div className="kavak-spec-label">Transmisión</div>
                                     </div>
                                 </div>
-                                <div className="spec-item">
-                                    <Settings2 size={20} />
-                                    <div>
-                                        <span className="spec-label">Transmisión</span>
-                                        <span className="spec-value">{car.transmission === 'automatico' ? 'Automático' : 'Manual'}</span>
+                                <div className="kavak-spec-item">
+                                    <Fuel className="kavak-spec-icon" />
+                                    <div className="kavak-spec-info">
+                                        <div className="kavak-spec-value">{getVal(car.fuel)}</div>
+                                        <div className="kavak-spec-label">Combustible</div>
                                     </div>
                                 </div>
-                                <div className="spec-item">
-                                    <Fuel size={20} />
-                                    <div>
-                                        <span className="spec-label">Combustible</span>
-                                        <span className="spec-value">{car.fuel?.charAt(0).toUpperCase() + car.fuel?.slice(1)}</span>
+                                <div className="kavak-spec-item">
+                                    <Settings2 className="kavak-spec-icon" />
+                                    <div className="kavak-spec-info">
+                                        <div className="kavak-spec-value">{getVal(car.engine_size, ' L')}</div>
+                                        <div className="kavak-spec-label">Motor</div>
+                                    </div>
+                                </div>
+                                <div className="kavak-spec-item">
+                                    <Users className="kavak-spec-icon" />
+                                    <div className="kavak-spec-info">
+                                        <div className="kavak-spec-value">{getVal(car.passengers)}</div>
+                                        <div className="kavak-spec-label">Pasajeros</div>
+                                    </div>
+                                </div>
+                                <div className="kavak-spec-item">
+                                    <DoorClosed className="kavak-spec-icon" />
+                                    <div className="kavak-spec-info">
+                                        <div className="kavak-spec-value">{getVal(car.doors)}</div>
+                                        <div className="kavak-spec-label">Puertas</div>
                                     </div>
                                 </div>
                             </div>
                         </section>
 
-                        {/* DETAILED SPECIFICATIONS SECTION */}
-                        <section className="detail-section">
-                            <h2 className="section-title-alt">📋 Características Técnicas Completas</h2>
-
-                            {/* General specs accordion */}
-                            <div className="spec-accordion">
-                                <div
-                                    className={`accordion-header ${activeAccordion === 'General' ? 'active' : ''}`}
-                                    onClick={() => toggleAccordion('General')}
-                                >
-                                    <h3>Información General</h3>
-                                    {activeAccordion === 'General' ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-                                </div>
-                                {activeAccordion === 'General' && (
-                                    <div className="accordion-content">
-                                        <div className="specs-grid">
-                                            <div className="spec-row">
-                                                <span className="spec-label">Marca:</span>
-                                                <span className="spec-value">{car.brand || 'N/A'}</span>
-                                            </div>
-                                            <div className="spec-row">
-                                                <span className="spec-label">Modelo:</span>
-                                                <span className="spec-value">{car.model || 'N/A'}</span>
-                                            </div>
-                                            {car.version && (
-                                                <div className="spec-row">
-                                                    <span className="spec-label">Versión:</span>
-                                                    <span className="spec-value">{car.version}</span>
-                                                </div>
-                                            )}
-                                            <div className="spec-row">
-                                                <span className="spec-label">Año:</span>
-                                                <span className="spec-value">{car.year}</span>
-                                            </div>
-                                            <div className="spec-row">
-                                                <span className="spec-label">Color:</span>
-                                                <span className="spec-value">{car.color || 'N/A'}</span>
-                                            </div>
-                                            <div className="spec-row">
-                                                <span className="spec-label">Tipo de combustible:</span>
-                                                <span className="spec-value">{car.fuel?.charAt(0).toUpperCase() + car.fuel?.slice(1) || 'N/A'}</span>
-                                            </div>
-                                            {car.doors && (
-                                                <div className="spec-row">
-                                                    <span className="spec-label">Puertas:</span>
-                                                    <span className="spec-value">{car.doors}</span>
-                                                </div>
-                                            )}
-                                            <div className="spec-row">
-                                                <span className="spec-label">Transmisión:</span>
-                                                <span className="spec-value">{car.transmission === 'automatico' ? 'Automático' : 'Manual'}</span>
-                                            </div>
-                                            <div className="spec-row">
-                                                <span className="spec-label">Tipo de carrocería:</span>
-                                                <span className="spec-value">{car.type?.charAt(0).toUpperCase() + car.type?.slice(1) || 'N/A'}</span>
-                                            </div>
-                                            <div className="spec-row">
-                                                <span className="spec-label">Kilómetros:</span>
-                                                <span className="spec-value">{car.km ? `${Number(car.km).toLocaleString('es-AR')} km` : 'N/A'}</span>
-                                            </div>
-                                            {car.passengers && (
-                                                <div className="spec-row">
-                                                    <span className="spec-label">Capacidad de personas:</span>
-                                                    <span className="spec-value">{car.passengers}</span>
-                                                </div>
-                                            )}
-                                        </div>
+                        {/* 1c. Características (Relocated below Descripción General) */}
+                        <section className="kavak-section-gallery">
+                            <h2 className="kavak-section-title-small">Características del {car.brand} {car.model}</h2>
+                            <div className="kavak-features-checklist">
+                                {carFeatures.map((feature, index) => (
+                                    <div key={index} className="kavak-feature-check">
+                                        <Check size={18} className="kavak-check-blue" />
+                                        <span>{feature}</span>
                                     </div>
-                                )}
-                            </div>
-
-                            {/* Motor accordion */}
-                            <div className="spec-accordion">
-                                <div
-                                    className={`accordion-header ${activeAccordion === 'Motor' ? 'active' : ''}`}
-                                    onClick={() => toggleAccordion('Motor')}
-                                >
-                                    <h3>Motor y Rendimiento</h3>
-                                    {activeAccordion === 'Motor' ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-                                </div>
-                                {activeAccordion === 'Motor' && (
-                                    <div className="accordion-content">
-                                        <div className="specs-grid">
-                                            {car.engine_size && (
-                                                <div className="spec-row">
-                                                    <span className="spec-label">Motor:</span>
-                                                    <span className="spec-value">{car.engine_size}</span>
-                                                </div>
-                                            )}
-                                            {car.horsepower && (
-                                                <div className="spec-row">
-                                                    <span className="spec-label">Potencia:</span>
-                                                    <span className="spec-value">{car.horsepower}</span>
-                                                </div>
-                                            )}
-                                            {car.valves_per_cylinder && (
-                                                <div className="spec-row">
-                                                    <span className="spec-label">Válvulas por cilindro:</span>
-                                                    <span className="spec-value">{car.valves_per_cylinder}</span>
-                                                </div>
-                                            )}
-                                            {car.fuel_tank_liters && (
-                                                <div className="spec-row">
-                                                    <span className="spec-label">Capacidad del tanque:</span>
-                                                    <span className="spec-value">{car.fuel_tank_liters} L</span>
-                                                </div>
-                                            )}
-                                            {car.traction_control && (
-                                                <div className="spec-row">
-                                                    <span className="spec-label">Control de tracción:</span>
-                                                    <span className="spec-value">{car.traction_control}</span>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Dimensions accordion */}
-                            <div className="spec-accordion">
-                                <div
-                                    className={`accordion-header ${activeAccordion === 'Dimensiones' ? 'active' : ''}`}
-                                    onClick={() => toggleAccordion('Dimensiones')}
-                                >
-                                    <h3>Dimensiones</h3>
-                                    {activeAccordion === 'Dimensiones' ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-                                </div>
-                                {activeAccordion === 'Dimensiones' && (
-                                    <div className="accordion-content">
-                                        <div className="specs-grid">
-                                            {(car.length_mm && car.width_mm && car.height_mm) && (
-                                                <div className="spec-row">
-                                                    <span className="spec-label">Largo x Altura x Ancho:</span>
-                                                    <span className="spec-value">{car.length_mm} mm x {car.height_mm} mm x {car.width_mm} mm</span>
-                                                </div>
-                                            )}
-                                            {car.wheelbase_mm && (
-                                                <div className="spec-row">
-                                                    <span className="spec-label">Distancia entre ejes:</span>
-                                                    <span className="spec-value">{car.wheelbase_mm} mm</span>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Safety accordion */}
-                            <div className="spec-accordion">
-                                <div
-                                    className={`accordion-header ${activeAccordion === 'Seguridad' ? 'active' : ''}`}
-                                    onClick={() => toggleAccordion('Seguridad')}
-                                >
-                                    <h3>Seguridad</h3>
-                                    {activeAccordion === 'Seguridad' ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-                                </div>
-                                {activeAccordion === 'Seguridad' && (
-                                    <div className="accordion-content">
-                                        <div className="specs-grid">
-                                            <div className="spec-row">
-                                                <span className="spec-label">Frenos ABS:</span>
-                                                <span className="spec-value">{car.abs_brakes ? 'Sí' : 'No'}</span>
-                                            </div>
-                                            {car.airbags && (
-                                                <div className="spec-row">
-                                                    <span className="spec-label">Airbags:</span>
-                                                    <span className="spec-value">{car.airbags}</span>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Comfort accordion */}
-                            <div className="spec-accordion">
-                                <div
-                                    className={`accordion-header ${activeAccordion === 'Confort' ? 'active' : ''}`}
-                                    onClick={() => toggleAccordion('Confort')}
-                                >
-                                    <h3>Confort y Características</h3>
-                                    {activeAccordion === 'Confort' ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-                                </div>
-                                {activeAccordion === 'Confort' && (
-                                    <div className="accordion-content">
-                                        <div className="specs-grid">
-                                            <div className="spec-row">
-                                                <span className="spec-label">Piloto automático:</span>
-                                                <span className="spec-value">{car.cruise_control ? 'Sí' : 'No'}</span>
-                                            </div>
-                                            <div className="spec-row">
-                                                <span className="spec-label">Aire acondicionado:</span>
-                                                <span className="spec-value">{car.air_conditioning ? 'Sí' : 'No'}</span>
-                                            </div>
-                                            <div className="spec-row">
-                                                <span className="spec-label">Computadora de abordo:</span>
-                                                <span className="spec-value">{car.onboard_computer ? 'Sí' : 'No'}</span>
-                                            </div>
-                                            <div className="spec-row">
-                                                <span className="spec-label">Porta vasos:</span>
-                                                <span className="spec-value">{car.cup_holders ? 'Sí' : 'No'}</span>
-                                            </div>
-                                            {car.steering_type && (
-                                                <div className="spec-row">
-                                                    <span className="spec-label">Dirección:</span>
-                                                    <span className="spec-value">{car.steering_type}</span>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Entertainment accordion */}
-                            <div className="spec-accordion">
-                                <div
-                                    className={`accordion-header ${activeAccordion === 'Entretenimiento' ? 'active' : ''}`}
-                                    onClick={() => toggleAccordion('Entretenimiento')}
-                                >
-                                    <h3>Entretenimiento</h3>
-                                    {activeAccordion === 'Entretenimiento' ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-                                </div>
-                                {activeAccordion === 'Entretenimiento' && (
-                                    <div className="accordion-content">
-                                        <div className="specs-grid">
-                                            <div className="spec-row">
-                                                <span className="spec-label">AM/FM:</span>
-                                                <span className="spec-value">{car.am_fm_radio ? 'Sí' : 'No'}</span>
-                                            </div>
-                                            <div className="spec-row">
-                                                <span className="spec-label">Bluetooth:</span>
-                                                <span className="spec-value">{car.bluetooth ? 'Sí' : 'No'}</span>
-                                            </div>
-                                            <div className="spec-row">
-                                                <span className="spec-label">Reproductor de MP3:</span>
-                                                <span className="spec-value">{car.mp3_player ? 'Sí' : 'No'}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
+                                ))}
                             </div>
                         </section>
                     </div>
 
-                    {/* Sidebar */}
-                    <aside className="detail-sidebar">
-                        <div className="reserve-card">
-                            <div className="status-label">
-                                <span className="dot"></span>
-                                {car.status === 'disponible' && 'Disponible'}
-                                {car.status === 'apartado' && 'Apartado'}
-                                {car.status === 'vendido' && 'Vendido'}
-                            </div>
-                            <div className="car-header-info">
-                                <h1>{car.brand} {car.model} {car.year}</h1>
-                                <div className="version-info">{car.specs} • {car.km ? `${Number(car.km).toLocaleString('es-AR')} km` : '0 km'} • Córdoba Capital</div>
-                                <div className="actions">
-                                    <button><Heart size={20} /></button>
-                                    <button><Share2 size={20} /></button>
-                                </div>
-                            </div>
-
-                            <div className="pricing-info">
-                                <div className="price-row main">
-                                    <span className="price-label">Precio de contado</span>
-                                    <span className="price-value">
-                                        ${Number(car.price).toLocaleString('es-AR', { maximumFractionDigits: 0 })}
-                                        {Number(car.price) < 100000 && <span className="usd-label"> USD</span>}
-                                    </span>
-                                    <Info size={14} className="info-icon" />
-                                </div>
-                                <div className="financing-box">
-                                    <div className="price-row">
-                                        <span className="price-label">Enganche desde (20%):</span>
-                                        <span className="price-value">
-                                            ${(Number(car.price) * 0.2).toLocaleString('es-AR', { maximumFractionDigits: 0 })}
-                                            {Number(car.price) < 100000 ? ' USD' : ''}
-                                        </span>
-                                        <Info size={14} className="info-icon" />
-                                    </div>
-                                    <div className="financing-details">
-                                        Saldo financiado en hasta 72 meses <button className="btn-link" onClick={() => setIsFinancingModalOpen(true)}>Consultar</button>
+                    {/* 2. RIGHT COLUMN (Price, CTA, Credits) */}
+                    <div className="kavak-right-column">
+                        <div className="kavak-sticky-wrapper">
+                            {/* Car Header Info */}
+                            <div className="kavak-header-right">
+                                <div className="kavak-header-info">
+                                    <h1 className="kavak-model-large">
+                                        {car.brand} {car.model} {car.version} {car.year}
+                                    </h1>
+                                    <div className="kavak-meta-small">
+                                        <div className="kavak-meta-line">{Number(car.km).toLocaleString('es-AR')} km • {car.city}</div>
+                                        <div className="kavak-delivery-estimate">
+                                            <Clock size={14} /> Entrega inmediata
+                                        </div>
                                     </div>
                                 </div>
-
-                                {car.city && (
-                                    <div className="location-info">
-                                        <MapPin size={18} />
-                                        <span>Se encuentra en Córdoba Capital</span>
-                                    </div>
-                                )}
-
-                                <div className="delivery-info">
-                                    <RotateCcw size={18} />
-                                    <span>Garantía de 3 meses de caja y motor</span>
+                                <div className="kavak-header-actions">
+                                    <button className="kavak-action-btn" onClick={handleShare}><Share2 size={20} /></button>
+                                    <button
+                                        className={`kavak-action-btn ${isFavorite ? 'favorite' : ''}`}
+                                        onClick={() => setIsFavorite(!isFavorite)}
+                                    >
+                                        <Heart size={20} fill={isFavorite ? '#E74C3C' : 'none'} />
+                                    </button>
                                 </div>
                             </div>
 
+                            {/* Price Boxes Section */}
+                            <div className="kavak-price-section">
+                                <div className="kavak-price-box regular">
+                                    <div className="kavak-price-box-label">Precio regular</div>
+                                    <div className="kavak-price-box-amount">
+                                        ${Number(car.price).toLocaleString('es-AR')}
+                                        <button className="kavak-info-icon-btn"><Check size={14} /></button>
+                                    </div>
+                                </div>
+
+                                <div className="kavak-price-box credit">
+                                    <div className="kavak-price-box-label">Llevatelo hoy por tan solo:</div>
+                                    <div className="kavak-price-box-amount">
+                                        ${(Number(car.price) * 0.20).toLocaleString('es-AR')}
+                                        <button className="kavak-info-icon-btn"><Check size={14} /></button>
+                                    </div>
+                                    <div className="kavak-credit-installment-row promo-highlight">
+                                        <span className="kavak-installment-text">100% FINANCIADO SOLO POR {
+                                            ["ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO",
+                                                "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"][new Date().getMonth()]
+                                        }</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Trade-in Box */}
+                            <div className="kavak-tradein-box">
+                                <div className="kavak-tradein-header">
+                                    <div className="kavak-tradein-title">Aceptamos autos en forma de pago, llave por llave</div>
+                                    <button className="kavak-quote-btn" onClick={() => setIsQuoteModalOpen(true)}>
+                                        <Check size={14} /> Mandanos tu auto
+                                    </button>
+                                </div>
+                                <p className="kavak-tradein-desc">
+                                    Cotiza para conocer el valor de tu auto y úsalo como parte de pago.
+                                </p>
+                            </div>
+
+                            {/* Main CTA Button */}
                             <button
-                                className="btn-reserve"
-                                disabled={car.status !== 'disponible'}
+                                className="kavak-main-cta blue-btn"
                                 onClick={() => setIsFinancingModalOpen(true)}
                             >
-                                {car.status === 'disponible' && 'Elegi Tu Cuota'}
-                                {car.status === 'apartado' && 'Auto Apartado'}
-                                {car.status === 'vendido' && 'Auto Vendido'}
+                                Calcular cuota
                             </button>
 
-                            <div className="dynamic-financing-promo" style={{
-                                marginTop: '16px',
-                                textAlign: 'center',
-                                color: '#0066FF',
-                                fontWeight: '600',
-                                fontSize: '0.9rem'
-                            }}>
-                                {`Solo por ${new Intl.DateTimeFormat('es-ES', { month: 'long' }).format(new Date()).charAt(0).toUpperCase() + new Intl.DateTimeFormat('es-ES', { month: 'long' }).format(new Date()).slice(1)} Financia hasta el 100%`}
+                            {/* Right Column Specs List */}
+                            <div className="kavak-specs-list">
+                                <div className="kavak-spec-list-item">
+                                    <div className="kavak-spec-list-left">
+                                        <span className="kavak-spec-list-label">Año</span>
+                                        <span className="kavak-spec-list-value">{car.year}</span>
+                                    </div>
+                                </div>
+                                <div className="kavak-spec-list-item">
+                                    <div className="kavak-spec-list-left">
+                                        <span className="kavak-spec-list-label">Versión</span>
+                                        <span className="kavak-spec-list-value">{car.version || car.model?.toUpperCase()}</span>
+                                    </div>
+                                </div>
+                                <div className="kavak-spec-list-item">
+                                    <div className="kavak-spec-list-left">
+                                        <span className="kavak-spec-list-label">Transmisión</span>
+                                        <span className="kavak-spec-list-value">{car.transmission === 'automatico' ? 'Automático' : 'Manual'}</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </aside>
+                    </div>
                 </div>
-            </div>
 
-            <div className="bottom-cta-banner">
-                <div className="container">
-                    <div className="cta-content">
-                        <h3>Paga tu auto a plazos de hasta 72 meses</h3>
-                        <p>Con tasas competitivas y aprobación en minutos.</p>
-                        <button className="btn-primary-alt">Analiza tu préstamo</button>
+                {/* Guarantees Banner */}
+                <section className="kavak-guarantees-banner">
+                    <div className="kavak-guarantee-item">
+                        <Shield size={32} />
+                        <div className="kavak-guarantee-content">
+                            <strong>Inspección Total Certificada</strong>
+                            <p>Cada vehículo pasa por una revisión técnica exhaustiva antes de la entrega.</p>
+                        </div>
                     </div>
-                    <div className="cta-image">
-                        <div className="mock-image"></div>
+                    <div className="kavak-guarantee-item">
+                        <RotateCcw size={32} />
+                        <div className="kavak-guarantee-content">
+                            <strong>Garantía Mecánica</strong>
+                            <p>Cobertura de 3 meses en motor y caja de cambios para tu tranquilidad.</p>
+                        </div>
                     </div>
-                </div>
+                    <div className="kavak-guarantee-item">
+                        <Clock size={32} />
+                        <div className="kavak-guarantee-content">
+                            <strong>Test Drive y Soporte</strong>
+                            <p>Prueba el auto antes de comprarlo y cuenta con atención de lunes a viernes.</p>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Financing Promotion */}
+                <section className="kavak-financing-promo">
+                    <div className="kavak-promo-content">
+                        <h3>¿Necesitas un financiamiento?</h3>
+                        <p>Obtén las mejores tasas del mercado con nuestros bancos aliados</p>
+                        <button className="kavak-promo-btn" onClick={() => setIsFinancingModalOpen(true)}>
+                            SIMULAR CRÉDITO
+                        </button>
+                    </div>
+                </section>
+
+                {/* Similar Vehicles Grid */}
+                {similarCars.length > 0 && (
+                    <section className="kavak-similar-section">
+                        <h2 className="kavak-similar-title">Vehículos similares</h2>
+                        <div className="kavak-similar-grid">
+                            {similarCars.map(similarCar => (
+                                <Link
+                                    key={similarCar.id}
+                                    to={`/car/${similarCar.id}`}
+                                    className="kavak-similar-card"
+                                >
+                                    <img
+                                        src={getImageUrl(similarCar.images?.[0])}
+                                        alt={`${similarCar.brand} ${similarCar.model}`}
+                                        className="kavak-similar-img"
+                                    />
+                                    <div className="kavak-similar-info">
+                                        <h3 className="kavak-similar-name">
+                                            {similarCar.brand} {similarCar.model}
+                                        </h3>
+                                        <p className="kavak-similar-specs">
+                                            {similarCar.year} • {Number(similarCar.km).toLocaleString('es-AR')} km
+                                        </p>
+                                        <p className="kavak-similar-location">
+                                            <MapPin size={14} /> {similarCar.city || 'Córdoba Capital'}
+                                        </p>
+                                        <div className="kavak-similar-price">
+                                            ${Number(similarCar.price).toLocaleString('es-AR')}
+                                        </div>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    </section>
+                )}
             </div>
 
             <FinancingModal
@@ -564,7 +473,11 @@ const CarDetail = () => {
                 onClose={() => setIsFinancingModalOpen(false)}
                 car={car}
             />
-        </div>
+            <QuoteModal
+                isOpen={isQuoteModalOpen}
+                onClose={() => setIsQuoteModalOpen(false)}
+            />
+        </div >
     );
 };
 

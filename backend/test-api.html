@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Test API Connection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        #result {
+            background: #f4f4f4;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .success {
+            color: green;
+        }
+
+        .error {
+            color: red;
+        }
+
+        button {
+            background: #0066FF;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Test API Connection</h1>
+    <button onclick="testAPI()">Test API</button>
+    <div id="result"></div>
+
+    <script>
+        async function testAPI() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<p>Loading...</p>';
+
+            try {
+                const response = await fetch('http://localhost:8000/api/cars.php');
+                const data = await response.json();
+
+                if (data.success && data.data && data.data.length > 0) {
+                    resultDiv.innerHTML = `
+                        <h2 class="success">✅ API Connection Successful!</h2>
+                        <p><strong>Total cars:</strong> ${data.data.length}</p>
+                        <p><strong>Sample car:</strong></p>
+                        <pre>${JSON.stringify(data.data[0], null, 2).substring(0, 500)}...</pre>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <h2 class="error">❌ API returned no data</h2>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <h2 class="error">❌ Error connecting to API</h2>
+                    <p>${error.message}</p>
+                    <p>Make sure PHP server is running on port 8000</p>
+                `;
+            }
+        }
+
+        // Auto-test on load
+        window.addEventListener('load', testAPI);
+    </script>
+</body>
+
+</html>

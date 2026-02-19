@@ -26,17 +26,37 @@ const BrandGrid = () => {
         <section className="brand-grid-section">
             <div className="container">
                 <h2 className="section-title-types">Explora por tipo de auto</h2>
-                <div className="types-grid-single-line">
-                    {types.map((type) => (
-                        <Link to={`/catalogo?type=${type.id}`} key={type.id} className="type-item">
-                            <div className="type-card">
-                                <div className="type-image-box">
-                                    <img src={type.img} alt={type.name} />
-                                </div>
-                                <span className="type-label">{type.name}</span>
-                            </div>
-                        </Link>
-                    ))}
+
+                {/* Desktop: normal grid | Mobile: marquee wrapper */}
+                <div className="types-carousel-outer">
+                    <div className="types-carousel-track">
+                        {/* First set */}
+                        <div className="types-grid-single-line">
+                            {types.map((type) => (
+                                <Link to={`/catalogo?type=${type.id}`} key={type.id} className="type-item">
+                                    <div className="type-card">
+                                        <div className="type-image-box">
+                                            <img src={type.img} alt={type.name} />
+                                        </div>
+                                        <span className="type-label">{type.name}</span>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                        {/* Duplicate for seamless mobile loop */}
+                        <div className="types-grid-single-line" aria-hidden="true">
+                            {types.map((type) => (
+                                <Link to={`/catalogo?type=${type.id}`} key={`dup-${type.id}`} className="type-item" tabIndex="-1">
+                                    <div className="type-card">
+                                        <div className="type-image-box">
+                                            <img src={type.img} alt="" />
+                                        </div>
+                                        <span className="type-label">{type.name}</span>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

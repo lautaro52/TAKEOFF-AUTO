@@ -9,19 +9,26 @@
     position: relative;
 }
 
-/* Brand Logo - Top Right Corner */
+/* Brand Logo - Subtle Background Watermark */
 .brand-logo-corner {
     position: absolute;
-    top: 0;
-    right: 20px;
-    z-index: 5;
+    top: -45px;
+    /* Higher up to avoid title overlap */
+    right: 15px;
+    z-index: 1;
+    /* Move behind titles */
+    opacity: 0.12;
+    /* More subtle watermark */
+    pointer-events: none;
+    user-select: none;
 }
 
 .brand-logo-corner .brand-text {
-    font-size: 60px;
+    font-size: 85px;
+    /* Slightly larger as watermark */
     font-weight: 900;
     font-family: 'Arial Black', sans-serif;
-    color: #1a1a1a;
+    color: #000;
     letter-spacing: 2px;
 }
 
@@ -30,7 +37,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 40px;
+    margin-bottom: 50px;
+    /* Increased spacing to clear the watermark */
+    position: relative;
+    z-index: 2;
+    /* Ensure title is above watermark */
 }
 
 .carousel-title {
@@ -60,11 +71,12 @@
 
 .carousel-track {
     display: flex;
-    transition: transform 0.5s ease-in-out;
+    /* Elegant and fluid transition */
+    transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
 .carousel-card {
-    min-width: calc(100% / 3);
+    /* min-width is now handled in JS for responsiveness */
     padding: 0 15px;
     box-sizing: border-box;
 }

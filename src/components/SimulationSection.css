@@ -46,20 +46,22 @@
 
 .btn-simular-primary {
     display: inline-block;
-    background-color: #2161f2;
+    background: linear-gradient(135deg, #2161f2 0%, #0046e5 100%);
     color: #ffffff;
-    padding: 14px 40px;
-    border-radius: 8px;
+    padding: 16px 45px;
+    border-radius: 50px;
     font-weight: 700;
     font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(33, 97, 242, 0.25);
+    box-shadow: 0 8px 25px rgba(33, 97, 242, 0.3);
 }
 
 .btn-simular-primary:hover {
-    background-color: #1651d2;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(33, 97, 242, 0.35);
+    background: linear-gradient(135deg, #1651d2 0%, #0037b3 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(33, 97, 242, 0.45);
 }
 
 .financier-logos {
@@ -272,5 +274,92 @@
 
     .preview-amount {
         font-size: 2.25rem;
+    }
+}
+
+/* ─── Financier logos carousel (shared base) ─── */
+
+.financier-carousel-outer {
+    margin-top: 40px;
+    width: 100%;
+}
+
+.financier-carousel-track {
+    display: flex;
+    align-items: center;
+}
+
+.financier-carousel-set {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    /* desktop: can wrap */
+}
+
+/* Hide the duplicate set on desktop */
+.financier-carousel-set[aria-hidden="true"] {
+    display: none;
+}
+
+.financier-carousel-set img {
+    height: 30px;
+    width: auto;
+    filter: grayscale(100%);
+    opacity: 0.6;
+    transition: all 0.4s ease;
+    object-fit: contain;
+}
+
+.financier-carousel-set img:hover {
+    filter: grayscale(0%);
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* ─── Mobile: infinite marquee ─── */
+@keyframes marquee-scroll {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+@media (max-width: 768px) {
+    .financier-carousel-outer {
+        margin-top: 24px;
+        overflow: hidden;
+        /* clip on mobile */
+        -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+        mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+    }
+
+    .financier-carousel-track {
+        flex-wrap: nowrap;
+        width: max-content;
+        animation: marquee-scroll 8s linear infinite;
+    }
+
+    .financier-carousel-track:hover {
+        animation-play-state: paused;
+    }
+
+    /* Show duplicate set on mobile */
+    .financier-carousel-set[aria-hidden="true"] {
+        display: flex !important;
+    }
+
+    .financier-carousel-set {
+        flex-wrap: nowrap;
+        gap: 36px;
+        padding-right: 36px;
+    }
+
+    .financier-carousel-set img {
+        height: 28px;
+        flex-shrink: 0;
     }
 }

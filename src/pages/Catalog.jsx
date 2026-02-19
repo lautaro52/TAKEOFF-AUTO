@@ -76,6 +76,7 @@ const Catalog = () => {
     const [selectedTransmission, setSelectedTransmission] = useState([]);
     const [selectedColors, setSelectedColors] = useState([]);
     const [searchBrand, setSearchBrand] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
     const [sortBy, setSortBy] = useState('recent');
 
     // Collapsible sections state
@@ -156,18 +157,21 @@ const Catalog = () => {
                 if (!selectedTransmission.includes(normalizedTrans)) return false;
             }
 
-            // Color filter
-            if (selectedColors.length > 0) {
-                const rawColor = car.color?.toLowerCase() || '';
-                const normalizedColor = COLOR_MAPPING[rawColor] || rawColor;
+            // Search query filter
+            if (searchQuery) {
+                const query = searchQuery.toLowerCase();
+                const brand = car.brand?.toLowerCase() || '';
+                const model = car.model?.toLowerCase() || '';
+                const specs = car.specs?.toLowerCase() || '';
 
-                // Check if any of the selected colors match the normalized color
-                if (!selectedColors.includes(normalizedColor)) return false;
+                if (!brand.includes(query) && !model.includes(query) && !specs.includes(query)) {
+                    return false;
+                }
             }
 
             return true;
         });
-    }, [cars, priceMin, priceMax, selectedBrands, selectedType, selectedTransmission, selectedColors]);
+    }, [cars, priceMin, priceMax, selectedBrands, selectedType, selectedTransmission, selectedColors, searchQuery]);
 
     // Sorted cars based on selected sort option
     const sortedCars = useMemo(() => {
@@ -226,7 +230,7 @@ const Catalog = () => {
         const debounceTimer = setTimeout(trackFilters, 2000);
 
         return () => clearTimeout(debounceTimer);
-    }, [priceMin, priceMax, selectedBrands, selectedType, selectedTransmission, selectedColors]);
+    }, [priceMin, priceMax, selectedBrands, selectedType, selectedTransmission, selectedColors, searchQuery]);
 
     const toggleBrand = (brand) => {
         setSelectedBrands(prev =>
@@ -348,6 +352,8 @@ const Catalog = () => {
                             type="text"
                             placeholder="Busca un auto"
                             className="sidebar-search"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
                         />
                     </div>
 

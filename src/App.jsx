@@ -22,6 +22,7 @@ import OpportunityPipeline from './pages/crm/OpportunityPipeline'
 import CRMAnalytics from './pages/crm/CRMAnalytics'
 import ActivityTimeline from './pages/crm/ActivityTimeline'
 import TasksBoard from './pages/crm/TasksBoard'
+import Nosotros from './pages/Nosotros'
 import Footer from './components/Footer'
 import Chatbot from './components/Chatbot'
 import './index.css'
@@ -52,6 +53,9 @@ function App() {
               {/* Rutas de Vendedores */}
               <Route path="/vendedor/dashboard" element={<SellerDashboard />} />
 
+              {/* Rutas de Nosotros */}
+              <Route path="/nosotros" element={<Nosotros />} />
+
               {/* Rutas de CRM - Protegidas */}
               <Route path="/crm" element={
                 <ProtectedRoute>
@@ -73,7 +77,8 @@ function App() {
           <Chatbot />
         </div>
       </Router>
-      )
+    </AuthProvider>
+  )
 }
 
-      export default App
+export default App

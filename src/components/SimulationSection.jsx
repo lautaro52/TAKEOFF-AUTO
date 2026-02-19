@@ -57,19 +57,33 @@ const SimulationSection = ({ minArsPrice, onCalculate }) => {
             <div className="container">
                 <div className="simulation-wrapper-static">
                     <div className="simulation-left-content">
-                        <h2>Paga tu próximo auto a meses</h2>
+                        <h2>Paga tu proximo auto en cuotas</h2>
                         <p>Arma tu presupuesto en solo 1 minuto</p>
                         <Link to="/catalogo" className="btn-simular-primary">
                             Ver autos.
                         </Link>
 
-                        <div className="financier-logos">
-                            <img src="/assets/logos/santander.png" alt="Santander Rio" title="Santander Rio" />
-                            <img src="/assets/logos/galicia.png" alt="Banco Galicia" title="Banco Galicia" />
-                            <img src="/assets/logos/bancor.png" alt="Bancor" title="Bancor" />
-                            <img src="/assets/logos/bna.png" alt="Banco Nación" title="Banco Nación" />
-                            <img src="/assets/logos/fiat.png" alt="Fiat" title="Fiat" />
-                            <img src="/assets/logos/jeep.png" alt="Jeep" title="Jeep" />
+                        <div className="financier-carousel-outer">
+                            <div className="financier-carousel-track">
+                                {/* First copy */}
+                                <div className="financier-carousel-set">
+                                    <img src="/assets/logos/santander.png" alt="Santander Rio" title="Santander Rio" />
+                                    <img src="/assets/logos/galicia.png" alt="Banco Galicia" title="Banco Galicia" />
+                                    <img src="/assets/logos/bancor.png" alt="Bancor" title="Bancor" />
+                                    <img src="/assets/logos/bna.png" alt="Banco Nación" title="Banco Nación" />
+                                    <img src="/assets/logos/fiat.png" alt="Fiat" title="Fiat" />
+                                    <img src="/assets/logos/jeep.png" alt="Jeep" title="Jeep" />
+                                </div>
+                                {/* Duplicate for seamless loop */}
+                                <div className="financier-carousel-set" aria-hidden="true">
+                                    <img src="/assets/logos/santander.png" alt="Santander Rio" title="Santander Rio" />
+                                    <img src="/assets/logos/galicia.png" alt="Banco Galicia" title="Banco Galicia" />
+                                    <img src="/assets/logos/bancor.png" alt="Bancor" title="Bancor" />
+                                    <img src="/assets/logos/bna.png" alt="Banco Nación" title="Banco Nación" />
+                                    <img src="/assets/logos/fiat.png" alt="Fiat" title="Fiat" />
+                                    <img src="/assets/logos/jeep.png" alt="Jeep" title="Jeep" />
+                                </div>
+                            </div>
                         </div>
                     </div>
 

@@ -1,484 +1,894 @@
-.car-detail-page {
-    padding-top: 100px;
-    background-color: #fff;
+/* ==========================================================================
+   KAVAK CAR DETAIL PAGE - HIGH FIDELITY CLONE
+   ========================================================================== */
+
+:root {
+    --kavak-blue: #0040C1;
+    --kavak-blue-dark: #003091;
+    --kavak-blue-light: #EBF2FF;
+    --text-primary: #1A1A1A;
+    --text-secondary: #666666;
+    --text-tertiary: #999999;
+    --bg-white: #FFFFFF;
+    --bg-gray-soft: #F5F5F5;
+    --bg-gray-lighter: #FAFAFA;
+    --border-gray: #E0E0E0;
+    --border-soft: #EFEFEF;
+    --success-green: #00A859;
+    --promo-orange: #FF6B00;
+    --whatsapp-green: #25D366;
 }
 
-.breadcrumbs {
+/* Global Page Styles */
+.kavak-car-detail {
+    background-color: #ffffff;
+    padding-top: 0;
+    /* Tight alignment with header */
+    min-height: 100vh;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Responsive Utils */
+.desktop-only {
+    display: block !important;
+}
+
+.mobile-only {
+    display: none !important;
+}
+
+@media (max-width: 767px) {
+    .desktop-only {
+        display: none !important;
+    }
+
+    .mobile-only {
+        display: block !important;
+    }
+}
+
+/* Global Container Adjustment */
+.kavak-container.no-padding-top {
+    padding-top: 0 !important;
+}
+
+/* Unified Search Bar Style */
+.kavak-search-bar-container {
+    position: relative;
+    max-width: 1162px;
+    margin: 65px auto 24px auto;
+    padding: 12px 20px;
+    /* Aligned with container padding */
+    z-index: 1000;
+}
+
+.kavak-search-input-wrapper {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 0.85rem;
-    color: var(--text-light);
-    margin-bottom: 24px;
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 12px 16px;
+    gap: 12px;
+    transition: all 0.3s ease;
 }
 
-.breadcrumbs a {
-    color: var(--primary-blue);
+.kavak-search-input-wrapper:focus-within {
+    border-color: #316be2;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(49, 107, 226, 0.1);
 }
 
-.detail-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 380px;
-    gap: 40px;
-    margin-bottom: 80px;
-    align-items: start;
+.kavak-search-input-wrapper .kavak-search-icon {
+    color: #666;
 }
 
-/* Gallery Section */
-.gallery-section {
-    position: relative;
-    margin-bottom: 32px;
+.kavak-search-input-wrapper input {
+    border: none;
+    background: transparent;
+    width: 100%;
+    font-size: 16px;
+    outline: none;
+    color: #333;
 }
 
-.main-image-container {
-    position: relative;
-    background: var(--secondary-grey);
-    border-radius: var(--radius-md);
-    aspect-ratio: 16/9;
+/* Search Results Dropdown */
+.kavak-search-results {
+    position: absolute;
+    top: 100%;
+    left: 20px;
+    right: 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    margin-top: 4px;
     overflow: hidden;
+    z-index: 1001;
+    border: 1px solid #eee;
+}
+
+.kavak-search-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    gap: 12px;
+    text-decoration: none;
+    color: inherit;
+    border-bottom: 1px solid #f5f5f5;
+    transition: background 0.2s;
+}
+
+.kavak-search-item:last-child {
+    border-bottom: none;
+}
+
+.kavak-search-item:hover,
+.kavak-search-item:active {
+    background: #f0f4ff;
+}
+
+.kavak-search-item-thumb {
+    width: 60px;
+    height: 45px;
+    border-radius: 6px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.kavak-search-item-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.kavak-search-item-info {
+    flex: 1;
+}
+
+.kavak-search-item-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 2px;
+}
+
+.kavak-search-item-meta {
+    font-size: 12px;
+    color: #888;
+}
+
+.kavak-search-arrow {
+    color: #ccc;
+    flex-shrink: 0;
+}
+
+.kavak-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+
+/* Breadcrumbs */
+.kavak-breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin: 16px 0;
+    text-transform: uppercase;
+}
+
+.kavak-breadcrumbs a {
+    color: var(--kavak-blue);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* Main Grid Structure */
+.kavak-detail-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+@media (min-width: 768px) {
+    .kavak-detail-grid {
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 32px !important;
+        align-items: flex-start !important;
+        justify-content: center !important;
+    }
+}
+
+/* Gallery (Left Top) */
+.kavak-gallery-top {
+    order: 1;
+    /* First on mobile */
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .kavak-gallery-top {
+        flex: 1 !important;
+        max-width: 750px !important;
+        /* Cap the width so it doesn't get huge */
+    }
+}
+
+.kavak-gallery-main-v2 {
+    position: relative;
+    width: 100% !important;
+    aspect-ratio: 16/9;
+    /* Back to wider format for better fit */
+    background-color: #f7f7f7;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 16px;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+@media (min-width: 768px) {
+    .kavak-gallery-main-v2 {
+        height: 480px !important;
+        /* Fixed height on desktop for better control */
+        aspect-ratio: auto !important;
+    }
+}
+
+.kavak-main-image {
+    width: 100% !important;
+    /* Prevent from touching edges */
+    height: 100% !important;
+    object-fit: contain !important;
+    /* Use contain to see whole car, but fill the 100% area */
+    display: block;
+    margin: 0 auto;
+    transition: transform 0.3s ease;
+}
+
+.kavak-gallery-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    transition: all 0.2s ease;
 }
 
-.main-image-container img {
+.kavak-gallery-nav:hover {
+    background: #fff;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.kavak-gallery-nav.prev {
+    left: 20px;
+}
+
+.kavak-gallery-nav.next {
+    right: 20px;
+}
+
+.kavak-gallery-thumbnails {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 4px 0;
+    scrollbar-width: thin;
+}
+
+.kavak-thumbnail {
+    flex: 0 0 100px;
+    height: 70px;
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid transparent;
+    opacity: 0.6;
+    transition: all 0.2s ease;
+}
+
+.kavak-thumbnail.active {
+    border-color: var(--kavak-blue);
+    opacity: 1;
+}
+
+.kavak-thumbnail img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
-    padding: 20px;
+    object-fit: cover;
 }
 
-.badge-reacondicionado {
-    position: absolute;
-    top: 16px;
-    left: 16px;
-    background: #e6f7ef;
-    color: #008a4e;
-    padding: 4px 12px;
-    border-radius: 4px;
-    font-size: 0.75rem;
-    font-weight: 600;
+/* Right Column (Pricing) */
+.kavak-right-column {
+    order: 2;
+    /* Second on mobile */
+}
+
+@media (min-width: 768px) {
+    .kavak-right-column {
+        width: 380px !important;
+        flex-shrink: 0 !important;
+    }
+}
+
+.kavak-sticky-wrapper {
+    position: sticky;
+    top: 80px;
+}
+
+.kavak-header-right {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.kavak-model-large {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a1a;
+    line-height: 1.3;
+    margin-bottom: 4px;
+}
+
+.kavak-meta-small {
+    font-size: 13px;
+    color: #666;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    margin-top: 4px;
+}
+
+.kavak-meta-line {
+    font-size: 14px;
+    color: #444;
+}
+
+.kavak-delivery-estimate {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #27ae60;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.kavak-header-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.kavak-action-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--kavak-blue);
+}
+
+.kavak-price-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.kavak-price-box {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.kavak-price-box-label {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.kavak-price-box-amount {
+    font-size: 24px;
+    font-weight: 800;
+    color: #1a1a1a;
     display: flex;
     align-items: center;
     gap: 6px;
 }
 
-.gallery-controls {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    transform: translateY(-50%);
-    display: flex;
-    justify-content: space-between;
-    padding: 0 16px;
-}
-
-.btn-gallery-nav {
-    width: 40px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.9);
+.kavak-info-icon-btn {
+    background: #eee;
+    color: var(--kavak-blue);
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    color: var(--text-dark);
-}
-
-.thumbnail-slider-container {
-    margin-top: 16px;
-    position: relative;
-    width: 100%;
-    overflow: hidden;
-}
-
-.thumbnail-slider {
-    display: flex;
-    gap: 12px;
-    overflow-x: auto;
-    padding: 8px 0;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-}
-
-.thumbnail-slider::-webkit-scrollbar {
-    display: none;
-    /* Hide scrollbar to use our bar */
-}
-
-.gallery-indicator-bar-container {
-    margin-top: 20px;
-    padding: 0 4px;
-}
-
-.gallery-indicator-bar {
-    position: relative;
-    height: 4px;
-    background: #e5e8ed;
-    border-radius: 2px;
-    width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
-    overflow: hidden;
-}
-
-.indicator-active {
-    position: absolute;
-    top: 0;
-    height: 100%;
-    background: var(--primary-blue);
-    border-radius: 2px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.thumb {
-    flex: 0 0 auto;
-    /* Allow auto width or fixed width */
-    width: 140px;
-    background: var(--secondary-grey);
-    border-radius: var(--radius-sm);
-    aspect-ratio: 3/2;
-    overflow: hidden;
-    cursor: pointer;
-    border: 3px solid transparent;
-    transition: all 0.3s ease;
-    opacity: 0.7;
-}
-
-.thumb.active {
-    border-color: var(--primary-blue);
-    opacity: 1;
-    transform: scale(1.05);
-}
-
-.thumb img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    /* Cover for a cleaner ribbon look */
-}
-
-/* Sidebar Styling */
-.reserve-card {
-    position: sticky;
-    top: 100px;
-    background: #fff;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    padding: 24px;
-    box-shadow: var(--shadow-medium);
-}
-
-.status-label {
     display: flex;
     align-items: center;
-    gap: 8px;
-    color: #008a4e;
-    font-size: 0.85rem;
+    justify-content: center;
+    border: none;
+}
+
+.kavak-price-box.credit {
+    border: 1px solid #f0f4ff;
+}
+
+.kavak-credit-installment-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    padding: 8px 12px;
+    background: #f8faff;
+    border-radius: 4px;
+}
+
+.kavak-installment-text {
+    font-size: 14px;
+    color: #1a1a1a;
+}
+
+.kavak-edit-btn {
+    background: #eff4ff;
+    color: var(--kavak-blue);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    border: none;
+    cursor: pointer;
+}
+
+.kavak-simulate-link {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--kavak-blue);
+    font-size: 14px;
     font-weight: 600;
+    margin-top: 16px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.kavak-tradein-box {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 16px;
     margin-bottom: 16px;
 }
 
-.dot {
-    width: 8px;
-    height: 8px;
-    background: #008a4e;
-    border-radius: 50%;
+.kavak-tradein-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
 }
 
-.car-header-info h1 {
-    font-size: 1.5rem;
+.kavak-tradein-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+.kavak-quote-btn {
+    background: transparent;
+    border: 1px solid var(--kavak-blue);
+    color: var(--kavak-blue);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+}
+
+.kavak-tradein-desc {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.4;
+}
+
+.kavak-main-cta.blue-btn {
+    width: 100%;
+    background: var(--kavak-blue);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 24px;
+}
+
+.kavak-specs-list {
+    border-top: 1px solid #eee;
+}
+
+.kavak-spec-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.kavak-spec-list-left {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.kavak-spec-list-label {
+    font-size: 12px;
+    color: #666;
+}
+
+.kavak-spec-list-value {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+.kavak-spec-list-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #999;
+}
+
+.kavak-spec-tag {
+    background: #f0f0f0;
+    color: #666;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 10px;
+}
+
+/* Left Column (Details) */
+.kavak-left-column {
+    order: 3;
+    /* Third on mobile */
+}
+
+@media (min-width: 768px) {
+    .kavak-left-column {
+        grid-column: 1;
+        grid-row: 2;
+    }
+}
+
+.kavak-section {
+    padding-bottom: 40px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 40px;
+}
+
+.kavak-section:last-child {
+    border-bottom: none;
+}
+
+.kavak-section-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: #1a1a1a;
+    margin-bottom: 24px;
+}
+
+.kavak-specs-main-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+@media (min-width: 768px) {
+    .kavak-specs-main-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.kavak-spec-item {
+    background: #fff;
+    border: 1px solid #efefef;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+}
+
+.kavak-spec-icon {
+    color: var(--kavak-blue);
+    width: 24px;
+    height: 24px;
+}
+
+.kavak-spec-value {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+.kavak-spec-label {
+    font-size: 13px;
+    color: #666;
+}
+
+.kavak-year-display {
+    background: #f8f9fa;
+    padding: 40px;
+    border-radius: 16px;
+    text-align: center;
+}
+
+.kavak-year-value {
+    font-size: 64px;
+    font-weight: 900;
+    color: #1a1a1a;
+    line-height: 1;
+}
+
+.kavak-year-text {
+    font-size: 18px;
+    color: #666;
+    margin-top: 8px;
+}
+
+.kavak-features-checklist {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.kavak-feature-check {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+    color: #444;
+}
+
+.kavak-check-blue {
+    color: var(--kavak-blue);
+    flex-shrink: 0;
+}
+
+/* Bottom Sections */
+.kavak-guarantees-banner {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    background: #e7efff;
+    padding: 40px;
+    border-radius: 16px;
+    margin: 40px 0;
+}
+
+.kavak-guarantee-item {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.kavak-guarantee-item svg {
+    color: var(--kavak-blue);
+    flex-shrink: 0;
+}
+
+.kavak-guarantee-content strong {
+    display: block;
+    font-size: 16px;
+    color: #1a1a1a;
     margin-bottom: 4px;
 }
 
-.version-info {
-    color: var(--text-medium);
-    font-size: 0.9rem;
-    margin-bottom: 16px;
+.kavak-guarantee-content p {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
 }
 
-.actions {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 24px;
-}
-
-.actions button {
-    width: 40px;
-    height: 40px;
-    border: 1px solid var(--border-color);
-    border-radius: 50%;
-    color: var(--text-medium);
-}
-
-.pricing-info {
-    border-top: 1px solid var(--border-color);
-    padding-top: 24px;
-}
-
-.price-row {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-    margin-bottom: 8px;
-}
-
-.price-label {
-    font-size: 0.85rem;
-    color: var(--text-medium);
-    flex: 1;
-}
-
-.price-value {
-    font-size: 1.25rem;
-    font-weight: 800;
-}
-
-.price-row.main .price-value {
-    font-size: 1.75rem;
-}
-
-.info-icon {
-    color: var(--text-light);
-    cursor: help;
-}
-
-.financing-box {
-    background: #f8faff;
-    border: 1px solid #d0e1ff;
-    border-radius: var(--radius-sm);
-    padding: 16px;
-    margin-bottom: 24px;
-}
-
-.financing-details {
-    font-size: 0.8rem;
-    color: var(--text-medium);
-    margin-top: 4px;
-}
-
-.btn-link {
-    color: var(--primary-blue);
-    font-weight: 600;
-    font-size: 0.8rem;
-    padding-left: 4px;
-}
-
-.location-info,
-.delivery-info {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 0.85rem;
-    color: var(--text-medium);
-    margin-bottom: 16px;
-}
-
-.btn-reserve {
-    width: 100%;
-    background: var(--primary-blue);
+.kavak-financing-promo {
+    background: linear-gradient(135deg, #0040c1 0%, #002b85 100%);
     color: #fff;
-    padding: 16px;
-    border-radius: var(--radius-pill);
+    padding: 60px;
+    border-radius: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 60px;
+}
+
+.kavak-promo-content h3 {
+    font-size: 32px;
+    font-weight: 900;
+    margin-bottom: 12px;
+}
+
+.kavak-promo-content p {
+    font-size: 18px;
+    opacity: 0.9;
+    margin-bottom: 32px;
+}
+
+.kavak-promo-btn {
+    background: #fff;
+    color: var(--kavak-blue);
+    border: none;
+    padding: 16px 32px;
+    border-radius: 8px;
+    font-size: 16px;
     font-weight: 700;
-    font-size: 1rem;
-    margin-top: 16px;
+    cursor: pointer;
 }
 
-/* Main Content Sections */
-.detail-section {
-    margin-top: 48px;
+.kavak-similar-section {
+    margin-bottom: 80px;
 }
 
-.section-title-alt {
-    font-size: 1.25rem;
-    margin-bottom: 24px;
+.kavak-similar-title {
+    font-size: 28px;
+    font-weight: 900;
+    color: #1a1a1a;
+    margin-bottom: 32px;
 }
 
-.quick-specs-grid {
+.kavak-similar-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 24px;
 }
 
-.spec-item {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-.spec-item svg {
-    color: var(--primary-blue);
-}
-
-.spec-label {
-    display: block;
-    font-size: 0.75rem;
-    color: var(--text-light);
-}
-
-.spec-value {
-    font-weight: 600;
-    font-size: 1rem;
-}
-
-.guarantees-banner {
-    background: #f8f9fa;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    padding: 24px;
-    margin-top: 24px;
-}
-
-/*Spec Accordions */
-.spec-accordion {
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-sm);
-    margin-bottom: 16px;
+.kavak-similar-card {
+    background: #fff;
+    border: 1px solid #efefef;
+    border-radius: 12px;
     overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none;
 }
 
-.spec-accordion .accordion-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 24px;
-    background: #fff;
-    cursor: pointer;
-    transition: background 0.2s ease;
-    border: none;
+.kavak-similar-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+.kavak-similar-img {
     width: 100%;
+    height: 180px;
+    object-fit: cover;
 }
 
-.spec-accordion .accordion-header:hover {
-    background: #f8f9fa;
+.kavak-similar-info {
+    padding: 20px;
 }
 
-.spec-accordion .accordion-header.active {
-    background: #f0f4ff;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.spec-accordion .accordion-header h3 {
-    margin: 0;
-    font-size: 1.05rem;
-    font-weight: 600;
-    color: var(--text-dark);
-}
-
-.spec-accordion .accordion-header svg {
-    color: var(--primary-blue);
-    transition: transform 0.3s ease;
-}
-
-.accordion-content {
-    padding: 24px;
-    background: #fafbfc;
-    animation: slideDown 0.3s ease-out;
-}
-
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.specs-grid {
-    display: grid;
-    gap: 16px;
-}
-
-.spec-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 16px;
-    background: #fff;
-    border-radius: var(--radius-sm);
-    border: 1px solid #e5e8ed;
-}
-
-.spec-row .spec-label {
-    font-weight: 500;
-    color: var(--text-medium);
-    font-size: 0.9rem;
-}
-
-.spec-row .spec-value {
-    font-weight: 600;
-    color: var(--text-dark);
-    font-size: 0.95rem;
-    text-align: right;
-}
-
-.financing-badge-100 {
-    background: #e6f0ff;
-    color: #2161f2;
-    padding: 10px 14px;
-    border-radius: 10px;
-    font-size: 0.95rem;
+.kavak-similar-name {
+    font-size: 18px;
     font-weight: 700;
-    margin-bottom: 20px;
-    display: inline-block;
-    border: 1px solid #cce0ff;
-    width: 100%;
-    text-align: center;
-    box-shadow: 0 2px 6px rgba(33, 97, 242, 0.1);
+    color: #1a1a1a;
+    margin-bottom: 8px;
 }
 
-.financing-details .btn-link {
-    color: var(--primary-blue);
-    background: none;
-    border: none;
-    padding: 0;
-    margin-left: 5px;
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: underline;
+.kavak-similar-specs {
+    font-size: 14px;
+    color: #999;
+    margin-bottom: 8px;
 }
 
-/* Bottom Banner */
-.bottom-cta-banner {
-    background: #f0f4ff;
-    padding: 60px 0;
-    margin-top: 80px;
-}
-
-.bottom-cta-banner .container {
+.kavak-similar-location {
+    font-size: 13px;
+    color: #666;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-}
-
-.cta-content h3 {
-    font-size: 2rem;
+    gap: 4px;
     margin-bottom: 16px;
 }
 
-.btn-primary-alt {
-    background: var(--primary-blue);
-    color: #fff;
-    padding: 12px 32px;
-    border-radius: var(--radius-pill);
-    font-weight: 600;
+.kavak-similar-price {
+    font-size: 20px;
+    font-weight: 800;
+    color: #1a1a1a;
+}
+
+.kavak-similar-installment {
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+}
+
+/* Relocated Specs Section (under gallery) */
+.kavak-section-gallery {
+    padding-top: 24px;
+    border-top: 1px solid #eee;
     margin-top: 24px;
 }
 
-@media (max-width: 992px) {
-    .detail-layout {
-        grid-template-columns: 1fr;
+.kavak-section-title-small {
+    font-size: 18px;
+    font-weight: 800;
+    color: #1a1a1a;
+    margin-bottom: 20px;
+}
+
+.kavak-specs-main-grid-v2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+@media (min-width: 480px) {
+    .kavak-specs-main-grid-v2 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Hide old year display */
+.kavak-year-display {
+    display: none !important;
+}
+
+/* Promo Highlight */
+.promo-highlight {
+    background: #ff4d4d !important;
+    padding: 10px 16px !important;
+    border-radius: 8px !important;
+    margin-top: 12px !important;
+    box-shadow: 0 4px 12px rgba(255, 77, 77, 0.3);
+    animation: pulse-red 2s infinite;
+}
+
+.promo-highlight .kavak-installment-text {
+    color: #ffffff !important;
+    font-weight: 900 !important;
+    font-size: 16px !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: center;
+    width: 100%;
+}
+
+@keyframes pulse-red {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 4px 12px rgba(255, 77, 77, 0.3);
     }
 
-    .detail-sidebar {
-        order: -1;
-        margin-bottom: 32px;
+    50% {
+        transform: scale(1.02);
+        box-shadow: 0 6px 16px rgba(255, 77, 77, 0.5);
     }
 
-    .reserve-card {
-        position: static;
+    100% {
+        transform: scale(1);
+        box-shadow: 0 4px 12px rgba(255, 77, 77, 0.3);
     }
 }
