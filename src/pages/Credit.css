@@ -119,9 +119,9 @@
     /* Glassmorphism effect */
     -webkit-backdrop-filter: blur(15px);
     color: #1a202c;
-    padding: 20px 45px;
-    border-radius: 24px;
-    width: 380px;
+    padding: 15px 24px;
+    border-radius: 20px;
+    width: 300px;
     cursor: pointer;
     transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
     border: 1px solid rgba(255, 255, 255, 0.3);

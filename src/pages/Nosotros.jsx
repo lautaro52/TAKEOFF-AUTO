@@ -123,7 +123,7 @@ const Hero = () => (
                     >
                         Ver Catálogo <ArrowRight size={15} />
                     </a>
-                    <a href="/credito" className="nosotros-hero-btn nosotros-hero-btn-secondary" style={{
+                    <Link to="/#simulation-section" className="nosotros-hero-btn nosotros-hero-btn-secondary" style={{
                         display: 'flex',
                         alignItems: 'center',
                         padding: '16px 32px',
@@ -140,7 +140,7 @@ const Hero = () => (
                         onMouseOut={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#111'; }}
                     >
                         Simular Crédito
-                    </a>
+                    </Link>
                 </div>
             </motion.div>
 
