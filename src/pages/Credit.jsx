@@ -213,12 +213,12 @@ const Credit = () => {
                         <div className={`hero-card-k ${activeTab === 'usados' ? 'active' : ''}`} onClick={() => setActiveTab('usados')}>
                             <div className="card-brand-tag">TAKEOFF <span className="blue-text">USADO</span></div>
                             <h3>Usados certificados con financiación del 100%</h3>
-                            <span className="card-link-blue"><ChevronRight size={16} /></span>
+
                         </div>
                         <div className={`hero-card-k ${activeTab === '0km' ? 'active' : ''}`} onClick={() => setActiveTab('0km')}>
                             <div className="card-brand-tag">TAKEOFF <span className="teal-text">0km</span></div>
                             <h3>Tu 0km con transparencia y pacto claro</h3>
-                            <span className="card-link-blue"><ChevronRight size={16} /></span>
+
                         </div>
                     </div>
                 </div>

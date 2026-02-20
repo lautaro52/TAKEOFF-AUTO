@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './Nosotros.css';
 import { motion } from "framer-motion";
 import {
@@ -104,7 +105,7 @@ const Hero = () => (
 
                 {/* Botones — Anclados a la base gracias a space-between y height: 100% */}
                 <div className="nosotros-hero-buttons" style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', marginTop: 'auto', paddingBottom: '4px' }}>
-                    <a href="/catalogo" className="nosotros-hero-btn nosotros-hero-btn-primary" style={{
+                    <Link to="/catalogo" className="nosotros-hero-btn nosotros-hero-btn-primary" style={{
                         display: 'flex',
                         alignItems: 'center',
                         gap: '8px',
@@ -122,7 +123,7 @@ const Hero = () => (
                         onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}
                     >
                         Ver Catálogo <ArrowRight size={15} />
-                    </a>
+                    </Link>
                     <Link to="/#simulation-section" className="nosotros-hero-btn nosotros-hero-btn-secondary" style={{
                         display: 'flex',
                         alignItems: 'center',
@@ -561,8 +562,8 @@ const CTA = () => (
                         justifyContent: 'center',
                         flexWrap: 'wrap',
                     }}>
-                        <a
-                            href="/catalogo"
+                        <Link
+                            to="/catalogo"
                             style={{
                                 display: 'inline-flex',
                                 alignItems: 'center',
@@ -584,7 +585,7 @@ const CTA = () => (
                             onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}
                         >
                             EXPLORAR CATÁLOGO
-                        </a>
+                        </Link>
 
                         <a
                             href="https://wa.me/5493512345678"
