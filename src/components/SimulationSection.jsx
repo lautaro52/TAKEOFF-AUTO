@@ -12,8 +12,14 @@ const SimulationSection = ({ minArsPrice, onCalculate }) => {
     React.useEffect(() => {
         const handleHighlight = () => {
             setIsHighlighted(true);
-            setTimeout(() => setIsHighlighted(false), 3000); // Remove after 3s
+            setTimeout(() => setIsHighlighted(false), 4000); // 4s highlight
         };
+
+        // Check hash on mount (for direct links or page reloads)
+        if (window.location.hash === '#simulation-section') {
+            handleHighlight();
+        }
+
         window.addEventListener('highlight-calculator', handleHighlight);
         return () => window.removeEventListener('highlight-calculator', handleHighlight);
     }, []);

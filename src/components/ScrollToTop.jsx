@@ -8,7 +8,9 @@ const ScrollToTop = () => {
         if (hash) {
             const element = document.getElementById(hash.substring(1));
             if (element) {
-                element.scrollIntoView({ behavior: 'smooth' });
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                // Dispatch event to trigger highlight effect in components
+                window.dispatchEvent(new CustomEvent('highlight-calculator'));
             }
         } else {
             window.scrollTo(0, 0);
