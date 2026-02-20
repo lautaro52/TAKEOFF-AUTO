@@ -1,5 +1,10 @@
 USE takeoffauto_db;
 
+SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE car_images;
+TRUNCATE TABLE cars;
+SET FOREIGN_KEY_CHECKS = 1;
+
 -- Chevrolet Agile 2016
 INSERT INTO cars (brand, model, version, year, price, km, transmission, fuel, engine_size, horsepower, valves_per_cylinder, length_mm, width_mm, height_mm, wheelbase_mm, fuel_tank_liters, abs_brakes, airbags, cruise_control, air_conditioning, onboard_computer, cup_holders, steering_type, traction_control, am_fm_radio, bluetooth, mp3_player, type, color, doors, passengers, city, status, featured) VALUES ('Chevrolet', 'Agile', '1.4 Ls', 2016, 14994000, 120917, 'manual', 'gasolina', '1.4', '92 hp', 2, 4063, 1835, 1549, 3085, 54, 1, 'Conductor y pasajero', 1, 1, 1, 1, 'Hidráulica', 'Delantera', 1, 1, 1, 'hatchback', 'Plateado', 5, 5, 'Córdoba Capital', 'disponible', 1);
 SET @car_id = LAST_INSERT_ID();
