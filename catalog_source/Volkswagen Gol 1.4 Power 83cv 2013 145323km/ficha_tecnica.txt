@@ -1,0 +1,33 @@
+============================================================
+VEHÍCULO: Volkswagen Gol 1.4 Power 83cv
+============================================================
+
+📅 Año: 2013
+🛣️  Kilometraje: 145323 km
+💰 Precio: $11.760.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-1662972079-volkswagen-gol-14-power-83cv-_JM#polycard_client=search-desktop&search_layout=grid&position=10&type=item&tracking_id=2d3e14c9-4daa-45d3-9912-49514f4132a6
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Volkswagen
+  • Modelo: Gol
+  • Año: 2013
+  • Versión: 1.4 Power 83cv
+  • Color: Gris
+  • Tipo de combustible: Nafta
+  • Puertas: 5
+  • Transmisión: Manual
+  • Motor: 1.4
+  • Tipo de carrocería: Hatchback
+  • Kilómetros: 145.323 km
+  • Porta vasos: Sí
+  • Control de tracción: Delantera
+  • Capacidad de personas: 5
+  • Potencia: 83 hp
+  • Distancia entre ejes: 2.465 mm
+  • Capacidad del tanque: 51 L
+  • Válvulas por cilindro: 2
+  • Reproductor de MP3: Sí
+  • Largo x Altura x Ancho: 3951 mm x 1414 mm x 1656 mm
+
+============================================================

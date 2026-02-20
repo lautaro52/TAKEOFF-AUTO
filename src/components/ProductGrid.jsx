@@ -12,7 +12,7 @@ const ProductGrid = ({ title, products, id }) => {
                 <div className="product-grid-window">
                     <div className="product-grid">
                         {products.map((product, index) => (
-                            <ProductCard key={`${product.id}-${index}`} {...product} />
+                            <ProductCard key={`${product.id}-${index}`} car={product} />
                         ))}
                     </div>
                 </div>

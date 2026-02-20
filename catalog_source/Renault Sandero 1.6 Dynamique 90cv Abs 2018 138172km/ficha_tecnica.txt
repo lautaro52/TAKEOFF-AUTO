@@ -1,0 +1,38 @@
+============================================================
+VEHÍCULO: Renault Sandero 1.6 Dynamique 90cv Abs
+============================================================
+
+📅 Año: 2018
+🛣️  Kilometraje: 138172 km
+💰 Precio: $15.680.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-1586201773-renault-sandero-16-dynamique-90cv-abs-_JM#polycard_client=search-desktop&search_layout=grid&position=41&type=item&tracking_id=2d3e14c9-4daa-45d3-9912-49514f4132a6
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Renault
+  • Modelo: Sandero
+  • Año: 2018
+  • Versión: 1.6 Dynamique 90cv Abs
+  • Color: Gris
+  • Tipo de combustible: Nafta
+  • Puertas: 5
+  • Transmisión: Manual
+  • Motor: 1.6
+  • Tipo de carrocería: Hatchback
+  • Kilómetros: 138.172 km
+  • Llantas de aleación: Sí
+  • Largo x Altura x Ancho: 4060 mm x 1536 mm x 1733 mm
+  • Piloto automático: Sí
+  • Dirección: Asistida
+  • Control de tracción: Delantera
+  • Capacidad de personas: 5
+  • Potencia: 90 hp
+  • Distancia entre ejes: 2.590 mm
+  • Capacidad del tanque: 50 L
+  • Válvulas por cilindro: 2
+  • Frenos ABS: Sí
+  • Airbag para conductor y pasajero: Sí
+  • Tracción ASR: Sí
+  • CD: Sí
+
+============================================================

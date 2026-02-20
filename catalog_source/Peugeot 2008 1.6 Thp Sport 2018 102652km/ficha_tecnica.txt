@@ -1,0 +1,36 @@
+============================================================
+VEHÍCULO: Peugeot 2008 1.6 Thp Sport
+============================================================
+
+📅 Año: 2018
+🛣️  Kilometraje: 102652 km
+💰 Precio: $18.620.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-1654186619-peugeot-2008-16-thp-sport-_JM#polycard_client=search-desktop&search_layout=grid&position=19&type=item&tracking_id=b1651126-6f73-4f2d-a29e-ee38aefe6328
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Peugeot
+  • Modelo: 2008
+  • Año: 2018
+  • Versión: 1.6 Thp Sport
+  • Color: Blanco
+  • Tipo de combustible: Nafta
+  • Puertas: 5
+  • Transmisión: Manual
+  • Motor: 1.6
+  • Tipo de carrocería: SUV
+  • Kilómetros: 102.652 km
+  • Largo x Altura x Ancho: 4159 mm x 1583 mm x 1739 mm
+  • Alarma: Sí
+  • Control de tracción: Delantera
+  • Capacidad de personas: 5
+  • Potencia: 165 hp
+  • Distancia entre ejes: 2.542 mm
+  • Capacidad del tanque: 55 L
+  • Válvulas por cilindro: 4
+  • Frenos ABS: Sí
+  • Airbag para conductor y pasajero: Sí
+  • Tracción ASR: Sí
+  • Reproductor de MP3: Sí
+
+============================================================

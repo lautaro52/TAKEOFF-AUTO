@@ -1,0 +1,25 @@
+============================================================
+VEHÍCULO: Hyundai Tucson 1.6 Turbo 4x4
+============================================================
+
+📅 Año: 2025
+🛣️  Kilometraje: 0 km
+💰 Precio: $58.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-1508426645-hyundai-tucson-16-turbo-4x4-_JM#polycard_client=search-desktop&search_layout=grid&position=2&type=item&tracking_id=b1651126-6f73-4f2d-a29e-ee38aefe6328
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Hyundai
+  • Modelo: Tucson
+  • Año: 2025
+  • Versión: Ultimate 1.6 Turbo DCT 4WD
+  • Color: Gris
+  • Tipo de combustible: Nafta
+  • Puertas: 5
+  • Transmisión: Automática
+  • Motor: 1.6 Turbo
+  • Tipo de carrocería: SUV
+  • Kilómetros: 0 km
+  • Control de tracción: 4x4
+
+============================================================

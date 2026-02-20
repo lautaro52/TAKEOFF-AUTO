@@ -1,0 +1,43 @@
+============================================================
+VEHÍCULO: Citroën C3 1.6 Vti 115 Urban Trail
+============================================================
+
+📅 Año: 2019
+🛣️  Kilometraje: 63303 km
+💰 Precio: $19.355.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-1594959945-citron-c3-16-vti-115-urban-trail-_JM#polycard_client=search-desktop&search_layout=grid&position=23&type=item&tracking_id=b1651126-6f73-4f2d-a29e-ee38aefe6328
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Citroën
+  • Modelo: C3
+  • Año: 2019
+  • Versión: 1.6 Vti 115 Urban Trail
+  • Color: Rojo
+  • Tipo de combustible: Nafta
+  • Puertas: 5
+  • Transmisión: Manual
+  • Motor: 1.6
+  • Tipo de carrocería: Hatchback
+  • Kilómetros: 63.303 km
+  • Frenos ABS: Sí
+  • Airbag para conductor y pasajero: Sí
+  • Tracción ASR: Sí
+  • Largo x Altura x Ancho: 3944 mm x 1521 mm x 1728 mm
+  • Aire acondicionado: Sí
+  • Computadora de abordo: Sí
+  • Sensor de lluvia: Sí
+  • Porta vasos: Sí
+  • Dirección: Eléctrica
+  • Control de tracción: Delantera
+  • Capacidad de personas: 5
+  • Potencia: 115 hp
+  • Distancia entre ejes: 2.460 mm
+  • Capacidad del tanque: 55 L
+  • Válvulas por cilindro: 4
+  • Llantas de aleación: Sí
+  • AM/FM: Sí
+  • Bluetooth: Sí
+  • Reproductor de MP3: Sí
+
+============================================================

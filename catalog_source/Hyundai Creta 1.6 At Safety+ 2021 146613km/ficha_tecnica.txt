@@ -1,0 +1,43 @@
+============================================================
+VEHÍCULO: Hyundai Creta 1.6 At Safety+
+============================================================
+
+📅 Año: 2021
+🛣️  Kilometraje: 146613 km
+💰 Precio: $25.970.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-1663011097-hyundai-creta-16-at-safety-_JM#polycard_client=search-desktop&search_layout=grid&position=31&type=item&tracking_id=2d3e14c9-4daa-45d3-9912-49514f4132a6
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Hyundai
+  • Modelo: Creta
+  • Año: 2021
+  • Versión: 1.6 At Safety+
+  • Color: Gris
+  • Tipo de combustible: Nafta
+  • Puertas: 5
+  • Transmisión: Automática
+  • Motor: 1.6
+  • Tipo de carrocería: SUV
+  • Kilómetros: 146.613 km
+  • Frenos ABS: Sí
+  • Airbag para conductor y pasajero: Sí
+  • Control de estabilidad: Sí
+  • Tracción ASR: Sí
+  • Computadora de abordo: Sí
+  • Comando remoto para radio en el volante: Sí
+  • Porta vasos: Sí
+  • Dirección: Eléctrica
+  • Alarma: Sí
+  • Control de tracción: 4x2
+  • Capacidad de personas: 5
+  • Potencia: 123 hp
+  • Distancia entre ejes: 2.590 mm
+  • Capacidad del tanque: 55 L
+  • Válvulas por cilindro: 4
+  • Llantas de aleación: Sí
+  • Bluetooth: Sí
+  • Reproductor de MP3: Sí
+  • Largo x Altura x Ancho: 4270 mm x 1630 mm x 1780 mm
+
+============================================================

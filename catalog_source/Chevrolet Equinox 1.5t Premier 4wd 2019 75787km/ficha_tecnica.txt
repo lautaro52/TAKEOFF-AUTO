@@ -1,0 +1,44 @@
+============================================================
+VEHÍCULO: Chevrolet Equinox 1.5t Premier 4wd
+============================================================
+
+📅 Año: 2019
+🛣️  Kilometraje: 75787 km
+💰 Precio: $30.870.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-2799715144-chevrolet-equinox-15t-premier-4wd-_JM#polycard_client=search-desktop&search_layout=grid&position=8&type=item&tracking_id=2d3e14c9-4daa-45d3-9912-49514f4132a6
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Chevrolet
+  • Modelo: Equinox
+  • Año: 2019
+  • Versión: 1.5t Premier 4wd
+  • Color: Plateado
+  • Tipo de combustible: Nafta
+  • Puertas: 5
+  • Transmisión: Automática
+  • Motor: 1.5
+  • Tipo de carrocería: SUV
+  • Kilómetros: 75.787 km
+  • Frenos ABS: Sí
+  • Airbag para conductor y pasajero: Sí
+  • Tracción ASR: Sí
+  • Bluetooth: Sí
+  • Entrada USB: Sí
+  • Piloto automático: Sí
+  • Aire acondicionado: Sí
+  • Computadora de abordo: Sí
+  • Comando remoto para radio en el volante: Sí
+  • Porta vasos: Sí
+  • Dirección: Hidráulica
+  • Alarma: Sí
+  • Control de tracción: 4x4
+  • Capacidad de personas: 5
+  • Potencia: 172 hp
+  • Distancia entre ejes: 2.725 mm
+  • Capacidad del tanque: 59 L
+  • Válvulas por cilindro: 4
+  • Llantas de aleación: Sí
+  • Largo x Altura x Ancho: 4651 mm x 1661 mm x 1844 mm
+
+============================================================

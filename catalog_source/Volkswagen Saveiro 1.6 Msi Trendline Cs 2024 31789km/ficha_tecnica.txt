@@ -1,0 +1,37 @@
+============================================================
+VEHÍCULO: Volkswagen Saveiro 1.6 Msi Trendline Cs
+============================================================
+
+📅 Año: 2024
+🛣️  Kilometraje: 31789 km
+💰 Precio: $27.930.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-1606107759-volkswagen-saveiro-16-msi-trendline-cs-_JM#polycard_client=search-desktop&search_layout=grid&position=38&type=item&tracking_id=2d3e14c9-4daa-45d3-9912-49514f4132a6
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Volkswagen
+  • Modelo: Saveiro
+  • Año: 2024
+  • Versión: 1.6 Msi Trendline Cs
+  • Color: Blanco
+  • Tipo de combustible: Nafta
+  • Puertas: 2
+  • Transmisión: Manual
+  • Motor: 1.6
+  • Tipo de carrocería: Pick-Up
+  • Kilómetros: 31.789 km
+  • Llantas de aleación: Sí
+  • Porta vasos: Sí
+  • Dirección: Hidráulica
+  • Control de tracción: Delantera
+  • Capacidad de personas: 2
+  • Potencia: 110 hp
+  • Distancia entre ejes: 2.753 mm
+  • Capacidad del tanque: 55 L
+  • Válvulas por cilindro: 2
+  • Frenos ABS: Sí
+  • Airbag para conductor y pasajero: Sí
+  • Tracción ASR: Sí
+  • Largo x Altura x Ancho: 4474 mm x 1520 mm x 1890 mm
+
+============================================================

@@ -1,7 +1,9 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { ChevronDown, ChevronUp, MapPin } from 'lucide-react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Search, ChevronDown, ChevronUp, MapPin, Heart, ArrowRight, Loader2, Filter, X } from 'lucide-react';
+import ProductCard from '../components/ProductCard';
 import { listenToCars } from '../services/carsService';
+import { userService } from '../services/userService';
 import { carBrands } from '../data/carsData';
 import { API_CONFIG, USD_QUOTATION } from '../config';
 import './Catalog.css';
@@ -59,7 +61,46 @@ const parseCurrencyInput = (val) => {
 
 const Catalog = () => {
     const [searchParams] = useSearchParams();
-    const initialType = searchParams.get('type') || '';
+    const navigate = useNavigate();
+    const [user, setUser] = useState(null);
+    const [favorites, setFavorites] = useState([]); // List of car IDs
+    const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+
+    // Load user and favorites on mount
+    useEffect(() => {
+        const currentUser = userService.getCurrentUser();
+        setUser(currentUser);
+
+        if (currentUser) {
+            userService.getActivities().then(data => {
+                if (data.success) {
+                    setFavorites(data.favorites.map(f => f.id));
+                }
+            }).catch(err => console.error('Error fetching favorites:', err));
+        }
+    }, []);
+
+    const handleFavoriteClick = async (e, carId) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (!user) {
+            setShowLoginPrompt(true);
+            return;
+        }
+
+        const isFavorite = favorites.includes(carId);
+        try {
+            const result = await userService.toggleFavorite(carId, isFavorite);
+            if (result.success) {
+                setFavorites(prev =>
+                    isFavorite ? prev.filter(id => id !== carId) : [...prev, carId]
+                );
+            }
+        } catch (error) {
+            console.error('Error toggling favorite:', error);
+        }
+    };
 
     // Cars from database
     const [cars, setCars] = useState([]);
@@ -72,6 +113,7 @@ const Catalog = () => {
     const [absMaxPrice, setAbsMaxPrice] = useState(0);
     const [selectedBrands, setSelectedBrands] = useState([]);
 
+    const initialType = searchParams.get('type') || '';
     const [selectedType, setSelectedType] = useState(initialType);
     const [selectedTransmission, setSelectedTransmission] = useState([]);
     const [selectedColors, setSelectedColors] = useState([]);
@@ -91,6 +133,7 @@ const Catalog = () => {
     // Load cars from database with real-time updates
     useEffect(() => {
         let isMounted = true;
+
         const unsubscribe = listenToCars((carsData) => {
             if (isMounted) {
                 setCars(carsData);
@@ -346,6 +389,7 @@ const Catalog = () => {
         <div className="catalog-page">
             <div className="catalog-container">
                 {/* Sidebar Filters */}
+                {/* Sidebar Filters */}
                 <aside className="catalog-sidebar">
                     <div className="sidebar-header">
                         <input
@@ -373,7 +417,7 @@ const Catalog = () => {
                                             <label>Desde</label>
                                             <input
                                                 type="text"
-                                                placeholder={`$ ${absMinPrice.toLocaleString('es-AR')}`}
+                                                placeholder={`$ ${absMinPrice.toLocaleString('es-AR')} `}
                                                 value={formatCurrencyInput(priceMin)}
                                                 onChange={(e) => setPriceMin(parseCurrencyInput(e.target.value))}
                                             />
@@ -383,7 +427,7 @@ const Catalog = () => {
                                             <label>Hasta</label>
                                             <input
                                                 type="text"
-                                                placeholder={`$ ${absMaxPrice.toLocaleString('es-AR')}`}
+                                                placeholder={`$ ${absMaxPrice.toLocaleString('es-AR')} `}
                                                 value={formatCurrencyInput(priceMax)}
                                                 onChange={(e) => setPriceMax(parseCurrencyInput(e.target.value))}
                                             />
@@ -393,8 +437,8 @@ const Catalog = () => {
                                         {histogramData.map((bin, i) => (
                                             <div
                                                 key={i}
-                                                className={`histogram-bar ${parseInt(priceMin) === bin.min && parseInt(priceMax) === bin.max ? 'active' : ''}`}
-                                                style={{ height: `${Math.max(bin.height, 5)}%` }} // Min 5% height
+                                                className={`histogram - bar ${parseInt(priceMin) === bin.min && parseInt(priceMax) === bin.max ? 'active' : ''} `}
+                                                style={{ height: `${Math.max(bin.height, 5)}% ` }} // Min 5% height
                                                 onClick={() => handleHistogramClick(bin)}
                                                 title={`Rango: $${bin.min.toLocaleString()} - $${bin.max.toLocaleString()} (${bin.count} autos)`}
                                             ></div>
@@ -426,7 +470,7 @@ const Catalog = () => {
                                             {activePopularBrands.map(brand => (
                                                 <button
                                                     key={brand.name}
-                                                    className={`brand-card ${selectedBrands.includes(brand.name) ? 'active' : ''}`}
+                                                    className={`brand - card ${selectedBrands.includes(brand.name) ? 'active' : ''} `}
                                                     onClick={() => toggleBrand(brand.name)}
                                                 >
                                                     {brand.logo && <img src={brand.logo} alt={brand.name} />}
@@ -464,7 +508,7 @@ const Catalog = () => {
                                         {carTypes.map(type => (
                                             <button
                                                 key={type.id}
-                                                className={`type-card ${selectedType === type.id ? 'active' : ''}`}
+                                                className={`type - card ${selectedType === type.id ? 'active' : ''} `}
                                                 onClick={() => setSelectedType(selectedType === type.id ? '' : type.id)}
                                             >
                                                 <span className="type-icon">{type.icon}</span>
@@ -489,7 +533,7 @@ const Catalog = () => {
                                         {availableTransmissions.map(trans => (
                                             <button
                                                 key={trans}
-                                                className={`pill-btn ${selectedTransmission.includes(trans) ? 'active' : ''}`}
+                                                className={`pill - btn ${selectedTransmission.includes(trans) ? 'active' : ''} `}
                                                 onClick={() => toggleTransmission(trans)}
                                             >
                                                 {trans.charAt(0).toUpperCase() + trans.slice(1)}
@@ -512,7 +556,7 @@ const Catalog = () => {
                                         {availableColors.map(color => (
                                             <button
                                                 key={color.id}
-                                                className={`color-card ${selectedColors.includes(color.id) ? 'active' : ''}`}
+                                                className={`color - card ${selectedColors.includes(color.id) ? 'active' : ''} `}
                                                 onClick={() => toggleColor(color.id)}
                                             >
                                                 <div
@@ -561,46 +605,29 @@ const Catalog = () => {
                         </div>
                     ) : (
                         <div className="cars-grid">
-                            {sortedCars.map(car => (
-                                <a href={`/car/${car.id}`} key={car.id} className="car-card">
-                                    <div className="car-location-top">
-                                        <MapPin size={16} />
-                                        <span>{car.city || 'C\u00f3rdoba Capital'}</span>
-                                    </div>
-                                    <div className="car-image-container">
-                                        <img
-                                            src={
-                                                car.images?.[0]?.startsWith('http')
-                                                    ? car.images[0]
-                                                    : `${API_CONFIG.IMAGE_BASE_URL}${car.images?.[0]}?t=${Date.now()}`
-                                            }
-                                            alt={`${car.brand} ${car.model}`}
-                                            onError={(e) => { e.target.src = 'https://via.placeholder.com/600x400?text=No+Image' }}
-                                        />
-                                        <button className="favorite-btn">♡</button>
-                                    </div>
-                                    <div className="car-info">
-                                        <h3 className="car-title">{car.brand} - {car.model}</h3>
-                                        <p className="car-specs-main">{car.year} • {Number(car.km).toLocaleString('es-AR')} km</p>
-                                        <p className="car-specs-details">{car.specs}</p>
-                                        <div className="car-price-section">
-                                            <p className="car-price-label">Mínimo anticipo (20%)</p>
-                                            <p className="car-price">
-                                                ${(Number(car.price) * 0.2).toLocaleString('es-AR', { maximumFractionDigits: 0 })}
-                                                {Number(car.price) < 100000 && <span className="usd-label"> USD</span>}
-                                            </p>
-                                            <p className="car-total-reference">
-                                                Precio total: ${Number(car.price).toLocaleString('es-AR', { maximumFractionDigits: 0 })}
-                                                {Number(car.price) < 100000 ? ' USD' : ''}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </a>
+                            {sortedCars.map((car, index) => (
+                                <ProductCard key={car.id} car={car} />
                             ))}
                         </div>
                     )}
                 </main>
             </div>
+            {/* Login Suggestion Modal */}
+            {showLoginPrompt && (
+                <div className="login-prompt-overlay" onClick={() => setShowLoginPrompt(false)}>
+                    <div className="login-prompt-modal" onClick={e => e.stopPropagation()}>
+                        <div className="login-prompt-icon">
+                            <Heart size={48} color="#ff4d4f" fill="#ff4d4f" />
+                        </div>
+                        <h3>¡Guarda tus favoritos!</h3>
+                        <p>Inicia sesión o regístrate para que tus autos favoritos se guarden en tu panel y puedas verlos cuando quieras.</p>
+                        <div className="login-prompt-actions">
+                            <button className="btn-secondary" onClick={() => setShowLoginPrompt(false)}>Después</button>
+                            <button className="btn-primary" onClick={() => navigate('/login')}>Ingresar ahora</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

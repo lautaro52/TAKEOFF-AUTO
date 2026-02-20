@@ -6,12 +6,10 @@ const isLocal = hostname === 'localhost' ||
     hostname.startsWith('172.');
 
 const ROOT_URL = isLocal
-    ? `http://${hostname}:8080`
+    ? `http://${hostname}`
     : 'https://takeoffauto.online';
 
-const BASE_URL = isLocal
-    ? `${ROOT_URL}/api`
-    : `${ROOT_URL}/takeoffauto-api/api`;
+const BASE_URL = `${ROOT_URL}/takeoffauto-api/api`;
 
 export const USD_QUOTATION = 1500;
 

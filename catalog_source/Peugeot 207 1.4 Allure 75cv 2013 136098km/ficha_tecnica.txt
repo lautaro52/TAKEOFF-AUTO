@@ -1,0 +1,38 @@
+============================================================
+VEHÍCULO: Peugeot 207 1.4 Allure 75cv
+============================================================
+
+📅 Año: 2013
+🛣️  Kilometraje: 136098 km
+💰 Precio: $12.740.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-2609265690-peugeot-207-14-allure-75cv-_JM#polycard_client=search-desktop&search_layout=grid&position=19&type=item&tracking_id=2d3e14c9-4daa-45d3-9912-49514f4132a6
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Peugeot
+  • Modelo: 207
+  • Año: 2013
+  • Versión: 1.4 Allure 75cv
+  • Color: Blanco
+  • Tipo de combustible: GNC
+  • Puertas: 3
+  • Transmisión: Manual
+  • Motor: 1.4
+  • Tipo de carrocería: Hatchback
+  • Kilómetros: 136.098 km
+  • Llantas de aleación: Sí
+  • Largo x Altura x Ancho: 3872 mm x 1446 mm x 1669 mm
+  • Aire acondicionado: Sí
+  • Comando remoto para radio en el volante: Sí
+  • Porta vasos: Sí
+  • Dirección: Hidráulica
+  • Control de tracción: Delantera
+  • Capacidad de personas: 5
+  • Potencia: 75 hp
+  • Distancia entre ejes: 2.443 mm
+  • Capacidad del tanque: 50 L
+  • Válvulas por cilindro: 2
+  • Airbag para conductor y pasajero: Sí
+  • Reproductor de MP3: Sí
+
+============================================================

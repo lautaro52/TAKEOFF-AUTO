@@ -36,6 +36,139 @@ const Admin = () => {
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
+    const [activeTab, setActiveTab] = useState('manual'); // 'manual' or 'bulk'
+
+    // Bulk upload states
+    const [bulkFolders, setBulkFolders] = useState([]); // Array of { name, files, specs, images }
+    const [bulkProgress, setBulkProgress] = useState({ current: 0, total: 0, status: '' });
+
+    // Parser for ficha_tecnica.txt
+    const parseFichaTecnica = (content) => {
+        const specs = {};
+        const lines = content.split('\n');
+
+        // Extraction patterns based on ingest_cars.cjs
+        const priceMatch = content.match(/Precio: \$([0-9.]+)/);
+        const kmMatch = content.match(/Kilometraje: ([0-9]+)/);
+        const yearMatch = content.match(/Año: ([0-9]+)/);
+
+        lines.forEach(line => {
+            const match = line.match(/• (.*?): (.*)/);
+            if (match) {
+                specs[match[1].trim()] = match[2].trim();
+            }
+        });
+
+        // Map to DB fields
+        const fuelMap = { 'Nafta': 'gasolina', 'Diesel': 'diesel', 'Híbrido': 'hibrido', 'Eléctrico': 'electrico', 'GNC': 'gasolina' };
+        const typeMap = { 'Sedán': 'sedan', 'SUV': 'suv', 'Hatchback': 'hatchback', 'Pickup': 'pickup', 'Cupé': 'coupe', 'Convertible': 'convertible', 'Van': 'van', 'Wagon': 'wagon' };
+
+        let length = 0, height = 0, width = 0;
+        const dimMatch = (specs['Largo x Altura x Ancho'] || '').match(/([0-9]+) mm x ([0-9]+) mm x ([0-9]+) mm/);
+        if (dimMatch) {
+            length = parseInt(dimMatch[1]);
+            height = parseInt(dimMatch[2]);
+            width = parseInt(dimMatch[3]);
+        }
+
+        return {
+            brand: specs['Marca'] || '',
+            model: specs['Modelo'] || '',
+            version: specs['Versión'] || '',
+            year: yearMatch ? parseInt(yearMatch[1]) : (specs['Año'] ? parseInt(specs['Año']) : 0),
+            price: priceMatch ? parseInt(priceMatch[1].replace(/\./g, '')) : 0,
+            km: kmMatch ? parseInt(kmMatch[1]) : (specs['Kilómetros'] ? parseInt(specs['Kilómetros'].replace(/\D/g, '')) : 0),
+            specs: specs['Versión'] || `${specs['Marca']} ${specs['Modelo']}`,
+            transmission: (specs['Transmisión'] || '').toLowerCase().includes('auto') ? 'automatico' : 'manual',
+            fuel: fuelMap[specs['Tipo de combustible']] || 'gasolina',
+            type: typeMap[specs['Tipo de carrocería']] || 'sedan',
+            color: specs['Color'] || 'blanco',
+            engine_size: specs['Motor'] || '',
+            horsepower: specs['Potencia'] || '',
+            valves_per_cylinder: parseInt(specs['Válvulas por cilindro'] || 0),
+            length_mm: length,
+            width_mm: width,
+            height_mm: height,
+            wheelbase_mm: parseInt((specs['Distancia entre ejes'] || '0').replace(/\D/g, '')),
+            fuel_tank_liters: parseInt((specs['Capacidad del tanque'] || '0').replace(/\D/g, '')),
+            abs_brakes: specs['Frenos ABS'] === 'Sí' ? 1 : 0,
+            airbags: (specs['Airbag para conductor y pasajero'] === 'Sí' || specs['Airbag'] === 'Sí') ? 'Conductor y pasajero' : 'No',
+            cruise_control: specs['Piloto automático'] === 'Sí' ? 1 : 0,
+            air_conditioning: specs['Aire acondicionado'] === 'Sí' ? 1 : 0,
+            onboard_computer: specs['Computadora de abordo'] === 'Sí' ? 1 : 0,
+            cup_holders: specs['Porta vasos'] === 'Sí' ? 1 : 0,
+            steering_type: specs['Dirección'] || '',
+            traction_control: specs['Control de tracción'] || '',
+            am_fm_radio: specs['AM/FM'] === 'Sí' ? 1 : 0,
+            bluetooth: specs['Bluetooth'] === 'Sí' ? 1 : 0,
+            mp3_player: specs['Reproductor de MP3'] === 'Sí' ? 1 : 0,
+            doors: parseInt((specs['Puertas'] || '0').replace(/\D/g, '')),
+            passengers: parseInt((specs['Capacidad de personas'] || '0').replace(/\D/g, '')),
+            city: 'Córdoba Capital',
+            status: 'disponible',
+            featured: false
+        };
+    };
+
+    const handleFolderSelect = async (e) => {
+        const files = Array.from(e.target.files);
+        if (files.length === 0) return;
+
+        // Group files by parent directory
+        const foldersMap = {};
+        files.forEach(file => {
+            // file.webkitRelativePath looks like "Folder/Sub/file.jpg"
+            const parts = file.webkitRelativePath.split('/');
+            const folderName = parts[0];
+            if (!foldersMap[folderName]) foldersMap[folderName] = { name: folderName, files: [], specsFile: null, images: [] };
+
+            foldersMap[folderName].files.push(file);
+            if (file.name.toLowerCase() === 'ficha_tecnica.txt') {
+                foldersMap[folderName].specsFile = file;
+            } else if (file.type.startsWith('image/')) {
+                foldersMap[folderName].images.push(file);
+            }
+        });
+
+        const folderList = Object.values(foldersMap).filter(f => f.specsFile);
+        setBulkFolders(folderList);
+    };
+
+    const handleBulkUpload = async () => {
+        if (bulkFolders.length === 0) return;
+        setLoading(true);
+        setError('');
+        setBulkProgress({ current: 0, total: bulkFolders.length, status: 'Iniciando carga...' });
+
+        try {
+            for (let i = 0; i < bulkFolders.length; i++) {
+                const folder = bulkFolders[i];
+                setBulkProgress(prev => ({ ...prev, current: i + 1, status: `Procesando: ${folder.name}` }));
+
+                // 1. Read and parse specs
+                const content = await folder.specsFile.text();
+                const carData = parseFichaTecnica(content);
+
+                // 2. Add car and images
+                if (carData.brand && carData.model) {
+                    await addCar(carData, folder.images);
+                } else {
+                    console.warn(`Saltando carpeta ${folder.name}: Datos incompletos`);
+                }
+            }
+            setSuccessMessage(`Se han cargado ${bulkFolders.length} autos exitosamente.`);
+            setBulkFolders([]);
+        } catch (err) {
+            setError('Error en carga masiva: ' + err.message);
+        } finally {
+            setLoading(false);
+            setBulkProgress({ current: 0, total: 0, status: '' });
+            setTimeout(() => {
+                setSuccessMessage('');
+                setError('');
+            }, 5000);
+        }
+    };
 
     // Real-time listener for cars
     useEffect(() => {
@@ -255,225 +388,23 @@ const Admin = () => {
                 {successMessage && <div className="success-banner">{successMessage}</div>}
                 {error && <div className="error-banner">{error}</div>}
 
-                {/* Form */}
-                <div className="inventory-form-container">
-                    <h3>{editingId ? 'Editar Auto' : 'Agregar Nuevo Auto'}</h3>
-                    <form onSubmit={handleSubmit}>
-                        <div className="form-row">
-                            <div className="form-group">
-                                <label>Marca *</label>
-                                <input
-                                    type="text"
-                                    placeholder="Ej: Mazda"
-                                    value={brand}
-                                    onChange={(e) => setBrand(e.target.value)}
-                                    required
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Modelo *</label>
-                                <input
-                                    type="text"
-                                    placeholder="Ej: CX-5"
-                                    value={model}
-                                    onChange={(e) => setModel(e.target.value)}
-                                    required
-                                />
-                            </div>
-                        </div>
+                {/* Tabs - Disabled */}
+                <div className="admin-tabs" style={{ opacity: 0.5, pointerEvents: 'none' }}>
+                    <button className="admin-tab">📝 Carga Manual (Bloqueado)</button>
+                    <button className="admin-tab">📁 Carga Masiva (Bloqueado)</button>
+                </div>
 
-                        <div className="form-row">
-                            <div className="form-group">
-                                <label>Año *</label>
-                                <input
-                                    type="number"
-                                    placeholder="2023"
-                                    value={year}
-                                    onChange={(e) => setYear(e.target.value)}
-                                    required
-                                    min="2000"
-                                    max="2025"
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Precio *</label>
-                                <input
-                                    type="number"
-                                    placeholder="390999"
-                                    value={price}
-                                    onChange={(e) => setPrice(e.target.value)}
-                                    required
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Kilometraje *</label>
-                                <input
-                                    type="number"
-                                    placeholder="15000"
-                                    value={km}
-                                    onChange={(e) => setKm(e.target.value)}
-                                    required
-                                />
-                            </div>
-                        </div>
-
-                        <div className="form-group full-width">
-                            <label>Especificaciones *</label>
-                            <input
-                                type="text"
-                                placeholder="Ej: 2.5 S Grand Touring • AWD • Automático"
-                                value={specs}
-                                onChange={(e) => setSpecs(e.target.value)}
-                                required
-                            />
-                        </div>
-
-                        <div className="form-row">
-                            <div className="form-group">
-                                <label>Tipo *</label>
-                                <select value={type} onChange={(e) => setType(e.target.value)}>
-                                    <option value="sedan">Sedán</option>
-                                    <option value="suv">SUV</option>
-                                    <option value="hatchback">Hatchback</option>
-                                    <option value="pickup">Pickup</option>
-                                    <option value="coupe">Coupe</option>
-                                    <option value="convertible">Convertible</option>
-                                    <option value="van">Van</option>
-                                    <option value="wagon">Wagon</option>
-                                </select>
-                            </div>
-                            <div className="form-group">
-                                <label>Transmisión *</label>
-                                <select value={transmission} onChange={(e) => setTransmission(e.target.value)}>
-                                    <option value="automatico">Automático</option>
-                                    <option value="manual">Manual</option>
-                                </select>
-                            </div>
-                            <div className="form-group">
-                                <label>Combustible *</label>
-                                <select value={fuel} onChange={(e) => setFuel(e.target.value)}>
-                                    <option value="gasolina">Gasolina</option>
-                                    <option value="diesel">Diesel</option>
-                                    <option value="hibrido">Híbrido</option>
-                                    <option value="electrico">Eléctrico</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div className="form-row">
-                            <div className="form-group">
-                                <label>Color *</label>
-                                <select value={color} onChange={(e) => setColor(e.target.value)}>
-                                    <option value="blanco">Blanco</option>
-                                    <option value="negro">Negro</option>
-                                    <option value="gris">Gris</option>
-                                    <option value="rojo">Rojo</option>
-                                    <option value="azul">Azul</option>
-                                    <option value="amarillo">Amarillo</option>
-                                    <option value="cafe">Café</option>
-                                    <option value="beige">Beige</option>
-                                    <option value="dorado">Dorado</option>
-                                </select>
-                            </div>
-                            <div className="form-group">
-                                <label>Ciudad *</label>
-                                <input
-                                    type="text"
-                                    placeholder="Córdoba Capital"
-                                    value={city}
-                                    onChange={(e) => setCity(e.target.value)}
-                                    required
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Estado *</label>
-                                <select value={status} onChange={(e) => setStatus(e.target.value)}>
-                                    <option value="disponible">Disponible</option>
-                                    <option value="apartado">Apartado</option>
-                                    <option value="vendido">Vendido</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div className="form-group">
-                            <label className="checkbox-label">
-                                <input
-                                    type="checkbox"
-                                    checked={featured}
-                                    onChange={(e) => setFeatured(e.target.checked)}
-                                />
-                                <span>Destacar en página principal</span>
-                            </label>
-                        </div>
-
-                        <div className="form-group">
-                            <label>Sección en Home (Opcional)</label>
-                            <select value={homeSection} onChange={(e) => setHomeSection(e.target.value)}>
-                                <option value="">Ninguna</option>
-                                <option value="vendidos">Los más vendidos</option>
-                                <option value="destacados">Destacados del catálogo</option>
-                            </select>
-                            <small style={{ display: 'block', marginTop: '5px', color: '#666' }}>
-                                Si seleccionas una sección, el auto aparecerá en la fila correspondiente en Home.
-                            </small>
-                        </div>
-
-                        {/* Image Upload */}
-                        <div className="image-upload-section">
-                            <label>Imágenes (Máximo 15) *</label>
-                            <div className="upload-area">
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    multiple
-                                    onChange={handleImageSelect}
-                                    id="image-input"
-                                    style={{ display: 'none' }}
-                                />
-                                <label htmlFor="image-input" className="upload-button">
-                                    <Upload size={24} />
-                                    <span>Seleccionar imágenes</span>
-                                    <small>{selectedImages.length}/15 imágenes seleccionadas</small>
-                                </label>
-                            </div>
-
-                            {imagePreviews.length > 0 && (
-                                <div className="image-previews">
-                                    {imagePreviews.map((preview, index) => (
-                                        <div key={index} className="image-preview">
-                                            <img src={preview} alt={`Preview ${index + 1}`} />
-                                            <button
-                                                type="button"
-                                                className="remove-image"
-                                                onClick={() => removeImage(index)}
-                                            >
-                                                <X size={16} />
-                                            </button>
-                                            {index === 0 && <span className="primary-badge">Principal</span>}
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="form-actions">
-                            <button type="submit" className="btn-submit" disabled={loading}>
-                                {loading ? (
-                                    <>
-                                        <Loader className="spin" size={18} />
-                                        {editingId ? 'Actualizando...' : 'Guardando...'}
-                                    </>
-                                ) : (
-                                    editingId ? 'Actualizar Auto' : 'Agregar Auto'
-                                )}
-                            </button>
-                            {editingId && (
-                                <button type="button" className="btn-cancel" onClick={resetForm}>
-                                    Cancelar
-                                </button>
-                            )}
-                        </div>
-                    </form>
+                <div className="locked-notice" style={{
+                    background: '#fff3e0',
+                    border: '1px solid #ffe0b2',
+                    padding: '20px',
+                    borderRadius: '8px',
+                    marginBottom: '30px',
+                    textAlign: 'center',
+                    color: '#e65100'
+                }}>
+                    <h3>⚠️ Catálogo Bloqueado</h3>
+                    <p>El catálogo se ha restringido a las 90 unidades actuales. Las funciones de carga, edición y eliminación han sido desactivadas temporalmente para mantener la integridad del inventario seleccionado.</p>
                 </div>
 
                 {/* Car List */}
@@ -531,12 +462,7 @@ const Admin = () => {
                                         )}
                                     </div>
                                     <div className="admin-action-buttons">
-                                        <button className="btn-edit-small" onClick={() => handleEdit(car)}>
-                                            ✏️ Editar
-                                        </button>
-                                        <button className="btn-delete-small" onClick={() => handleDelete(car.id, `${car.brand} ${car.model}`)}>
-                                            🗑️ Eliminar
-                                        </button>
+                                        <p style={{ fontSize: '0.85rem', color: '#666', fontStyle: 'italic' }}>Información de lectura</p>
                                     </div>
                                 </div>
                             ))}

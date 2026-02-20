@@ -1,0 +1,39 @@
+============================================================
+VEHÍCULO: Citroën C3 1.5 Feel 90cv
+============================================================
+
+📅 Año: 2017
+🛣️  Kilometraje: 53781 km
+💰 Precio: $18.130.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-1570500379-citron-c3-15-feel-90cv-_JM#polycard_client=search-desktop&search_layout=grid&position=41&type=item&tracking_id=b1651126-6f73-4f2d-a29e-ee38aefe6328
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Citroën
+  • Modelo: C3
+  • Año: 2017
+  • Versión: 1.5 Feel 90cv
+  • Color: Rojo
+  • Tipo de combustible: Nafta
+  • Puertas: 5
+  • Transmisión: Manual
+  • Motor: 1.5
+  • Tipo de carrocería: Hatchback
+  • Kilómetros: 53.781 km
+  • AM/FM: Sí
+  • Largo x Altura x Ancho: 3850 mm x 1533 mm x 1645 mm
+  • Aire acondicionado: Sí
+  • Computadora de abordo: Sí
+  • Porta vasos: Sí
+  • Dirección: Eléctrica
+  • Control de tracción: Delantera
+  • Capacidad de personas: 5
+  • Potencia: 90 hp
+  • Distancia entre ejes: 2.443 mm
+  • Capacidad del tanque: 47 L
+  • Válvulas por cilindro: 2
+  • Frenos ABS: Sí
+  • Airbag para conductor y pasajero: Sí
+  • Tracción ASR: Sí
+
+============================================================

@@ -1,0 +1,42 @@
+============================================================
+VEHÍCULO: Ford Focus III 2.0 Sedan Se Plus At6
+============================================================
+
+📅 Año: 2017
+🛣️  Kilometraje: 115949 km
+💰 Precio: $20.580.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-1641862199-ford-focus-iii-20-sedan-se-plus-at6-_JM#polycard_client=search-desktop&search_layout=grid&position=35&type=item&tracking_id=2d3e14c9-4daa-45d3-9912-49514f4132a6
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Ford
+  • Modelo: Focus III
+  • Año: 2017
+  • Versión: 2.0 Sedan Se Plus At6
+  • Color: Gris
+  • Tipo de combustible: Nafta
+  • Puertas: 4
+  • Transmisión: Automática
+  • Motor: 2.0
+  • Tipo de carrocería: Sedán
+  • Kilómetros: 115.949 km
+  • Llantas de aleación: Sí
+  • Techo solar eléctrico retráctil: Sí
+  • Tapizado de cuero: Sí
+  • Largo x Altura x Ancho: 4534 mm x 1484 mm x 1742 mm
+  • Computadora de abordo: Sí
+  • Comando remoto para radio en el volante: Sí
+  • Dirección: Eléctrica
+  • Alarma: Sí
+  • Control de tracción: Delantera
+  • Capacidad de personas: 5
+  • Potencia: 170 hp
+  • Distancia entre ejes: 2.630 mm
+  • Capacidad del tanque: 55 L
+  • Válvulas por cilindro: 4
+  • Frenos ABS: Sí
+  • Airbag para conductor y pasajero: Sí
+  • Control de estabilidad: Sí
+  • Tracción ASR: Sí
+
+============================================================

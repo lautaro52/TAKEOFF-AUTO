@@ -1,0 +1,40 @@
+============================================================
+VEHÍCULO: Volkswagen Up! 1.0 Pepper 101cv
+============================================================
+
+📅 Año: 2017
+🛣️  Kilometraje: 103296 km
+💰 Precio: $18.620.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-1626369407-volkswagen-up-10-pepper-101cv-_JM#polycard_client=search-desktop&search_layout=grid&position=16&type=item&tracking_id=2d3e14c9-4daa-45d3-9912-49514f4132a6
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Volkswagen
+  • Modelo: Up!
+  • Año: 2017
+  • Versión: 1.0 Pepper 101cv
+  • Color: Blanco
+  • Tipo de combustible: Nafta
+  • Puertas: 5
+  • Transmisión: Manual
+  • Motor: 1.0
+  • Tipo de carrocería: Hatchback
+  • Kilómetros: 103.296 km
+  • Llantas de aleación: Sí
+  • Bluetooth: Sí
+  • Largo x Altura x Ancho: 3605 mm x 1500 mm x 1645 mm
+  • Aire acondicionado: Sí
+  • Computadora de abordo: Sí
+  • Dirección: Eléctrica
+  • Alarma: Sí
+  • Control de tracción: Delantera
+  • Capacidad de personas: 5
+  • Potencia: 101 hp
+  • Distancia entre ejes: 2.421 mm
+  • Capacidad del tanque: 50 L
+  • Válvulas por cilindro: 4
+  • Frenos ABS: Sí
+  • Airbag para conductor y pasajero: Sí
+  • Tracción ASR: Sí
+
+============================================================

@@ -1,0 +1,35 @@
+============================================================
+VEHÍCULO: Kia K2500 2.5 Caja
+============================================================
+
+📅 Año: 2021
+🛣️  Kilometraje: 187885 km
+💰 Precio: $35.280.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-2800091164-kia-k2500-25-caja-_JM#polycard_client=search-desktop&search_layout=grid&position=40&type=item&tracking_id=2d3e14c9-4daa-45d3-9912-49514f4132a6
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Kia
+  • Modelo: K2500
+  • Año: 2021
+  • Versión: 2.5 Caja
+  • Color: Blanco
+  • Tipo de combustible: Diésel
+  • Puertas: 2
+  • Transmisión: Manual
+  • Motor: 2.5
+  • Kilómetros: 187.885 km
+  • Tapizado de cuero: Sí
+  • Dirección: Hidráulica
+  • Control de tracción: 4x2
+  • Capacidad de personas: 3
+  • Potencia: 130 hp
+  • Distancia entre ejes: 2.615 mm
+  • Capacidad del tanque: 60 L
+  • Válvulas por cilindro: 2
+  • Frenos ABS: Sí
+  • Airbag para conductor y pasajero: Sí
+  • Tracción ASR: Sí
+  • Largo x Altura x Ancho: 5110 mm x 1970 mm x 1740 mm
+
+============================================================

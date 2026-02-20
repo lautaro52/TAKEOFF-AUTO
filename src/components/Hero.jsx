@@ -76,8 +76,8 @@ const Hero = () => {
             </div>
             <div className="container">
                 <div className="hero-content">
-                    <h1>Transforma tu camino</h1>
-                    <p className="hero-subtitle">Compra y venta de autos. Financiamiento a tu medida</p>
+                    <h1>Tu próximo auto empieza aquí.</h1>
+                    <p className="hero-subtitle">Transparencia absoluta en usados y 0km.</p>
 
                     <div className="hero-search-area" ref={searchRef}>
                         <div className="search-bar-rounded">

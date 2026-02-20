@@ -1,0 +1,38 @@
+============================================================
+VEHÍCULO: Nissan March 1.6 Active 107cv
+============================================================
+
+📅 Año: 2017
+🛣️  Kilometraje: 86513 km
+💰 Precio: $16.856.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-1561930645-nissan-march-16-active-107cv-_JM#polycard_client=search-desktop&search_layout=grid&position=18&type=item&tracking_id=2d3e14c9-4daa-45d3-9912-49514f4132a6
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Nissan
+  • Modelo: March
+  • Año: 2017
+  • Versión: 1.6 Active 107cv
+  • Color: Gris
+  • Tipo de combustible: Nafta
+  • Puertas: 5
+  • Transmisión: Manual
+  • Motor: 1.6
+  • Tipo de carrocería: Hatchback
+  • Kilómetros: 86.513 km
+  • Llantas de aleación: Sí
+  • Largo x Altura x Ancho: 3780 mm x 1528 mm x 1675 mm
+  • Porta vasos: Sí
+  • Dirección: Asistida
+  • Control de tracción: Delantera
+  • Capacidad de personas: 5
+  • Potencia: 107 hp
+  • Distancia entre ejes: 2.450 mm
+  • Capacidad del tanque: 41 L
+  • Válvulas por cilindro: 4
+  • Frenos ABS: Sí
+  • Airbag para conductor y pasajero: Sí
+  • Tracción ASR: Sí
+  • Reproductor de MP3: Sí
+
+============================================================

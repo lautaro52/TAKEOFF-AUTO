@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, ChevronLeft } from 'lucide-react';
+import { API_CONFIG } from '../config';
+import { userService } from '../services/userService';
 import './FinancingModal.css';
 
 const FinancingModal = ({ isOpen, onClose, car, initialDownPayment }) => {
@@ -31,7 +33,18 @@ const FinancingModal = ({ isOpen, onClose, car, initialDownPayment }) => {
             setShowLeadForm(false);
             setIsSuccess(false);
             setDownPayment(initialDownPayment || Math.round(price * 0.2));
-            setLeadData({ name: '', dni: '', email: '', whatsapp: '' });
+
+            const currentUser = userService.getCurrentUser();
+            if (currentUser) {
+                setLeadData({
+                    name: currentUser.full_name || '',
+                    dni: currentUser.dni || '',
+                    email: currentUser.email || '',
+                    whatsapp: currentUser.whatsapp || ''
+                });
+            } else {
+                setLeadData({ name: '', dni: '', email: '', whatsapp: '' });
+            }
         }
     }, [isOpen, price, initialDownPayment]);
 

@@ -1,0 +1,37 @@
+============================================================
+VEHÍCULO: Chevrolet Tracker 1.8 Ltz
+============================================================
+
+📅 Año: 2018
+🛣️  Kilometraje: 113160 km
+💰 Precio: $20.090.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-2799770034-chevrolet-tracker-18-ltz-_JM#polycard_client=search-desktop&search_layout=grid&position=13&type=item&tracking_id=b1651126-6f73-4f2d-a29e-ee38aefe6328
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Chevrolet
+  • Modelo: Tracker
+  • Año: 2018
+  • Versión: 1.8 Ltz
+  • Color: Gris
+  • Tipo de combustible: Nafta
+  • Puertas: 5
+  • Transmisión: Manual
+  • Motor: 1.8
+  • Tipo de carrocería: SUV
+  • Kilómetros: 113.160 km
+  • Largo x Altura x Ancho: 4248 mm x 1674 mm x 1657 mm
+  • Aire acondicionado: Sí
+  • Control de tracción: 4x2
+  • Capacidad de personas: 5
+  • Potencia: 141 hp
+  • Distancia entre ejes: 2.465 mm
+  • Capacidad del tanque: 53 L
+  • Válvulas por cilindro: 4
+  • Frenos ABS: Sí
+  • Airbag para conductor y pasajero: Sí
+  • Tracción ASR: Sí
+  • Bluetooth: Sí
+  • Entrada USB: Sí
+
+============================================================

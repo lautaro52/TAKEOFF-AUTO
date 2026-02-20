@@ -130,6 +130,10 @@ const SimulationSection = ({ minArsPrice, onCalculate }) => {
                     <div className="geo-shape geo-shape-1"></div>
                     <div className="geo-shape geo-shape-2"></div>
                     <div className="geo-shape geo-shape-3"></div>
+                    <div className="geo-shape geo-circle-1"></div>
+                    <div className="geo-shape geo-circle-2"></div>
+                    <div className="geo-shape geo-rect-1"></div>
+                    <div className="geo-shape geo-rect-2"></div>
                 </div>
             </div>
         </section>

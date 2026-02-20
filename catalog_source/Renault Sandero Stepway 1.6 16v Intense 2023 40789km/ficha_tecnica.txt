@@ -1,0 +1,37 @@
+============================================================
+VEHÍCULO: Renault Sandero Stepway 1.6 16v Intense
+============================================================
+
+📅 Año: 2023
+🛣️  Kilometraje: 40789 km
+💰 Precio: $25.970.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-2470210396-renault-sandero-stepway-16-16v-intense-_JM#polycard_client=search-desktop&search_layout=grid&position=13&type=item&tracking_id=2d3e14c9-4daa-45d3-9912-49514f4132a6
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Renault
+  • Modelo: Sandero Stepway
+  • Año: 2023
+  • Versión: 1.6 16v Intense
+  • Color: Blanco
+  • Tipo de combustible: Nafta
+  • Puertas: 5
+  • Transmisión: Manual
+  • Motor: 1.6
+  • Tipo de carrocería: Hatchback
+  • Kilómetros: 40.789 km
+  • Largo x Altura x Ancho: 4066 mm x 1559 mm x 1761 mm
+  • Piloto automático: Sí
+  • Computadora de abordo: Sí
+  • Dirección: Hidráulica
+  • Control de tracción: Delantera
+  • Capacidad de personas: 5
+  • Potencia: 115 hp
+  • Distancia entre ejes: 2.590 mm
+  • Capacidad del tanque: 50 L
+  • Válvulas por cilindro: 4
+  • Frenos ABS: Sí
+  • Airbag para conductor y pasajero: Sí
+  • Tracción ASR: Sí
+
+============================================================

@@ -778,24 +778,247 @@
     border-top: 1px solid #e5e8ed;
 }
 
-.btn-edit-small,
 .btn-delete-small {
-    padding: 8px 12px;
-    border: none;
-    cursor: pointer;
-    font-size: 0.8rem;
-    font-weight: 600;
-    transition: all 0.2s ease;
-    border-radius: 6px;
+    background: #fff;
+    color: #de350b;
+    border: 1px solid #de350b;
 }
 
-.btn-edit-small {
-    background: #2161f2;
+.btn-delete-small:hover {
+    background: #de350b;
     color: white;
 }
 
-.btn-edit-small:hover {
+/* Tabs */
+.admin-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #e1e8ed;
+    padding-bottom: 0px;
+}
+
+.admin-tab {
+    padding: 12px 24px;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    font-weight: 700;
+    color: #718096;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.admin-tab:hover {
+    color: #2161f2;
+}
+
+.admin-tab.active {
+    color: #2161f2;
+    border-bottom-color: #2161f2;
+}
+
+/* Bulk Upload */
+.bulk-upload-container {
+    background: #fff;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    margin-bottom: 40px;
+}
+
+.bulk-instructions {
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #f8fafc;
+    border-radius: 12px;
+    border-left: 4px solid #2161f2;
+}
+
+.bulk-instructions h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.1rem;
+    color: #1a202c;
+}
+
+.bulk-instructions ul {
+    margin: 10px 0 0 20px;
+    color: #4a5568;
+}
+
+.bulk-upload-area {
+    margin-bottom: 30px;
+}
+
+.bulk-upload-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    padding: 50px 20px;
+    background: #f1f5f9;
+    border: 3px dashed #cbd5e0;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.bulk-upload-button:hover {
+    border-color: #2161f2;
+    background: #eff6ff;
+}
+
+.bulk-upload-button span {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1e40af;
+}
+
+.bulk-upload-button small {
+    color: #64748b;
+}
+
+.bulk-folder-list {
+    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 2px solid #f1f5f9;
+}
+
+.folder-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 10px;
+    background: #f8fafc;
+    border-radius: 10px;
+}
+
+.folder-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.folder-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.folder-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #1e293b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 140px;
+}
+
+.folder-meta {
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+/* Progress Section */
+.bulk-progress-section {
+    margin-top: 30px;
+    padding: 20px;
+    background: #f0f7ff;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.progress-bar-bg {
+    height: 12px;
+    background: #e2e8f0;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6, #2563eb);
+    transition: width 0.3s ease;
+}
+
+.progress-status {
+    font-weight: 600;
+    color: #1e40af;
+    margin: 0;
+}
+
+/* Bulk Actions */
+.bulk-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn-bulk-execute {
+    flex: 2;
+    padding: 16px;
+    background: #2161f2;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-bulk-execute:hover {
     background: #1651d2;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(33, 97, 242, 0.4);
+}
+
+.btn-bulk-clear {
+    flex: 1;
+    padding: 16px;
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #cbd5e0;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-bulk-clear:hover {
+    background: #e2e8f0;
+}
+
+@media (max-width: 600px) {
+    .admin-tabs {
+        flex-direction: column;
+        border-bottom: none;
+    }
+
+    .admin-tab {
+        width: 100%;
+        border-bottom: 2px solid #f1f5f9;
+        text-align: left;
+    }
+
+    .admin-tab.active {
+        border-bottom: 2px solid #2161f2;
+        background: #f0f7ff;
+    }
+
+    .bulk-actions {
+        flex-direction: column;
+    }
 }
 
 .btn-delete-small {

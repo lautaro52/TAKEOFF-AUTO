@@ -1,0 +1,35 @@
+============================================================
+VEHÍCULO: Volkswagen Up! 1.0 Take Up! Aa 75Cv 3P
+============================================================
+
+📅 Año: 2018
+🛣️  Kilometraje: 115882 km
+💰 Precio: $14.945.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-1605211495-volkswagen-up-10-take-up-aa-75cv-3p-_JM#polycard_client=search-desktop&search_layout=grid&position=26&type=item&tracking_id=b1651126-6f73-4f2d-a29e-ee38aefe6328
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Volkswagen
+  • Modelo: Up!
+  • Año: 2018
+  • Versión: 1.0 Take Up! Aa 75Cv 3P
+  • Color: Rojo
+  • Tipo de combustible: Nafta
+  • Puertas: 3
+  • Transmisión: Manual
+  • Motor: 1.0
+  • Tipo de carrocería: Hatchback
+  • Kilómetros: 115.882 km
+  • Aire acondicionado: Sí
+  • Control de tracción: Delantera
+  • Capacidad de personas: 5
+  • Potencia: 75 hp
+  • Distancia entre ejes: 2.421 mm
+  • Capacidad del tanque: 50 L
+  • Válvulas por cilindro: 4
+  • Frenos ABS: Sí
+  • Airbag para conductor y pasajero: Sí
+  • Tracción ASR: Sí
+  • Largo x Altura x Ancho: 3605 mm x 1500 mm x 1645 mm
+
+============================================================

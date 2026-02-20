@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import './PromiseCarousel.css';
 
 // Import images (assuming user will put them in src/assets/promesas/)
-// If they are missing, we'll use fallback patterns
 const tryImport = (num) => {
     try {
         return new URL(`../assets/promesas/promesa${num}.jpg`, import.meta.url).href;
@@ -59,12 +59,18 @@ const slides = [
 const PromiseCarousel = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
 
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setCurrentIndex((prev) => (prev + 1) % slides.length);
-        }, 4000);
-        return () => clearInterval(timer);
+    const nextSlide = useCallback(() => {
+        setCurrentIndex((prev) => (prev + 1) % slides.length);
     }, []);
+
+    const prevSlide = useCallback(() => {
+        setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length);
+    }, []);
+
+    useEffect(() => {
+        const timer = setInterval(nextSlide, 4000);
+        return () => clearInterval(timer);
+    }, [nextSlide]);
 
     const goToSlide = (index) => {
         setCurrentIndex(index);
@@ -83,6 +89,13 @@ const PromiseCarousel = () => {
                     </div>
                 ))}
             </div>
+
+            <button className="carousel-arrow-promise prev" onClick={prevSlide} aria-label="Anterior">
+                <ChevronLeft size={24} />
+            </button>
+            <button className="carousel-arrow-promise next" onClick={nextSlide} aria-label="Siguiente">
+                <ChevronRight size={24} />
+            </button>
 
             <div className="carousel-dots-promise">
                 {slides.map((_, idx) => (

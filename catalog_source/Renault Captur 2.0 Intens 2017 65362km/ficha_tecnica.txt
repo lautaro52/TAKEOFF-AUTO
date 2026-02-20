@@ -1,0 +1,41 @@
+============================================================
+VEHÍCULO: Renault Captur 2.0 Intens
+============================================================
+
+📅 Año: 2017
+🛣️  Kilometraje: 65362 km
+💰 Precio: $22.050.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-1663165945-renault-captur-20-intens-_JM#polycard_client=search-desktop&search_layout=grid&position=1&type=item&tracking_id=2d3e14c9-4daa-45d3-9912-49514f4132a6
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Renault
+  • Modelo: Captur
+  • Año: 2017
+  • Versión: 2.0 Intens
+  • Color: Blanco
+  • Tipo de combustible: Nafta
+  • Puertas: 5
+  • Transmisión: Manual
+  • Motor: 2.0
+  • Tipo de carrocería: SUV
+  • Kilómetros: 65.362 km
+  • Llantas de aleación: Sí
+  • Porta equipaje en techo: Sí
+  • Inspección vehicular: No
+  • Piloto automático: Sí
+  • Computadora de abordo: Sí
+  • Porta vasos: Sí
+  • Dirección: Hidráulica
+  • Control de tracción: Delantera
+  • Capacidad de personas: 5
+  • Potencia: 143 hp
+  • Distancia entre ejes: 2.670 mm
+  • Capacidad del tanque: 45 L
+  • Válvulas por cilindro: 4
+  • Frenos ABS: Sí
+  • Airbag para conductor y pasajero: Sí
+  • Tracción ASR: Sí
+  • Largo x Altura x Ancho: 4122 mm x 1556 mm x 1778 mm
+
+============================================================

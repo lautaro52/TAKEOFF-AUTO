@@ -1,0 +1,38 @@
+============================================================
+VEHÍCULO: Ford Ka 1.5 S
+============================================================
+
+📅 Año: 2017
+🛣️  Kilometraje: 94557 km
+💰 Precio: $15.386.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-1586098185-ford-ka-15-s-_JM#polycard_client=search-desktop&search_layout=grid&position=33&type=item&tracking_id=b1651126-6f73-4f2d-a29e-ee38aefe6328
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Ford
+  • Modelo: Ka
+  • Año: 2017
+  • Versión: 1.5 S
+  • Color: Rojo
+  • Tipo de combustible: Nafta
+  • Puertas: 5
+  • Transmisión: Manual
+  • Motor: 1.5
+  • Tipo de carrocería: Hatchback
+  • Kilómetros: 94.557 km
+  • Llantas de aleación: Sí
+  • Porta equipaje en techo: Sí
+  • Porta vasos: Sí
+  • Dirección: Eléctrica
+  • Control de tracción: Delantera
+  • Capacidad de personas: 5
+  • Potencia: 105 hp
+  • Distancia entre ejes: 2.686 mm
+  • Capacidad del tanque: 51 L
+  • Válvulas por cilindro: 4
+  • Frenos ABS: Sí
+  • Airbag para conductor y pasajero: Sí
+  • Tracción ASR: Sí
+  • Largo x Altura x Ancho: 3969 mm x 1464 mm x 1777 mm
+
+============================================================

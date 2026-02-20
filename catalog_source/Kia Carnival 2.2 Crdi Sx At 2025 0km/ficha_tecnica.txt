@@ -1,0 +1,31 @@
+============================================================
+VEHÍCULO: Kia Carnival 2.2 Crdi Sx At
+============================================================
+
+📅 Año: 2025
+🛣️  Kilometraje: 0 km
+💰 Precio: $75.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-2153562790-kia-carnival-22-crdi-sx-at-_JM#polycard_client=search-desktop&search_layout=grid&position=39&type=item&tracking_id=2d3e14c9-4daa-45d3-9912-49514f4132a6
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Kia
+  • Modelo: Carnival
+  • Año: 2025
+  • Versión: 2.2 Crdi Sx At
+  • Color: Dorado
+  • Tipo de combustible: Diésel
+  • Puertas: 5
+  • Transmisión: Automática
+  • Motor: 2.2
+  • Tipo de carrocería: Monovolumen
+  • Kilómetros: 0 km
+  • Control de tracción: Delantera
+  • Capacidad de personas: 7
+  • Potencia: 199 hp
+  • Distancia entre ejes: 3.090 mm
+  • Capacidad del tanque: 72 L
+  • Válvulas por cilindro: 4
+  • Largo x Altura x Ancho: 5155 mm x 1775 mm x 1995 mm
+
+============================================================

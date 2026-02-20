@@ -1,0 +1,35 @@
+============================================================
+VEHÍCULO: Hyundai Tucson 2.0 C/techo
+============================================================
+
+📅 Año: 2020
+🛣️  Kilometraje: 94473 km
+💰 Precio: $37.044.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-1654394481-hyundai-tucson-20-ctecho-_JM#polycard_client=search-desktop&search_layout=grid&position=36&type=item&tracking_id=2d3e14c9-4daa-45d3-9912-49514f4132a6
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Hyundai
+  • Modelo: Tucson
+  • Año: 2020
+  • Versión: 2.0 C/techo
+  • Color: Plateado
+  • Tipo de combustible: Nafta
+  • Puertas: 5
+  • Transmisión: Automática
+  • Motor: 2.0
+  • Tipo de carrocería: SUV
+  • Kilómetros: 94.473 km
+  • Control de tracción: 4x2
+  • Capacidad de personas: 5
+  • Potencia: 166 hp
+  • Distancia entre ejes: 2.630 mm
+  • Capacidad del tanque: 58 L
+  • Válvulas por cilindro: 4
+  • Frenos ABS: Sí
+  • Airbag para conductor y pasajero: Sí
+  • Tracción ASR: Sí
+  • Llantas de aleación: Sí
+  • Largo x Altura x Ancho: 4410 mm x 1655 mm x 1830 mm
+
+============================================================

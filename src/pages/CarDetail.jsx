@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { getCarById, getCars } from '../services/carsService';
 import { API_CONFIG } from '../config';
+import { userService } from '../services/userService';
 import FinancingModal from '../components/FinancingModal';
 import QuoteModal from '../components/QuoteModal';
 import './CarDetail.css';
@@ -38,6 +39,16 @@ const CarDetail = () => {
                 ]);
                 setCar(carData);
                 setAllCars(carsData);
+
+                // Check if favorite
+                const user = userService.getCurrentUser();
+                if (user) {
+                    const activities = await userService.getActivities();
+                    if (activities.success) {
+                        const isFav = activities.favorites.some(f => f.id === parseInt(id));
+                        setIsFavorite(isFav);
+                    }
+                }
             } catch (error) {
                 console.error('Error loading car:', error);
             } finally {
@@ -45,6 +56,11 @@ const CarDetail = () => {
             }
         };
         loadData();
+    }, [id]);
+
+    useEffect(() => {
+        // Record view if logged in
+        userService.recordQuote(id); // Using recordQuote as activity tracker
     }, [id]);
 
     // Auto-scroll thumbnails
@@ -92,16 +108,40 @@ const CarDetail = () => {
         return `${API_CONFIG.IMAGE_BASE_URL}${imagePath}?t=${Date.now()}`;
     };
 
+    const handleToggleFavorite = async () => {
+        const user = userService.getCurrentUser();
+        if (!user) {
+            navigate('/login');
+            return;
+        }
+
+        try {
+            const res = await userService.toggleFavorite(car.id, isFavorite);
+            if (res.success) {
+                setIsFavorite(!isFavorite);
+            }
+        } catch (error) {
+            console.error('Error toggling favorite:', error);
+        }
+    };
+
+    const handleSimulationClick = () => {
+        setIsFinancingModalOpen(true);
+        userService.recordQuote(car.id);
+    };
+
     const handleShare = () => {
         if (navigator.share) {
             navigator.share({
                 title: `${car.brand} ${car.model}`,
-                text: `Check out this ${car.brand} ${car.model} ${car.year}`,
-                url: window.location.href
-            });
+                text: `Mirá este ${car.brand} ${car.model} en TAKEOFF AUTO`,
+                url: window.location.href,
+            }).catch(err => console.error('Error sharing:', err));
         } else {
-            navigator.clipboard.writeText(window.location.href);
-            alert('Link copiado al portapapeles');
+            // Fallback: copy to clipboard
+            navigator.clipboard.writeText(window.location.href)
+                .then(() => alert('Enlace copiado al portapapeles'))
+                .catch(err => console.error('Error copying link:', err));
         }
     };
 
@@ -317,9 +357,9 @@ const CarDetail = () => {
                                     <button className="kavak-action-btn" onClick={handleShare}><Share2 size={20} /></button>
                                     <button
                                         className={`kavak-action-btn ${isFavorite ? 'favorite' : ''}`}
-                                        onClick={() => setIsFavorite(!isFavorite)}
+                                        onClick={handleToggleFavorite}
                                     >
-                                        <Heart size={20} fill={isFavorite ? '#E74C3C' : 'none'} />
+                                        <Heart size={20} fill={isFavorite ? '#E74C3C' : 'none'} color={isFavorite ? '#E74C3C' : 'currentColor'} />
                                     </button>
                                 </div>
                             </div>
@@ -365,7 +405,7 @@ const CarDetail = () => {
                             {/* Main CTA Button */}
                             <button
                                 className="kavak-main-cta blue-btn"
-                                onClick={() => setIsFinancingModalOpen(true)}
+                                onClick={handleSimulationClick}
                             >
                                 Calcular cuota
                             </button>
@@ -436,7 +476,7 @@ const CarDetail = () => {
                     <section className="kavak-similar-section">
                         <h2 className="kavak-similar-title">Vehículos similares</h2>
                         <div className="kavak-similar-grid">
-                            {similarCars.map(similarCar => (
+                            {similarCars.map((similarCar, index) => (
                                 <Link
                                     key={similarCar.id}
                                     to={`/car/${similarCar.id}`}
@@ -477,7 +517,7 @@ const CarDetail = () => {
                 isOpen={isQuoteModalOpen}
                 onClose={() => setIsQuoteModalOpen(false)}
             />
-        </div >
+        </div>
     );
 };
 

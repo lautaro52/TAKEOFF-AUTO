@@ -1,0 +1,44 @@
+============================================================
+VEHÍCULO: Fiat 500 1.4 Cult 85cv
+============================================================
+
+📅 Año: 2012
+🛣️  Kilometraje: 123969 km
+💰 Precio: $14.994.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-1605160399-fiat-500-14-cult-85cv-_JM#polycard_client=search-desktop&search_layout=grid&position=35&type=item&tracking_id=b1651126-6f73-4f2d-a29e-ee38aefe6328
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Fiat
+  • Modelo: 500
+  • Año: 2012
+  • Versión: 1.4 Cult 85cv
+  • Color: Gris
+  • Tipo de combustible: Nafta
+  • Puertas: 3
+  • Transmisión: Manual
+  • Motor: 1.4
+  • Tipo de carrocería: Hatchback
+  • Kilómetros: 123.969 km
+  • Frenos ABS: Sí
+  • Airbag para conductor y pasajero: Sí
+  • Control de estabilidad: Sí
+  • Tracción ASR: Sí
+  • Largo x Altura x Ancho: 3546 mm x 1492 mm x 1800 mm
+  • Piloto automático: No
+  • Aire acondicionado: Sí
+  • Comando remoto para radio en el volante: No
+  • Dirección: Asistida
+  • Alarma: Sí
+  • Control de tracción: Delantera
+  • Capacidad de personas: 4
+  • Potencia: 85 hp
+  • Distancia entre ejes: 2.570 mm
+  • Capacidad del tanque: 40 L
+  • Válvulas por cilindro: 2
+  • Llantas de aleación: Sí
+  • Techo solar eléctrico retráctil: Sí
+  • AM/FM: Sí
+  • Bluetooth: No
+
+============================================================

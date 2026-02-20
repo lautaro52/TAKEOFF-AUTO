@@ -1,13 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { User, ChevronDown, MapPin, Heart, Menu, X } from 'lucide-react';
+import { User, ChevronDown, MapPin, Heart, Menu, X, LogOut } from 'lucide-react';
+import { userService } from '../services/userService';
 import Logo from './Logo';
 import './Navbar.css';
 
 const Navbar = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isVisible, setIsVisible] = useState(true);
+    const [user, setUser] = useState(null);
+    const [showLocation, setShowLocation] = useState(false);
     const scrollTimeout = useRef(null);
+    const locationRef = useRef(null);
+
+    useEffect(() => {
+        const currentUser = userService.getCurrentUser();
+        setUser(currentUser);
+    }, []);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -34,6 +43,16 @@ const Navbar = () => {
         };
     }, []);
 
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (locationRef.current && !locationRef.current.contains(event.target)) {
+                setShowLocation(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
     const toggleMobileMenu = () => {
         setIsMobileMenuOpen(!isMobileMenuOpen);
     };
@@ -53,8 +72,9 @@ const Navbar = () => {
 
                 {/* Desktop Menu */}
                 <ul className="navbar-menu">
+                    <li><Link to="/">Inicio</Link></li>
                     <li><Link to="/credito">Usado o 0km</Link></li>
-                    <li><Link to="/catalogo">Compra un auto</Link></li>
+                    <li><Link to="/catalogo">Catalogo de usados</Link></li>
                     {/* <li><Link to="/vender">Vende tu auto</Link></li>
                     <li><a href="#">Cuida tu auto</a></li> */}
                     <li><Link to="/nosotros">Nosotros</Link></li>
@@ -63,17 +83,52 @@ const Navbar = () => {
                 {/* Desktop Actions */}
                 <div className="navbar-actions">
                     <div className="country-flag">🇦🇷</div>
-                    <button className="nav-location-btn">
-                        <MapPin size={16} />
-                        <span>Ubicación</span>
-                    </button>
-                    <button className="nav-icon-btn">
+                    <div className="nav-location-container" ref={locationRef}>
+                        <button
+                            className={`nav-location-btn ${showLocation ? 'active' : ''}`}
+                            onClick={() => setShowLocation(!showLocation)}
+                        >
+                            <MapPin size={16} />
+                            <span>Ubicación</span>
+                        </button>
+
+                        {showLocation && (
+                            <div className="location-popup">
+                                <div className="location-popup-content">
+                                    <div className="location-popup-header">
+                                        <MapPin size={18} className="location-icon-blue" />
+                                        <h4>Nuestra Ubicación</h4>
+                                    </div>
+                                    <p className="location-address">Av. Fuerza Aérea Argentina 3808</p>
+                                    <p className="location-city">Córdoba, Argentina</p>
+                                    <a
+                                        href="https://www.google.com/maps/search/?api=1&query=Turin+Usados+Av.+Fuerza+Aérea+Argentina+3808+Córdoba"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="btn-view-map"
+                                    >
+                                        Ver en Google Maps
+                                    </a>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                    <button className="nav-icon-btn" onClick={() => user ? window.location.href = '/panel' : window.location.href = '/login'}>
                         <Heart size={22} />
                     </button>
-                    <Link to="/login" className="btn-ingresar">
-                        <User size={18} />
-                        <span>Ingresar</span>
-                    </Link>
+                    {user ? (
+                        <Link to="/panel" className="btn-ingresar logged-in">
+                            <div className="nav-user-avatar">
+                                {user.email[0].toUpperCase()}
+                            </div>
+                            <span>Mi Panel</span>
+                        </Link>
+                    ) : (
+                        <Link to="/login" className="btn-ingresar">
+                            <User size={18} />
+                            <span>Ingresar</span>
+                        </Link>
+                    )}
                 </div>
 
                 {/* Mobile Hamburger Button */}
@@ -92,8 +147,9 @@ const Navbar = () => {
                     <div className="mobile-menu-overlay" onClick={closeMobileMenu}></div>
                     <div className="mobile-menu">
                         <ul className="mobile-menu-list">
+                            <li><Link to="/" onClick={closeMobileMenu}>Inicio</Link></li>
                             <li><Link to="/credito" onClick={closeMobileMenu}>Usado o 0km</Link></li>
-                            <li><Link to="/catalogo" onClick={closeMobileMenu}>Compra un auto</Link></li>
+                            <li><Link to="/catalogo" onClick={closeMobileMenu}>Catalogo de usados</Link></li>
                             {/* <li><Link to="/vender" onClick={closeMobileMenu}>Vende tu auto</Link></li>
                             <li><a href="#" onClick={closeMobileMenu}>Cuida tu auto</a></li> */}
                             <li><Link to="/nosotros" onClick={closeMobileMenu}>Nosotros</Link></li>
@@ -105,10 +161,19 @@ const Navbar = () => {
                                 </button>
                             </li>
                             <li>
-                                <Link to="/login" onClick={closeMobileMenu} className="mobile-login-btn">
-                                    <User size={18} />
-                                    <span>Ingresar</span>
-                                </Link>
+                                {user ? (
+                                    <Link to="/panel" onClick={closeMobileMenu} className="mobile-login-btn logged-in">
+                                        <div className="nav-user-avatar">
+                                            {user.email[0].toUpperCase()}
+                                        </div>
+                                        <span>Mi Panel</span>
+                                    </Link>
+                                ) : (
+                                    <Link to="/login" onClick={closeMobileMenu} className="mobile-login-btn">
+                                        <User size={18} />
+                                        <span>Ingresar</span>
+                                    </Link>
+                                )}
                             </li>
                         </ul>
                     </div>

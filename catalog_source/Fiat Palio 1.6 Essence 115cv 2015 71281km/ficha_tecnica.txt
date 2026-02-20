@@ -1,0 +1,45 @@
+============================================================
+VEHÍCULO: Fiat Palio 1.6 Essence 115cv
+============================================================
+
+📅 Año: 2015
+🛣️  Kilometraje: 71281 km
+💰 Precio: $14.700.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-1626303529-fiat-palio-16-essence-115cv-_JM#polycard_client=search-desktop&search_layout=grid&position=29&type=item&tracking_id=2d3e14c9-4daa-45d3-9912-49514f4132a6
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Fiat
+  • Modelo: Palio
+  • Año: 2015
+  • Versión: 1.6 Essence 115cv
+  • Color: Gris
+  • Tipo de combustible: Nafta
+  • Puertas: 5
+  • Transmisión: Manual
+  • Motor: 1.6
+  • Tipo de carrocería: Hatchback
+  • Kilómetros: 71.281 km
+  • Frenos ABS: Sí
+  • Airbag para conductor y pasajero: Sí
+  • Llantas de aleación: Sí
+  • AM/FM: Sí
+  • Bluetooth: No
+  • Reproductor de MP3: No
+  • Piloto automático: Sí
+  • Aire acondicionado: Sí
+  • Computadora de abordo: Sí
+  • Sensor de lluvia: No
+  • Comando remoto para radio en el volante: Sí
+  • Porta vasos: Sí
+  • Dirección: Hidráulica
+  • Alarma: Sí
+  • Control de tracción: Delantera
+  • Capacidad de personas: 5
+  • Potencia: 115 hp
+  • Distancia entre ejes: 3.250 mm
+  • Capacidad del tanque: 48 L
+  • Válvulas por cilindro: 4
+  • Largo x Altura x Ancho: 3875 mm x 1513 mm x 1993 mm
+
+============================================================

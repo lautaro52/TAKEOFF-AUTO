@@ -1,0 +1,41 @@
+============================================================
+VEHÍCULO: Chevrolet Agile 1.4 Ls
+============================================================
+
+📅 Año: 2016
+🛣️  Kilometraje: 120917 km
+💰 Precio: $14.994.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-1654395445-chevrolet-agile-14-ls-_JM#polycard_client=search-desktop&search_layout=grid&position=3&type=item&tracking_id=2d3e14c9-4daa-45d3-9912-49514f4132a6
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Chevrolet
+  • Modelo: Agile
+  • Año: 2016
+  • Versión: 1.4 Ls
+  • Color: Plateado
+  • Tipo de combustible: Nafta
+  • Puertas: 5
+  • Transmisión: Manual
+  • Motor: 1.4
+  • Tipo de carrocería: Hatchback
+  • Kilómetros: 120.917 km
+  • Frenos ABS: Sí
+  • Airbag para conductor y pasajero: Sí
+  • Largo x Altura x Ancho: 4063 mm x 1549 mm x 1835 mm
+  • Piloto automático: Sí
+  • Aire acondicionado: Sí
+  • Computadora de abordo: Sí
+  • Porta vasos: Sí
+  • Dirección: Hidráulica
+  • Control de tracción: Delantera
+  • Capacidad de personas: 5
+  • Potencia: 92 hp
+  • Distancia entre ejes: 3.085 mm
+  • Capacidad del tanque: 54 L
+  • Válvulas por cilindro: 2
+  • AM/FM: Sí
+  • Bluetooth: Sí
+  • Reproductor de MP3: Sí
+
+============================================================

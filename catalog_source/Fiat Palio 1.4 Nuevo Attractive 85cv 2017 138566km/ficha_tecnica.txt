@@ -1,0 +1,41 @@
+============================================================
+VEHÍCULO: Fiat Palio 1.4 Nuevo Attractive 85cv
+============================================================
+
+📅 Año: 2017
+🛣️  Kilometraje: 138566 km
+💰 Precio: $14.602.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-1654252967-fiat-palio-14-nuevo-attractive-85cv-_JM#polycard_client=search-desktop&search_layout=grid&position=5&type=item&tracking_id=2d3e14c9-4daa-45d3-9912-49514f4132a6
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Fiat
+  • Modelo: Palio
+  • Año: 2017
+  • Versión: 1.4 Nuevo Attractive 85cv
+  • Color: Blanco
+  • Tipo de combustible: Nafta
+  • Puertas: 5
+  • Transmisión: Manual
+  • Motor: 1.4
+  • Tipo de carrocería: Hatchback
+  • Kilómetros: 138.566 km
+  • Llantas de aleación: Sí
+  • AM/FM: Sí
+  • Bluetooth: Sí
+  • Aire acondicionado: Sí
+  • Comando remoto para radio en el volante: Sí
+  • Dirección: Hidráulica
+  • Alarma: Sí
+  • Control de tracción: Delantera
+  • Capacidad de personas: 5
+  • Potencia: 85 hp
+  • Distancia entre ejes: 3.665 mm
+  • Capacidad del tanque: 48 L
+  • Válvulas por cilindro: 2
+  • Frenos ABS: Sí
+  • Airbag para conductor y pasajero: Sí
+  • Tracción ASR: Sí
+  • Largo x Altura x Ancho: 3875 mm x 1504 mm x 1993 mm
+
+============================================================

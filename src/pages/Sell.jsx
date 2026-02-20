@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronRight, ChevronDown, CheckCircle, Shield, Clock, TrendingUp, PlayCircle, MapPin, MessageCircle, Pencil } from 'lucide-react';
 import VideoModal from '../components/VideoModal';
+import Reveal from '../components/Reveal';
 import './Sell.css';
 
 // Local Assets
@@ -56,38 +57,40 @@ const Sell = () => {
             {/* HERO SECTION WITH VALUATION FORM */}
             <section className="sell-hero">
                 <div className="container sell-hero-container">
-                    <div className="valuation-card">
-                        <h3>Obtén una oferta por tu auto</h3>
-                        <p>Al instante y sin salir de casa, es la forma más fácil y rápida.</p>
-                        <div className="valuation-form">
-                            <div className="form-group">
-                                <label>Placa</label>
-                                <input type="text" placeholder="Ej: ABC-123-D" />
-                            </div>
-                            <div className="form-row">
+                    <Reveal direction="left" duration={1.2}>
+                        <div className="valuation-card">
+                            <h3>Obtén una oferta por tu auto</h3>
+                            <p>Al instante y sin salir de casa, es la forma más fácil y rápida.</p>
+                            <div className="valuation-form">
                                 <div className="form-group">
-                                    <label>Año</label>
-                                    <select>
-                                        <option>Selecciona</option>
-                                        <option>2024</option>
-                                        <option>2023</option>
-                                        <option>2022</option>
-                                        <option>2021</option>
-                                    </select>
+                                    <label>Placa</label>
+                                    <input type="text" placeholder="Ej: ABC-123-D" />
                                 </div>
-                                <div className="form-group">
-                                    <label>Modelo</label>
-                                    <select>
-                                        <option>Selecciona</option>
-                                        <option>Civic</option>
-                                        <option>Corolla</option>
-                                        <option>Jetta</option>
-                                    </select>
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label>Año</label>
+                                        <select>
+                                            <option>Selecciona</option>
+                                            <option>2024</option>
+                                            <option>2023</option>
+                                            <option>2022</option>
+                                            <option>2021</option>
+                                        </select>
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Modelo</label>
+                                        <select>
+                                            <option>Selecciona</option>
+                                            <option>Civic</option>
+                                            <option>Corolla</option>
+                                            <option>Jetta</option>
+                                        </select>
+                                    </div>
                                 </div>
+                                <button className="btn-primary-k full-width big-blue">COTIZAR</button>
                             </div>
-                            <button className="btn-primary-k full-width big-blue">COTIZAR</button>
                         </div>
-                    </div>
+                    </Reveal>
                 </div>
                 <div className="hero-bg-image">
                     <img src={sellHeroImg} alt="Vender auto" />
@@ -95,13 +98,15 @@ const Sell = () => {
             </section>
 
             {/* TAB SELECTOR */}
-            <div className="tabs-container-sell">
-                <div className="tabs-switcher-sell">
-                    <button className={`tab-btn-s ${activeTab === 'vende' ? 'active' : ''}`} onClick={() => setActiveTab('vende')}>Vender</button>
-                    <button className={`tab-btn-s ${activeTab === 'cambia' ? 'active' : ''}`} onClick={() => setActiveTab('cambia')}>Cambiar</button>
-                    <button className={`tab-btn-s ${activeTab === 'deja' ? 'active' : ''}`} onClick={() => setActiveTab('deja')}>Obtener préstamo</button>
+            <Reveal direction="down" duration={1} delay={0.2}>
+                <div className="tabs-container-sell">
+                    <div className="tabs-switcher-sell">
+                        <button className={`tab-btn-s ${activeTab === 'vende' ? 'active' : ''}`} onClick={() => setActiveTab('vende')}>Vender</button>
+                        <button className={`tab-btn-s ${activeTab === 'cambia' ? 'active' : ''}`} onClick={() => setActiveTab('cambia')}>Cambiar</button>
+                        <button className={`tab-btn-s ${activeTab === 'deja' ? 'active' : ''}`} onClick={() => setActiveTab('deja')}>Obtener préstamo</button>
+                    </div>
                 </div>
-            </div>
+            </Reveal>
 
             {/* DYNAMIC CONTENT BASED ON TABS */}
             <div className="sell-content-wrapper">
@@ -109,45 +114,57 @@ const Sell = () => {
                     <>
                         <section className="section section-staggered">
                             <div className="container">
-                                <h2 className="section-title centered">El proceso más rápido y seguro de vender tu auto</h2>
-                                <p className="section-subtitle centered">Sigue estos pasos y obtén tu dinero hoy mismo.</p>
+                                <Reveal direction="up" duration={1.2}>
+                                    <h2 className="section-title centered">El proceso más rápido y seguro de vender tu auto</h2>
+                                    <p className="section-subtitle centered">Sigue estos pasos y obtén tu dinero hoy mismo.</p>
+                                </Reveal>
 
                                 <div className="staggered-visual-section">
                                     <div className="staggered-img-box">
-                                        <img src={sellVendeImg} alt="Proceso venta" />
-                                        <div className="floating-card-s pos-1">
-                                            <div className="icon-badge-s"><CheckCircle size={20} /></div>
-                                            <div>
-                                                <h5>Cotización al instante</h5>
-                                                <p>Valuamos tu auto con datos reales del mercado</p>
+                                        <Reveal direction="left" duration={1.2} delay={0.2}>
+                                            <img src={sellVendeImg} alt="Proceso venta" />
+                                            <div className="floating-card-s pos-1">
+                                                <div className="icon-badge-s"><CheckCircle size={20} /></div>
+                                                <div>
+                                                    <h5>Cotización al instante</h5>
+                                                    <p>Valuamos tu auto con datos reales del mercado</p>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div className="floating-card-s pos-2">
-                                            <div className="icon-badge-s"><Clock size={20} /></div>
-                                            <div>
-                                                <h5>Pago en el momento</h5>
-                                                <p>Transferencia segura después de la inspección</p>
+                                            <div className="floating-card-s pos-2">
+                                                <div className="icon-badge-s"><Clock size={20} /></div>
+                                                <div>
+                                                    <h5>Pago en el momento</h5>
+                                                    <p>Transferencia segura después de la inspección</p>
+                                                </div>
                                             </div>
-                                        </div>
+                                        </Reveal>
                                     </div>
                                     <div className="staggered-text-box">
-                                        <h3>Vende tu auto en 3 simples pasos</h3>
+                                        <Reveal direction="up" duration={1.2} delay={0.4}>
+                                            <h3>Vende tu auto en 3 simples pasos</h3>
+                                        </Reveal>
                                         <div className="vertical-steps">
-                                            <div className="v-step">
-                                                <div className="v-badge">1</div>
-                                                <h4>Cotiza online</h4>
-                                                <p>Ingresa los datos de tu auto y recibe una oferta preliminar en segundos.</p>
-                                            </div>
-                                            <div className="v-step">
-                                                <div className="v-badge">2</div>
-                                                <h4>Agenda tu cita</h4>
-                                                <p>Visítanos para una inspección física y mecánica de 240 puntos.</p>
-                                            </div>
-                                            <div className="v-step">
-                                                <div className="v-badge">3</div>
-                                                <h4>Recibe tu pago</h4>
-                                                <p>Si todo está en orden, firmamos y te transferimos el dinero el mismo día.</p>
-                                            </div>
+                                            <Reveal direction="up" duration={1.2} delay={0.6}>
+                                                <div className="v-step">
+                                                    <div className="v-badge">1</div>
+                                                    <h4>Cotiza online</h4>
+                                                    <p>Ingresa los datos de tu auto y recibe una oferta preliminar en segundos.</p>
+                                                </div>
+                                            </Reveal>
+                                            <Reveal direction="up" duration={1.2} delay={0.8}>
+                                                <div className="v-step">
+                                                    <div className="v-badge">2</div>
+                                                    <h4>Agenda tu cita</h4>
+                                                    <p>Visítanos para una inspección física y mecánica de 240 puntos.</p>
+                                                </div>
+                                            </Reveal>
+                                            <Reveal direction="up" duration={1.2} delay={1.0}>
+                                                <div className="v-step">
+                                                    <div className="v-badge">3</div>
+                                                    <h4>Recibe tu pago</h4>
+                                                    <p>Si todo está en orden, firmamos y te transferimos el dinero el mismo día.</p>
+                                                </div>
+                                            </Reveal>
                                         </div>
                                     </div>
                                 </div>
@@ -156,23 +173,31 @@ const Sell = () => {
 
                         <section className="section benefits-sell gray-bg">
                             <div className="container">
-                                <h2 className="section-title">¿Por qué vender tu auto en TAKEOFF?</h2>
+                                <Reveal direction="up" duration={1.2}>
+                                    <h2 className="section-title">¿Por qué vender tu auto en TAKEOFF?</h2>
+                                </Reveal>
                                 <div className="benefits-grid-sell">
-                                    <div className="benefit-item-s">
-                                        <div className="icon-teal"><Shield size={32} /></div>
-                                        <h4>Seguridad total</h4>
-                                        <p>Evita riesgos al vender a particulares. En TAKEOFF garantizamos transacciones seguras.</p>
-                                    </div>
-                                    <div className="benefit-item-s">
-                                        <div className="icon-teal"><TrendingUp size={32} /></div>
-                                        <h4>Mejor precio del mercado</h4>
-                                        <p>Usamos algoritmos avanzados para darte la oferta más justa por tu vehículo.</p>
-                                    </div>
-                                    <div className="benefit-item-s">
-                                        <div className="icon-teal"><Clock size={32} /></div>
-                                        <h4>Proceso en el día</h4>
-                                        <p>Desde la cotización hasta el pago, podemos completar todo en menos de 24 horas.</p>
-                                    </div>
+                                    <Reveal direction="up" duration={1.2} delay={0.2}>
+                                        <div className="benefit-item-s">
+                                            <div className="icon-teal"><Shield size={32} /></div>
+                                            <h4>Seguridad total</h4>
+                                            <p>Evita riesgos al vender a particulares. En TAKEOFF garantizamos transacciones seguras.</p>
+                                        </div>
+                                    </Reveal>
+                                    <Reveal direction="up" duration={1.2} delay={0.4}>
+                                        <div className="benefit-item-s">
+                                            <div className="icon-teal"><TrendingUp size={32} /></div>
+                                            <h4>Mejor precio del mercado</h4>
+                                            <p>Usamos algoritmos avanzados para darte la oferta más justa por tu vehículo.</p>
+                                        </div>
+                                    </Reveal>
+                                    <Reveal direction="up" duration={1.2} delay={0.6}>
+                                        <div className="benefit-item-s">
+                                            <div className="icon-teal"><Clock size={32} /></div>
+                                            <h4>Proceso en el día</h4>
+                                            <p>Desde la cotización hasta el pago, podemos completar todo en menos de 24 horas.</p>
+                                        </div>
+                                    </Reveal>
                                 </div>
                             </div>
                         </section>
@@ -261,18 +286,24 @@ const Sell = () => {
             <section className="trust-banners-s">
                 <div className="container">
                     <div className="trust-grid-s">
-                        <div className="trust-item-s">
-                            <CheckCircle size={24} />
-                            <span>Más de 10,000 autos comprados</span>
-                        </div>
-                        <div className="trust-item-s">
-                            <Shield size={24} />
-                            <span>Inspección de 240 puntos</span>
-                        </div>
-                        <div className="trust-item-s">
-                            <Clock size={24} />
-                            <span>Pago en menos de 24 horas</span>
-                        </div>
+                        <Reveal direction="up" duration={1.2} delay={0.1}>
+                            <div className="trust-item-s">
+                                <CheckCircle size={24} />
+                                <span>Más de 10,000 autos comprados</span>
+                            </div>
+                        </Reveal>
+                        <Reveal direction="up" duration={1.2} delay={0.3}>
+                            <div className="trust-item-s">
+                                <Shield size={24} />
+                                <span>Inspección de 240 puntos</span>
+                            </div>
+                        </Reveal>
+                        <Reveal direction="up" duration={1.2} delay={0.5}>
+                            <div className="trust-item-s">
+                                <Clock size={24} />
+                                <span>Pago en menos de 24 horas</span>
+                            </div>
+                        </Reveal>
                     </div>
                 </div>
             </section>
@@ -338,20 +369,24 @@ const Sell = () => {
             {/* FAQ SECTION */}
             <section className="section faq-section-s">
                 <div className="container">
-                    <h2 className="section-title centered">Preguntas frecuentes</h2>
+                    <Reveal direction="up" duration={1.2}>
+                        <h2 className="section-title centered">Preguntas frecuentes</h2>
+                    </Reveal>
                     <div className="faq-wrapper-s">
                         {faqs.map((faq, index) => (
-                            <div key={index} className={`faq-item-s ${openFaq === index ? 'open' : ''}`} onClick={() => toggleFaq(index)}>
-                                <div className="faq-question-s">
-                                    <span>{faq.q}</span>
-                                    <ChevronDown size={20} className="faq-arrow-s" />
-                                </div>
-                                {openFaq === index && (
-                                    <div className="faq-answer-s">
-                                        <p>{faq.a}</p>
+                            <Reveal key={index} direction="up" duration={1.2} delay={index * 0.1}>
+                                <div className={`faq-item-s ${openFaq === index ? 'open' : ''}`} onClick={() => toggleFaq(index)}>
+                                    <div className="faq-question-s">
+                                        <span>{faq.q}</span>
+                                        <ChevronDown size={20} className="faq-arrow-s" />
                                     </div>
-                                )}
-                            </div>
+                                    {openFaq === index && (
+                                        <div className="faq-answer-s">
+                                            <p>{faq.a}</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </Reveal>
                         ))}
                     </div>
                 </div>

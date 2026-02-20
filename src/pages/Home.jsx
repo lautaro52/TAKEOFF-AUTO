@@ -43,28 +43,16 @@ const Home = () => {
                 : 0;
             setMinArsPrice(calculatedMinArsPrice);
 
-            const formatCar = (car) => ({
-                id: car.id,
-                image: car.images?.[0]?.startsWith('http')
-                    ? car.images[0]
-                    : `${API_CONFIG.IMAGE_BASE_URL}${car.images?.[0]}`,
-                title: `${car.brand} ${car.model} ${car.year}`,
-                price: Number(car.price) >= 100000
-                    ? `$ ${Number(car.price).toLocaleString('es-AR')}`
-                    : `$ ${Number(car.price).toLocaleString('es-AR')} USD`,
-                monthly: `$ ${Math.round(Number(car.price) / 60).toLocaleString('es-AR')}${Number(car.price) < 100000 ? ' USD' : ''}`
-            });
-
             let sellers = availableCars
                 .filter(car => Number(car.price) >= 1000000) // ARS prices have 7+ digits
                 .sort((a, b) => Number(a.price) - Number(b.price)) // cheapest first
                 .slice(0, 4);
-            setBestSellers(sellers.map(formatCar));
+            setBestSellers(sellers);
 
             let featured = availableCars.filter(car => car.home_section === 'destacados');
             if (featured.length === 0) featured = availableCars.filter(car => car.featured).slice(0, 4);
             else featured = featured.slice(0, 4);
-            setFeaturedCars(featured.map(formatCar));
+            setFeaturedCars(featured);
 
             setLoading(false);
         } catch (error) {
@@ -81,11 +69,14 @@ const Home = () => {
     return (
         <div className="home">
             <Hero />
+
             <PurchaseProcess />
+
             <SimulationSection
                 minArsPrice={minArsPrice}
                 onCalculate={handleSimulate}
             />
+
             <TrustSection />
 
             {loading ? (
@@ -111,11 +102,13 @@ const Home = () => {
                     )}
 
                     <PromiseFilmstrip />
+
                     <HowItWorks />
                 </>
             )}
 
             <Testimonials />
+
             <BrandGrid />
 
             {showFinancingModal && simulationData && (

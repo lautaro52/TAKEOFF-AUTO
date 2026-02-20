@@ -4,6 +4,8 @@ import Logo from './Logo';
 import './Footer.css';
 
 const Footer = () => {
+    const whatsappLink = "https://wa.me/5493516752879?text=Hola,%20tengo%20una%20consulta";
+
     return (
         <footer className="footer">
             <div className="container">
@@ -12,47 +14,36 @@ const Footer = () => {
                         <Logo variant="dark" />
                     </div>
                     <div className="social-links">
-                        <Facebook size={20} />
-                        <Instagram size={20} />
-                        <Twitter size={20} />
-                        <Youtube size={20} />
-                        <Linkedin size={20} />
+                        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"><Facebook size={20} /></a>
+                        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"><Instagram size={20} /></a>
+                        <a href="https://youtube.com" target="_blank" rel="noopener noreferrer"><Youtube size={20} /></a>
                     </div>
                 </div>
 
                 <div className="footer-grid">
                     <div className="footer-col">
-                        <h4>Compra un auto</h4>
+                        <h4>Catalogo de usados</h4>
                         <ul>
-                            <li><a href="#">Catálogo</a></li>
-                            <li><a href="#">Cómo comprar</a></li>
-                            <li><a href="#">Financiamiento</a></li>
-                            <li><a href="#">Garantía</a></li>
+                            <li><a href="/catalogo">Catalogo de usados</a></li>
+                            <li><a href="/catalogo">Catálogo</a></li>
+                            <li><a href="/credito">Cómo comprar</a></li>
+                            <li><a href="/credito#calculadora">Financiamiento</a></li>
+                            <li><a href="/credito#promesas">Garantía</a></li>
                         </ul>
                     </div>
-                    {/* <div className="footer-col">
-                        <h4>Vende tu auto</h4>
-                        <ul>
-                            <li><a href="#">Cotizar auto</a></li>
-                            <li><a href="#">Cómo vender</a></li>
-                            <li><a href="#">Sedes</a></li>
-                        </ul>
-                    </div> */}
                     <div className="footer-col">
                         <h4>Nosotros</h4>
                         <ul>
+                            <li><a href="/nosotros">Nosotros</a></li>
                             <li><a href="/nosotros">Conócenos</a></li>
-                            <li><a href="#">Trabaja con nosotros</a></li>
-                            <li><a href="#">Blog</a></li>
-                            <li><a href="#">Sustentabilidad</a></li>
+                            <li><a href="/partner/dashboard">Trabaja con nosotros</a></li>
                         </ul>
                     </div>
                     <div className="footer-col">
                         <h4>Soporte</h4>
                         <ul>
-                            <li><a href="#">Centro de ayuda</a></li>
-                            <li><a href="#">Contacto</a></li>
-                            <li><a href="#">Preguntas frecuentes</a></li>
+                            <li><a href={whatsappLink} target="_blank" rel="noopener noreferrer">Soporte</a></li>
+                            <li><a href={whatsappLink} target="_blank" rel="noopener noreferrer">Contacto</a></li>
                         </ul>
                     </div>
                 </div>

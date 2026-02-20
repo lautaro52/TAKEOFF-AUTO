@@ -1,0 +1,34 @@
+============================================================
+VEHÍCULO: Fiat Toro 2.0 Freedom 4x4 At
+============================================================
+
+📅 Año: 2022
+🛣️  Kilometraje: 96453 km
+💰 Precio: $33.320.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-1570225175-fiat-toro-20-freedom-4x4-at-_JM#polycard_client=search-desktop&search_layout=grid&position=30&type=item&tracking_id=2d3e14c9-4daa-45d3-9912-49514f4132a6
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Fiat
+  • Modelo: Toro
+  • Año: 2022
+  • Versión: 2.0 Freedom 4x4 At
+  • Color: Plateado
+  • Tipo de combustible: Diésel
+  • Puertas: 4
+  • Transmisión: Automática
+  • Motor: 2.0
+  • Tipo de carrocería: Pick-Up
+  • Kilómetros: 96.453 km
+  • Control de tracción: 4x4
+  • Capacidad de personas: 5
+  • Potencia: 170 hp
+  • Distancia entre ejes: 2.443 mm
+  • Capacidad del tanque: 60 L
+  • Válvulas por cilindro: 4
+  • Frenos ABS: Sí
+  • Airbag para conductor y pasajero: Sí
+  • Tracción ASR: Sí
+  • Largo x Altura x Ancho: 4915 mm x 1690 mm x 1669 mm
+
+============================================================

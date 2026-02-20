@@ -1,0 +1,39 @@
+============================================================
+VEHÍCULO: Ford Ecosport 1.5 Freestyle 123cv 4x2
+============================================================
+
+📅 Año: 2018
+🛣️  Kilometraje: 83383 km
+💰 Precio: $20.580.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-1626394385-ford-ecosport-15-freestyle-123cv-4x2-_JM#polycard_client=search-desktop&search_layout=grid&position=14&type=item&tracking_id=2d3e14c9-4daa-45d3-9912-49514f4132a6
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Ford
+  • Modelo: Ecosport
+  • Año: 2018
+  • Versión: 1.5 Freestyle 123cv 4x2
+  • Color: Negro
+  • Tipo de combustible: Nafta
+  • Puertas: 5
+  • Transmisión: Manual
+  • Motor: 1.5
+  • Tipo de carrocería: SUV
+  • Kilómetros: 83.383 km
+  • Llantas de aleación: Sí
+  • Largo x Altura x Ancho: 4241 mm x 1693 mm x 1821 mm
+  • Aire acondicionado: Sí
+  • Computadora de abordo: Sí
+  • Dirección: Asistida
+  • Alarma: No
+  • Control de tracción: 4x2
+  • Capacidad de personas: 5
+  • Potencia: 123 hp
+  • Distancia entre ejes: 2.608 mm
+  • Capacidad del tanque: 52 L
+  • Válvulas por cilindro: 4
+  • Frenos ABS: Sí
+  • Airbag para conductor y pasajero: Sí
+  • Tracción ASR: Sí
+
+============================================================

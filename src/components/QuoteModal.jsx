@@ -1,5 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { X, ChevronDown, ChevronUp, Upload, Image as ImageIcon, Loader2 } from 'lucide-react';
+import { userService } from '../services/userService';
 import './QuoteModal.css';
 
 const QuoteModal = ({ isOpen, onClose }) => {
@@ -22,6 +23,18 @@ const QuoteModal = ({ isOpen, onClose }) => {
     });
     const [photos, setPhotos] = useState([]);
     const [previews, setPreviews] = useState([]);
+
+    useEffect(() => {
+        if (isOpen) {
+            const currentUser = userService.getCurrentUser();
+            if (currentUser) {
+                setFormData(prev => ({
+                    ...prev,
+                    email: currentUser.email || ''
+                }));
+            }
+        }
+    }, [isOpen]);
 
     if (!isOpen) return null;
 

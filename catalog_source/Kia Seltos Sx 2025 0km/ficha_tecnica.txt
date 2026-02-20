@@ -1,0 +1,21 @@
+============================================================
+VEHÍCULO: Kia Seltos Sx
+============================================================
+
+📅 Año: 2025
+🛣️  Kilometraje: 0 km
+💰 Precio: $33.500
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-2152593802-kia-seltos-sx-_JM#polycard_client=search-desktop&search_layout=grid&position=30&type=item&tracking_id=b1651126-6f73-4f2d-a29e-ee38aefe6328
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Kia
+  • Modelo: Seltos
+  • Año: 2025
+  • Versión: Sx
+  • Color: Blanco
+  • Tipo de combustible: Diésel
+  • Puertas: 5
+  • Kilómetros: 0 km
+
+============================================================

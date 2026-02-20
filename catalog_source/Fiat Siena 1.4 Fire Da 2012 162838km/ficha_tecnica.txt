@@ -1,0 +1,36 @@
+============================================================
+VEHÍCULO: Fiat Siena 1.4 Fire Da
+============================================================
+
+📅 Año: 2012
+🛣️  Kilometraje: 162838 km
+💰 Precio: $12.250.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-2578485016-fiat-siena-14-fire-da-_JM#polycard_client=search-desktop&search_layout=grid&position=16&type=item&tracking_id=b1651126-6f73-4f2d-a29e-ee38aefe6328
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Fiat
+  • Modelo: Siena
+  • Año: 2012
+  • Versión: 1.4 Fire Da
+  • Color: Blanco
+  • Tipo de combustible: Nafta
+  • Puertas: 4
+  • Transmisión: Manual
+  • Motor: 1.4
+  • Tipo de carrocería: Sedán
+  • Kilómetros: 162.838 km
+  • Largo x Altura x Ancho: 4135 mm x 1453 mm x 1850 mm
+  • Aire acondicionado: No
+  • Computadora de abordo: Sí
+  • Porta vasos: Sí
+  • Dirección: Hidráulica
+  • Control de tracción: Delantera
+  • Capacidad de personas: 5
+  • Potencia: 82 hp
+  • Distancia entre ejes: 3.150 mm
+  • Capacidad del tanque: 48 L
+  • Válvulas por cilindro: 2
+  • AM/FM: No
+
+============================================================

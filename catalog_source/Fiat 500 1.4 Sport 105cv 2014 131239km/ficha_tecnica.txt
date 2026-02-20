@@ -1,0 +1,45 @@
+============================================================
+VEHÍCULO: Fiat 500 1.4 Sport 105cv
+============================================================
+
+📅 Año: 2014
+🛣️  Kilometraje: 131239 km
+💰 Precio: $15.680.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-1626432903-fiat-500-14-sport-105cv-_JM#polycard_client=search-desktop&search_layout=grid&position=34&type=item&tracking_id=2d3e14c9-4daa-45d3-9912-49514f4132a6
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Fiat
+  • Modelo: 500
+  • Año: 2014
+  • Versión: 1.4 Sport 105cv
+  • Color: Rojo
+  • Tipo de combustible: Nafta
+  • Puertas: 3
+  • Transmisión: Manual
+  • Motor: 1.4
+  • Tipo de carrocería: Hatchback
+  • Kilómetros: 131.239 km
+  • Frenos ABS: Sí
+  • Airbag para conductor y pasajero: Sí
+  • Control de estabilidad: Sí
+  • Tracción ASR: Sí
+  • Tapizado de cuero: No
+  • Piloto automático: Sí
+  • Aire acondicionado: Sí
+  • Comando remoto para radio en el volante: Sí
+  • Dirección: Asistida
+  • Alarma: Sí
+  • Control de tracción: Delantera
+  • Capacidad de personas: 4
+  • Potencia: 105 hp
+  • Distancia entre ejes: 2.640 mm
+  • Capacidad del tanque: 40 L
+  • Válvulas por cilindro: 4
+  • Llantas de aleación: Sí
+  • Techo solar eléctrico retráctil: Sí
+  • AM/FM: Sí
+  • Bluetooth: Sí
+  • Largo x Altura x Ancho: 3546 mm x 1492 mm x 1855 mm
+
+============================================================

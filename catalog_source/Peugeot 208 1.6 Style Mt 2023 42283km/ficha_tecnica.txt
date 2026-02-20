@@ -1,0 +1,41 @@
+============================================================
+VEHÍCULO: Peugeot 208 1.6 Style Mt
+============================================================
+
+📅 Año: 2023
+🛣️  Kilometraje: 42283 km
+💰 Precio: $25.284.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-1606082781-peugeot-208-16-style-mt-_JM#polycard_client=search-desktop&search_layout=grid&position=24&type=item&tracking_id=b1651126-6f73-4f2d-a29e-ee38aefe6328
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Peugeot
+  • Modelo: 208
+  • Año: 2023
+  • Versión: 1.6 Style Mt
+  • Color: Gris
+  • Tipo de combustible: Nafta
+  • Puertas: 5
+  • Transmisión: Manual
+  • Motor: 1.6
+  • Tipo de carrocería: Hatchback
+  • Kilómetros: 42.283 km
+  • Bluetooth: Sí
+  • Reproductor de MP3: Sí
+  • Entrada USB: Sí
+  • Aire acondicionado: Sí
+  • Computadora de abordo: Sí
+  • Comando remoto para radio en el volante: Sí
+  • Dirección: Asistida
+  • Control de tracción: Delantera
+  • Capacidad de personas: 5
+  • Potencia: 115 hp
+  • Distancia entre ejes: 2.540 mm
+  • Capacidad del tanque: 55 L
+  • Válvulas por cilindro: 4
+  • Frenos ABS: Sí
+  • Airbag para conductor y pasajero: Sí
+  • Tracción ASR: Sí
+  • Largo x Altura x Ancho: 3975 mm x 1470 mm x 1740 mm
+
+============================================================

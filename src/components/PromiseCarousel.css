@@ -1,7 +1,8 @@
 .promise-carousel {
     position: relative;
     width: 100%;
-    max-width: 1000px;
+    max-width: 850px;
+    /* Reduced from 1000px */
     margin: 40px auto;
     border-radius: 20px;
     overflow: hidden;
@@ -46,7 +47,6 @@
     text-transform: uppercase;
     letter-spacing: -0.5px;
     color: white;
-    /* Ensure visibility */
 }
 
 .slide-content-promise p {
@@ -55,6 +55,38 @@
     opacity: 0.9;
     line-height: 1.4;
     max-width: 600px;
+}
+
+.carousel-arrow-promise {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(4px);
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    z-index: 20;
+    transition: all 0.3s ease;
+}
+
+.carousel-arrow-promise:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-arrow-promise.prev {
+    left: 20px;
+}
+
+.carousel-arrow-promise.next {
+    right: 20px;
 }
 
 .carousel-dots-promise {
@@ -85,8 +117,32 @@
 
 /* Mobile responsive */
 @media (max-width: 768px) {
+    .promise-carousel {
+        border-radius: 16px;
+        margin: 24px auto;
+    }
+
     .carousel-track-promise {
-        height: 450px;
+        height: auto;
+        aspect-ratio: 3 / 4;
+    }
+
+    .carousel-slide-promise img {
+        object-fit: cover;
+        object-position: center top;
+    }
+
+    .carousel-arrow-promise {
+        width: 36px;
+        height: 36px;
+    }
+
+    .carousel-arrow-promise.prev {
+        left: 10px;
+    }
+
+    .carousel-arrow-promise.next {
+        right: 10px;
     }
 
     .slide-content-promise {
@@ -99,5 +155,11 @@
 
     .slide-content-promise p {
         font-size: 0.95rem;
+    }
+
+    .carousel-dots-promise {
+        bottom: 12px;
+        right: 50%;
+        transform: translateX(50%);
     }
 }

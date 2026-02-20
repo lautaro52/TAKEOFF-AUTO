@@ -1,0 +1,39 @@
+============================================================
+VEHÍCULO: Ford Ecosport 1.5 Se 123cv 4x2 Manual
+============================================================
+
+📅 Año: 2021
+🛣️  Kilometraje: 78281 km
+💰 Precio: $23.324.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-1654354677-ford-ecosport-15-se-123cv-4x2-manual-_JM#polycard_client=search-desktop&search_layout=grid&position=27&type=item&tracking_id=2d3e14c9-4daa-45d3-9912-49514f4132a6
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Ford
+  • Modelo: Ecosport
+  • Año: 2021
+  • Versión: 1.5 Se 123cv 4x2 Manual
+  • Color: Plateado
+  • Tipo de combustible: Nafta
+  • Puertas: 5
+  • Transmisión: Manual
+  • Motor: 1.5
+  • Tipo de carrocería: SUV
+  • Kilómetros: 78.281 km
+  • Llantas de aleación: Sí
+  • Largo x Altura x Ancho: 4241 mm x 1693 mm x 1821 mm
+  • Aire acondicionado: Sí
+  • Computadora de abordo: Sí
+  • Dirección: Asistida
+  • Alarma: No
+  • Control de tracción: 4x2
+  • Capacidad de personas: 5
+  • Potencia: 123 hp
+  • Distancia entre ejes: 2.608 mm
+  • Capacidad del tanque: 52 L
+  • Válvulas por cilindro: 4
+  • Frenos ABS: Sí
+  • Airbag para conductor y pasajero: Sí
+  • Tracción ASR: Sí
+
+============================================================

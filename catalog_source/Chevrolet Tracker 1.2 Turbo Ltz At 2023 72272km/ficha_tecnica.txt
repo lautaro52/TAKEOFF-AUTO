@@ -1,0 +1,44 @@
+============================================================
+VEHÍCULO: Chevrolet Tracker 1.2 Turbo Ltz At
+============================================================
+
+📅 Año: 2023
+🛣️  Kilometraje: 72272 km
+💰 Precio: $31.360.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-1663021473-chevrolet-tracker-12-turbo-ltz-at-_JM#polycard_client=search-desktop&search_layout=grid&position=22&type=item&tracking_id=2d3e14c9-4daa-45d3-9912-49514f4132a6
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Chevrolet
+  • Modelo: Tracker
+  • Año: 2023
+  • Versión: 1.2 Turbo Ltz At
+  • Color: Blanco
+  • Tipo de combustible: Nafta
+  • Puertas: 5
+  • Transmisión: Automática
+  • Motor: 1.2
+  • Tipo de carrocería: SUV
+  • Kilómetros: 72.272 km
+  • Bluetooth: Sí
+  • CD: Sí
+  • Entrada USB: Sí
+  • Tapizado de cuero: Sí
+  • Largo x Altura x Ancho: 4270 mm x 1626 mm x 1791 mm
+  • Piloto automático: Sí
+  • Aire acondicionado: Sí
+  • Porta vasos: Sí
+  • Dirección: Eléctrica
+  • Control de tracción: 4x2
+  • Capacidad de personas: 5
+  • Potencia: 132 hp
+  • Distancia entre ejes: 2.570 mm
+  • Capacidad del tanque: 44 L
+  • Válvulas por cilindro: 4
+  • Frenos ABS: Sí
+  • Faros con regulación automática: Sí
+  • Airbag para conductor y pasajero: Sí
+  • Tracción ASR: Sí
+  • Inspección vehicular: No
+
+============================================================

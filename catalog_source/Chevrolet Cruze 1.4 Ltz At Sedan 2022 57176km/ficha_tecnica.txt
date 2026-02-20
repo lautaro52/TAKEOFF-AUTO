@@ -1,0 +1,41 @@
+============================================================
+VEHÍCULO: Chevrolet Cruze 1.4 Ltz At Sedan
+============================================================
+
+📅 Año: 2022
+🛣️  Kilometraje: 57176 km
+💰 Precio: $29.890.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-2819054832-chevrolet-cruze-14-ltz-at-sedan-_JM#polycard_client=search-desktop&search_layout=grid&position=21&type=item&tracking_id=2d3e14c9-4daa-45d3-9912-49514f4132a6
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Chevrolet
+  • Modelo: Cruze
+  • Año: 2022
+  • Versión: 1.4 Ltz At Sedan
+  • Color: Blanco
+  • Tipo de combustible: Nafta
+  • Puertas: 4
+  • Transmisión: Automática
+  • Motor: 1.4
+  • Tipo de carrocería: Sedán
+  • Kilómetros: 57.176 km
+  • Techo solar eléctrico retráctil: Sí
+  • Android auto: Sí
+  • Apple CarPlay: Sí
+  • Piloto automático: Sí
+  • Dirección: Eléctrica
+  • Control de tracción: Delantera
+  • Capacidad de personas: 5
+  • Potencia: 153 hp
+  • Distancia entre ejes: 2.700 mm
+  • Capacidad del tanque: 52 L
+  • Válvulas por cilindro: 4
+  • Frenos ABS: Sí
+  • Airbag para conductor y pasajero: Sí
+  • Control de estabilidad: Sí
+  • Tracción ASR: Sí
+  • Inspección vehicular: No
+  • Largo x Altura x Ancho: 4665 mm x 1484 mm x 2042 mm
+
+============================================================

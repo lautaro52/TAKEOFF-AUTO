@@ -1,0 +1,40 @@
+============================================================
+VEHÍCULO: Chevrolet Onix 1.2 Ls
+============================================================
+
+📅 Año: 2020
+🛣️  Kilometraje: 97897 km
+💰 Precio: $19.110.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-1654316677-chevrolet-onix-12-ls-_JM#polycard_client=search-desktop&search_layout=grid&position=12&type=item&tracking_id=2d3e14c9-4daa-45d3-9912-49514f4132a6
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Chevrolet
+  • Modelo: Onix
+  • Año: 2020
+  • Versión: 1.2 Ls
+  • Color: Blanco
+  • Tipo de combustible: Nafta
+  • Puertas: 5
+  • Transmisión: Manual
+  • Motor: 1.2
+  • Tipo de carrocería: Hatchback
+  • Kilómetros: 97.897 km
+  • Bluetooth: Sí
+  • Entrada USB: Sí
+  • Largo x Altura x Ancho: 3930 mm x 1484 mm x 1656 mm
+  • Piloto automático: No
+  • Aire acondicionado: Sí
+  • Dirección: Asistida
+  • Control de tracción: Delantera
+  • Capacidad de personas: 5
+  • Potencia: 90 hp
+  • Distancia entre ejes: 2.465 mm
+  • Capacidad del tanque: 54 L
+  • Válvulas por cilindro: 2
+  • Frenos ABS: Sí
+  • Airbag para conductor y pasajero: Sí
+  • Tracción ASR: Sí
+  • Tapizado de cuero: Sí
+
+============================================================

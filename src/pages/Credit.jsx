@@ -9,6 +9,7 @@ import './Credit.css';
 import creditHero from '../assets/credit-hero.jpg';
 import videoCredit from '../assets/video-credit.mp4';
 import creditPoster from '../assets/credit-poster.jpg';
+import Reveal from '../components/Reveal';
 
 // Para evitar que la página falle si las fotos aún no existen, 
 // usaremos las rutas como texto. Una vez subas las fotos, aparecerán solas.
@@ -22,30 +23,6 @@ const Credit = () => {
     const [activeTab, setActiveTab] = useState('usados'); // 'usados' o '0km'
     const [openFaq, setOpenFaq] = useState(null);
     const [carouselIndex, setCarouselIndex] = useState(0);
-
-    useEffect(() => {
-        const observerOptions = {
-            threshold: 0.15,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
-                    // Opcional: dejar de observar una vez visible
-                    // observer.unobserve(entry.target);
-                }
-            });
-        }, observerOptions);
-
-        const revealElements = document.querySelectorAll('.reveal');
-        revealElements.forEach(el => observer.observe(el));
-
-        return () => {
-            revealElements.forEach(el => observer.unobserve(el));
-        };
-    }, [activeTab]); // Reiniciar observador cuando cambie el tab ya que el contenido cambia
 
     // Track carousel scroll position for indicators + Auto-play (infinite loop)
     useEffect(() => {
@@ -268,59 +245,69 @@ const Credit = () => {
             {activeTab === 'usados' ? (
                 <>
                     {/* AUTO FINANCING CALCULATOR PREVIEW */}
-                    <section className="section financing-preview">
+                    <section id="calculadora" className="section financing-preview">
                         <div className="container">
-                            <h2 className="section-title reveal reveal-bottom">Usados Certificados - Financiamos el 100%</h2>
-                            <p className="section-subtitle reveal reveal-bottom delay-100">Sin entrega inicial. Hasta 72 cuotas. Llevate tu auto hoy.</p>
+                            <Reveal direction="up" duration={1.2}>
+                                <h2 className="section-title">Usados Certificados - Financiamos el 100%</h2>
+                            </Reveal>
+                            <Reveal direction="up" duration={1.2} delay={0.4}>
+                                <p className="section-subtitle">Sin entrega inicial. Hasta 72 cuotas. Llevate tu auto hoy.</p>
+                            </Reveal>
 
                             <div className="financing-staggered-grid">
-                                <div className="financing-staggered-card reveal reveal-left delay-200">
-                                    <div className="car-top-label">Usado Certificado</div>
-                                    <div className="staggered-img-container">
-                                        <img src={car1} alt="Fiat Cronos Drive 2021" />
-                                    </div>
-                                    <div className="staggered-info">
-                                        <div className="staggered-title">Fiat Cronos Drive 2021 • $21.560.000</div>
-                                        <div className="staggered-monthly">
-                                            <span className="monthly-val">$ 475.998/mes</span>
+                                <Reveal direction="left" duration={1.2} delay={0.5}>
+                                    <div className="financing-staggered-card">
+                                        <div className="car-top-label">Usado Certificado</div>
+                                        <div className="staggered-img-container">
+                                            <img src={car1} alt="Fiat Cronos Drive 2021" />
                                         </div>
-                                        <div className="staggered-footer">
-                                            Págalo en <span className="blue-link-text">60 meses</span>
+                                        <div className="staggered-info">
+                                            <div className="staggered-title">Fiat Cronos Drive 2021 • $21.560.000</div>
+                                            <div className="staggered-monthly">
+                                                <span className="monthly-val">$ 475.998/mes</span>
+                                            </div>
+                                            <div className="staggered-footer">
+                                                Págalo en <span className="blue-link-text">60 meses</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                </Reveal>
 
-                                <div className="financing-staggered-card featured reveal reveal-bottom delay-400">
-                                    <div className="car-top-label">Usado Certificado</div>
-                                    <div className="staggered-img-container">
-                                        <img src={car2} alt="Fiat Toro Freedom 2021" />
-                                    </div>
-                                    <div className="staggered-info">
-                                        <div className="staggered-title">Fiat Toro Freedom 2021 • $32.340.000</div>
-                                        <div className="staggered-monthly">
-                                            <span className="monthly-val">$ 952.150/mes</span>
+                                <Reveal direction="up" duration={1.2} delay={0.7}>
+                                    <div className="financing-staggered-card featured">
+                                        <div className="car-top-label">Usado Certificado</div>
+                                        <div className="staggered-img-container">
+                                            <img src={car2} alt="Fiat Toro Freedom 2021" />
                                         </div>
-                                        <div className="staggered-footer">
-                                            Págalo en <span className="blue-link-text">72 meses (Tasa 0%)</span>
+                                        <div className="staggered-info">
+                                            <div className="staggered-title">Fiat Toro Freedom 2021 • $32.340.000</div>
+                                            <div className="staggered-monthly">
+                                                <span className="monthly-val">$ 952.150/mes</span>
+                                            </div>
+                                            <div className="staggered-footer">
+                                                Págalo en <span className="blue-link-text">72 meses (Tasa 0%)</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                </Reveal>
 
-                                <div className="financing-staggered-card reveal reveal-right delay-600">
-                                    <div className="car-top-label">Usado Certificado</div>
-                                    <div className="staggered-img-container">
-                                        <img src={car3} alt="Volkswagen Gol Power 2013" />
-                                    </div>
-                                    <div className="staggered-info">
-                                        <div className="staggered-title">Volkswagen Gol Power 2013 • $11.760.000</div>
-                                        <div className="staggered-monthly">
-                                            <span className="monthly-val">$ 291.577/mes</span>
+                                <Reveal direction="right" duration={1.2} delay={0.9}>
+                                    <div className="financing-staggered-card">
+                                        <div className="car-top-label">Usado Certificado</div>
+                                        <div className="staggered-img-container">
+                                            <img src={car3} alt="Volkswagen Gol Power 2013" />
                                         </div>
-                                        <div className="staggered-footer">
-                                            Págalo en <span className="blue-link-text">48 meses (Línea UVA)</span>
+                                        <div className="staggered-info">
+                                            <div className="staggered-title">Volkswagen Gol Power 2013 • $11.760.000</div>
+                                            <div className="staggered-monthly">
+                                                <span className="monthly-val">$ 291.577/mes</span>
+                                            </div>
+                                            <div className="staggered-footer">
+                                                Págalo en <span className="blue-link-text">48 meses (Línea UVA)</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                </Reveal>
 
                                 {/* === CLONES FOR INFINITE LOOP (mobile only, hidden on desktop) === */}
                                 <div className="financing-staggered-card financing-carousel-dup" aria-hidden="true">
@@ -388,34 +375,34 @@ const Credit = () => {
                     <section className="section steps-section-staggered">
                         <div className="container">
                             <div className="steps-split-layout">
-                                <div className="steps-left-col reveal reveal-left">
+                                <Reveal direction="left" duration={1.2} className="steps-left-col">
                                     <h2 className="steps-main-title">Comprá tu Usado Certificado</h2>
                                     <button onClick={() => navigate('/catalogo')} className="comenzar-ahora-link" style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
                                         Comenzar ahora <ChevronRight size={18} />
                                     </button>
-                                </div>
+                                </Reveal>
                                 <div className="steps-right-col">
-                                    <div className="step-card-k reveal reveal-right delay-100">
+                                    <Reveal direction="right" duration={1.2} delay={0.2} className="step-card-k">
                                         <div className="step-badge">1</div>
                                         <div>
                                             <h4>Busca tu auto en nuestro catálogo</h4>
                                             <p>Filtra y encuentra autos para tu presupuesto</p>
                                         </div>
-                                    </div>
-                                    <div className="step-card-k reveal reveal-right delay-200">
+                                    </Reveal>
+                                    <Reveal direction="right" duration={1.2} delay={0.4} className="step-card-k">
                                         <div className="step-badge">2</div>
                                         <div>
                                             <h4>Elige tu ingreso y simula tu plan de pagos</h4>
                                             <p>Ingresa tus datos y descubre las opciones que tenemos para ti</p>
                                         </div>
-                                    </div>
-                                    <div className="step-card-k reveal reveal-right delay-300">
+                                    </Reveal>
+                                    <Reveal direction="right" duration={1.2} delay={0.6} className="step-card-k">
                                         <div className="step-badge">3</div>
                                         <div>
                                             <h4>Compra tu auto</h4>
                                             <p>Personaliza tu plan y decide a cuantos meses quieres pagar</p>
                                         </div>
-                                    </div>
+                                    </Reveal>
                                 </div>
                             </div>
                         </div>
@@ -424,27 +411,29 @@ const Credit = () => {
                     {/* BLUE BENEFITS SECTION */}
                     <section className="section benefits-blue">
                         <div className="container">
-                            <div className="benefits-header reveal reveal-bottom">
-                                <h2>Las ventajas de nuestros Usados Certificados</h2>
-                                <a href="#" className="link-white">Más información <ChevronRight size={16} /></a>
-                            </div>
+                            <Reveal direction="up" duration={1.2}>
+                                <div className="benefits-header">
+                                    <h2>Las ventajas de nuestros Usados Certificados</h2>
+                                    <a href="#" className="link-white">Más información <ChevronRight size={16} /></a>
+                                </div>
+                            </Reveal>
                             <div className="benefits-row">
-                                <div className="benefit-col reveal reveal-bottom delay-100">
+                                <Reveal direction="up" duration={1.2} delay={0.2} className="benefit-col">
                                     <CheckCircle size={32} />
                                     <p>Financiá hasta en 72 cuotas con una entrega inicial mínima del 30%</p>
-                                </div>
-                                <div className="benefit-col reveal reveal-bottom delay-200">
+                                </Reveal>
+                                <Reveal direction="up" duration={1.2} delay={0.4} className="benefit-col">
                                     <Shield size={32} />
                                     <p>Cuotas Fijas y Créditos UVA</p>
-                                </div>
-                                <div className="benefit-col reveal reveal-bottom delay-300">
+                                </Reveal>
+                                <Reveal direction="up" duration={1.2} delay={0.6} className="benefit-col">
                                     <Clock size={32} />
                                     <p>Calculá tu plan en 60 segundos</p>
-                                </div>
-                                <div className="benefit-col reveal reveal-bottom delay-400">
+                                </Reveal>
+                                <Reveal direction="up" duration={1.2} delay={0.8} className="benefit-col">
                                     <TrendingUp size={32} />
                                     <p>Unidades con respaldo de 3 meses en caja y motor</p>
-                                </div>
+                                </Reveal>
                             </div>
                         </div>
                     </section>
@@ -454,16 +443,22 @@ const Credit = () => {
                     {/* LOAN SECTION - 0KM SHOWCASE */}
                     <section className="section loans-section">
                         <div className="container">
-                            <h2 className="section-title reveal reveal-bottom">TU 0KM A TASA 0%: SIN INTERÉS NI SORPRESAS</h2>
-                            <p className="section-subtitle reveal reveal-bottom delay-100">Accedé al stock más completo con entrega inmediata. Financiá en 18 cuotas fijas y simulá tu plan a medida en segundos con nuestra IA.</p>
+                            <Reveal direction="up" duration={1.2}>
+                                <h2 className="section-title">TU 0KM A TASA 0%: SIN INTERÉS NI SORPRESAS</h2>
+                            </Reveal>
+                            <Reveal direction="up" duration={1.2} delay={0.3}>
+                                <p className="section-subtitle">Accedé al stock más completo con entrega inmediata. Financiá en 18 cuotas fijas y simulá tu plan a medida en segundos con nuestra IA.</p>
+                            </Reveal>
 
-                            <div className="reveal reveal-scale delay-200">
+                            <Reveal direction="scale" duration={1.2} delay={0.5}>
                                 <ZeroKmShowcase />
-                            </div>
+                            </Reveal>
 
-                            <div className="center-btn reveal reveal-bottom delay-400" style={{ marginTop: '20px' }}>
-                                <button className="btn-primary-k big-blue" onClick={() => window.open('https://wa.me/5493516752879?text=Hola,%20quiero%20un%20Auto%200km', '_blank')}>Consulta el Mejor Plan</button>
-                            </div>
+                            <Reveal direction="up" duration={1.2} delay={0.7}>
+                                <div className="center-btn" style={{ marginTop: '20px' }}>
+                                    <button className="btn-primary-k big-blue" onClick={() => window.open('https://wa.me/5493516752879?text=Hola,%20quiero%20un%20Auto%200km', '_blank')}>Consulta el Mejor Plan</button>
+                                </div>
+                            </Reveal>
                         </div>
                     </section>
 
@@ -471,34 +466,34 @@ const Credit = () => {
                     <section className="section steps-section-staggered">
                         <div className="container">
                             <div className="steps-split-layout">
-                                <div className="steps-left-col reveal reveal-left">
+                                <Reveal direction="left" duration={1.2} className="steps-left-col">
                                     <h2 className="steps-main-title">Pedí tu 0km ahora</h2>
                                     <button onClick={() => navigate('/catalogo')} className="comenzar-ahora-link" style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
                                         Comenzar ahora <ChevronRight size={18} />
                                     </button>
-                                </div>
+                                </Reveal>
                                 <div className="steps-right-col">
-                                    <div className="step-card-k reveal reveal-right delay-100">
+                                    <Reveal direction="right" duration={1.2} delay={0.2} className="step-card-k">
                                         <div className="step-badge">1</div>
                                         <div>
                                             <h4>ELEGÍ TU UNIDAD 0KM</h4>
                                             <p>Explorá el catálogo con stock real de las mejores marcas y seleccioná el modelo que buscás.</p>
                                         </div>
-                                    </div>
-                                    <div className="step-card-k reveal reveal-right delay-200">
+                                    </Reveal>
+                                    <Reveal direction="right" duration={1.2} delay={0.4} className="step-card-k">
                                         <div className="step-badge">2</div>
                                         <div>
                                             <h4>SIMULÁ TU TASA 0%</h4>
                                             <p>Usá nuestra calculadora para armar tu plan en 18 cuotas fijas y sin interés de forma inmediata.</p>
                                         </div>
-                                    </div>
-                                    <div className="step-card-k reveal reveal-right delay-300">
+                                    </Reveal>
+                                    <Reveal direction="right" duration={1.2} delay={0.6} className="step-card-k">
                                         <div className="step-badge">3</div>
                                         <div>
                                             <h4>RESERVÁ Y RETIRÁ</h4>
                                             <p>Pre-calificá con nuestra IA, agendá tu cita en el salón y retirá tu unidad con garantía oficial.</p>
                                         </div>
-                                    </div>
+                                    </Reveal>
                                 </div>
                             </div>
                         </div>
@@ -534,35 +529,37 @@ const Credit = () => {
                 </>
             )}
 
-            <section className="section deliveries-section">
+            <section id="promesas" className="section deliveries-section">
                 <div className="container">
-                    <h2 className="section-title reveal reveal-bottom">Nuestra promesa TakeOff</h2>
-                    <div className="reveal reveal-bottom delay-100">
+                    <Reveal direction="up" duration={1.2}>
+                        <h2 className="section-title">Nuestra promesa TakeOff</h2>
                         <PromiseCarousel />
-                    </div>
+                    </Reveal>
                 </div>
             </section>
 
             {/* WHY CHOOSE US */}
             <section className="section why-choose">
                 <div className="container">
-                    <h2 className="section-title reveal reveal-bottom">¿Por qué elegirnos?</h2>
+                    <Reveal direction="up" duration={1.2}>
+                        <h2 className="section-title">¿Por qué elegirnos?</h2>
+                    </Reveal>
                     <div className="why-grid">
-                        <div className="why-item reveal reveal-bottom delay-100">
+                        <Reveal direction="up" duration={1.2} delay={0.2} className="why-item">
                             <MessageCircle className="icon-teal" />
                             <h4>Atención personalizada</h4>
                             <p>Contamos con múltiples asesores, disponibles para acompañarte en el proceso.</p>
-                        </div>
-                        <div className="why-item reveal reveal-bottom delay-200">
+                        </Reveal>
+                        <Reveal direction="up" duration={1.2} delay={0.4} className="why-item">
                             <CheckCircle className="icon-teal" />
                             <h4>Altas tasas de aprobación</h4>
                             <p>Aprobamos a 4 de cada 5 personas que solicitan un préstamo.</p>
-                        </div>
-                        <div className="why-item reveal reveal-bottom delay-300">
+                        </Reveal>
+                        <Reveal direction="up" duration={1.2} delay={0.6} className="why-item">
                             <Pencil className="icon-teal" />
                             <h4>Préstamos a medida</h4>
                             <p>Te damos la oportunidad de personalizar el pago de tu préstamo.</p>
-                        </div>
+                        </Reveal>
                     </div>
                 </div>
             </section>
@@ -570,8 +567,10 @@ const Credit = () => {
             {/* FAQ SECTION */}
             <section className="section faq-section gray-bg">
                 <div className="container">
-                    <h2 className="section-title reveal reveal-bottom">Qué tienes que saber</h2>
-                    <div className="faq-wrapper reveal reveal-bottom delay-200">
+                    <Reveal direction="up" duration={1.2}>
+                        <h2 className="section-title">Qué tienes que saber</h2>
+                    </Reveal>
+                    <Reveal direction="up" duration={1.2} delay={0.3} className="faq-wrapper">
                         {faqs.map((faq, index) => (
                             <div key={index} className={`faq-item ${openFaq === index ? 'open' : ''}`} onClick={() => toggleFaq(index)}>
                                 <div className="faq-question">
@@ -583,7 +582,7 @@ const Credit = () => {
                                 </div>
                             </div>
                         ))}
-                    </div>
+                    </Reveal>
                 </div>
             </section>
         </div>

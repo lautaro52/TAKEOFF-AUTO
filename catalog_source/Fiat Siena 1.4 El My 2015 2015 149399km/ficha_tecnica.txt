@@ -1,0 +1,37 @@
+============================================================
+VEHÍCULO: Fiat Siena 1.4 El My 2015
+============================================================
+
+📅 Año: 2015
+🛣️  Kilometraje: 149399 km
+💰 Precio: $14.700.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-2775682550-fiat-siena-14-el-my-2015-_JM#polycard_client=search-desktop&search_layout=grid&position=9&type=item&tracking_id=2d3e14c9-4daa-45d3-9912-49514f4132a6
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Fiat
+  • Modelo: Siena
+  • Año: 2015
+  • Versión: 1.4 El My 2015
+  • Color: Plateado
+  • Tipo de combustible: Nafta
+  • Puertas: 4
+  • Transmisión: Manual
+  • Motor: 1.4
+  • Tipo de carrocería: Sedán
+  • Kilómetros: 149.399 km
+  • AM/FM: Sí
+  • Aire acondicionado: Sí
+  • Computadora de abordo: Sí
+  • Porta vasos: Sí
+  • Dirección: Hidráulica
+  • Control de tracción: Delantera
+  • Capacidad de personas: 5
+  • Potencia: 82 hp
+  • Distancia entre ejes: 2.959 mm
+  • Capacidad del tanque: 48 L
+  • Válvulas por cilindro: 2
+  • Airbag para conductor y pasajero: Sí
+  • Largo x Altura x Ancho: 4155 mm x 1437 mm x 1826 mm
+
+============================================================

@@ -1,0 +1,25 @@
+============================================================
+VEHÍCULO: Chevrolet Spin 1.8n Premier M/t 2020
+============================================================
+
+📅 Año: 2020
+🛣️  Kilometraje: 134904 km
+💰 Precio: $22.540.000
+🔗 URL: https://auto.mercadolibre.com.ar/MLA-1582091121-chevrolet-spin-18n-premier-mt-2020-_JM#polycard_client=search-desktop&search_layout=grid&position=32&type=item&tracking_id=2d3e14c9-4daa-45d3-9912-49514f4132a6
+
+📋 CARACTERÍSTICAS TÉCNICAS:
+------------------------------------------------------------
+  • Marca: Chevrolet
+  • Modelo: Spin
+  • Año: 2020
+  • Versión: 1.8 Premier Mt
+  • Color: Negro
+  • Tipo de combustible: Nafta
+  • Puertas: 5
+  • Transmisión: Manual
+  • Motor: 1.8
+  • Tipo de carrocería: Monovolumen
+  • Kilómetros: 134.904 km
+  • Control de tracción: Delantera
+
+============================================================
