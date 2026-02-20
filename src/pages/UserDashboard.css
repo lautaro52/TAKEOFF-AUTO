@@ -1,6 +1,8 @@
 .dashboard-page {
     min-height: 100vh;
     background-color: #f8f9fb;
+    padding-top: 60px;
+    /* Offset for fixed Navbar */
     padding-bottom: 80px;
 }
 
@@ -9,7 +11,8 @@
     border-bottom: 1px solid #e1e4e8;
     padding-top: 40px;
     position: sticky;
-    top: 0;
+    top: 60px;
+    /* Sticky below fixed Navbar */
     z-index: 100;
 }
 
