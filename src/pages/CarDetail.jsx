@@ -186,11 +186,11 @@ const CarDetail = () => {
     };
 
     return (
-        <div className="kavak-car-detail">
-            <div className="kavak-container no-padding-top">
-                <div className="kavak-search-bar-container" ref={searchRef}>
-                    <div className="kavak-search-input-wrapper">
-                        <Search className="kavak-search-icon" size={18} />
+        <div className="takeoff-car-detail">
+            <div className="takeoff-container no-padding-top">
+                <div className="takeoff-search-bar-container" ref={searchRef}>
+                    <div className="takeoff-search-input-wrapper">
+                        <Search className="takeoff-search-icon" size={18} />
                         <input
                             type="text"
                             placeholder="Busca tu próximo auto..."
@@ -203,53 +203,53 @@ const CarDetail = () => {
                         />
                     </div>
                     {showSearchResults && filteredCars.length > 0 && (
-                        <div className="kavak-search-results">
+                        <div className="takeoff-search-results">
                             {filteredCars.map(res => (
                                 <Link
                                     key={res.id}
                                     to={`/car/${res.id}`}
-                                    className="kavak-search-item"
+                                    className="takeoff-search-item"
                                     onClick={() => {
                                         setShowSearchResults(false);
                                         setSearchQuery('');
                                     }}
                                 >
-                                    <div className="kavak-search-item-thumb">
+                                    <div className="takeoff-search-item-thumb">
                                         <img src={getImageUrl(res.images?.[0])} alt={res.model} />
                                     </div>
-                                    <div className="kavak-search-item-info">
-                                        <div className="kavak-search-item-name">{res.brand} {res.model}</div>
-                                        <div className="kavak-search-item-meta">
+                                    <div className="takeoff-search-item-info">
+                                        <div className="takeoff-search-item-name">{res.brand} {res.model}</div>
+                                        <div className="takeoff-search-item-meta">
                                             {res.year} • {Number(res.km).toLocaleString('es-AR')} km • ${Number(res.price).toLocaleString('es-AR')}
                                         </div>
                                     </div>
-                                    <ChevronRight size={16} className="kavak-search-arrow" />
+                                    <ChevronRight size={16} className="takeoff-search-arrow" />
                                 </Link>
                             ))}
                         </div>
                     )}
                 </div>
 
-                <div className="kavak-detail-grid">
+                <div className="takeoff-detail-grid">
                     {/* 1. GALLERY (Part of the grid to align with right column on desktop) */}
-                    <div className="kavak-gallery-top">
-                        <div className="kavak-gallery">
-                            <div className="kavak-gallery-main-v2">
+                    <div className="takeoff-gallery-top">
+                        <div className="takeoff-gallery">
+                            <div className="takeoff-gallery-main-v2">
                                 <img
                                     src={getImageUrl(images[activeImage])}
                                     alt={`${car.brand} ${car.model}`}
-                                    className="kavak-main-image"
+                                    className="takeoff-main-image"
                                 />
                                 {images.length > 1 && (
                                     <>
                                         <button
-                                            className="kavak-gallery-nav prev"
+                                            className="takeoff-gallery-nav prev"
                                             onClick={() => setActiveImage(prev => prev > 0 ? prev - 1 : images.length - 1)}
                                         >
                                             <ChevronLeft size={24} />
                                         </button>
                                         <button
-                                            className="kavak-gallery-nav next"
+                                            className="takeoff-gallery-nav next"
                                             onClick={() => setActiveImage(prev => prev < images.length - 1 ? prev + 1 : 0)}
                                         >
                                             <ChevronRight size={24} />
@@ -260,11 +260,11 @@ const CarDetail = () => {
 
                             {/* Thumbnails */}
                             {images.length > 1 && (
-                                <div className="kavak-gallery-thumbnails" ref={thumbnailRef}>
+                                <div className="takeoff-gallery-thumbnails" ref={thumbnailRef}>
                                     {images.map((img, index) => (
                                         <div
                                             key={index}
-                                            className={`kavak-thumbnail ${activeImage === index ? 'active' : ''}`}
+                                            className={`takeoff-thumbnail ${activeImage === index ? 'active' : ''}`}
                                             onClick={() => setActiveImage(index)}
                                         >
                                             <img src={getImageUrl(img)} alt={`Vista ${index + 1}`} />
@@ -275,61 +275,61 @@ const CarDetail = () => {
                         </div>
 
                         {/* 1b. Descripción General (Relocated from left column) */}
-                        <section className="kavak-section-gallery">
-                            <h2 className="kavak-section-title-small">Descripción general</h2>
-                            <div className="kavak-specs-main-grid-v2">
-                                <div className="kavak-spec-item">
-                                    <Gauge className="kavak-spec-icon" />
-                                    <div className="kavak-spec-info">
-                                        <div className="kavak-spec-value">{getVal(Number(car.km).toLocaleString('es-AR'), ' km')}</div>
-                                        <div className="kavak-spec-label">Kilometraje</div>
+                        <section className="takeoff-section-gallery">
+                            <h2 className="takeoff-section-title-small">Descripción general</h2>
+                            <div className="takeoff-specs-main-grid-v2">
+                                <div className="takeoff-spec-item">
+                                    <Gauge className="takeoff-spec-icon" />
+                                    <div className="takeoff-spec-info">
+                                        <div className="takeoff-spec-value">{getVal(Number(car.km).toLocaleString('es-AR'), ' km')}</div>
+                                        <div className="takeoff-spec-label">Kilometraje</div>
                                     </div>
                                 </div>
-                                <div className="kavak-spec-item">
-                                    <Settings2 className="kavak-spec-icon" />
-                                    <div className="kavak-spec-info">
-                                        <div className="kavak-spec-value">{car.transmission === 'automatico' ? 'Automática' : (car.transmission === 'manual' ? 'Manual' : '-')}</div>
-                                        <div className="kavak-spec-label">Transmisión</div>
+                                <div className="takeoff-spec-item">
+                                    <Settings2 className="takeoff-spec-icon" />
+                                    <div className="takeoff-spec-info">
+                                        <div className="takeoff-spec-value">{car.transmission === 'automatico' ? 'Automática' : (car.transmission === 'manual' ? 'Manual' : '-')}</div>
+                                        <div className="takeoff-spec-label">Transmisión</div>
                                     </div>
                                 </div>
-                                <div className="kavak-spec-item">
-                                    <Fuel className="kavak-spec-icon" />
-                                    <div className="kavak-spec-info">
-                                        <div className="kavak-spec-value">{getVal(car.fuel)}</div>
-                                        <div className="kavak-spec-label">Combustible</div>
+                                <div className="takeoff-spec-item">
+                                    <Fuel className="takeoff-spec-icon" />
+                                    <div className="takeoff-spec-info">
+                                        <div className="takeoff-spec-value">{getVal(car.fuel)}</div>
+                                        <div className="takeoff-spec-label">Combustible</div>
                                     </div>
                                 </div>
-                                <div className="kavak-spec-item">
-                                    <Settings2 className="kavak-spec-icon" />
-                                    <div className="kavak-spec-info">
-                                        <div className="kavak-spec-value">{getVal(car.engine_size, ' L')}</div>
-                                        <div className="kavak-spec-label">Motor</div>
+                                <div className="takeoff-spec-item">
+                                    <Settings2 className="takeoff-spec-icon" />
+                                    <div className="takeoff-spec-info">
+                                        <div className="takeoff-spec-value">{getVal(car.engine_size, ' L')}</div>
+                                        <div className="takeoff-spec-label">Motor</div>
                                     </div>
                                 </div>
-                                <div className="kavak-spec-item">
-                                    <Users className="kavak-spec-icon" />
-                                    <div className="kavak-spec-info">
-                                        <div className="kavak-spec-value">{getVal(car.passengers)}</div>
-                                        <div className="kavak-spec-label">Pasajeros</div>
+                                <div className="takeoff-spec-item">
+                                    <Users className="takeoff-spec-icon" />
+                                    <div className="takeoff-spec-info">
+                                        <div className="takeoff-spec-value">{getVal(car.passengers)}</div>
+                                        <div className="takeoff-spec-label">Pasajeros</div>
                                     </div>
                                 </div>
-                                <div className="kavak-spec-item">
-                                    <DoorClosed className="kavak-spec-icon" />
-                                    <div className="kavak-spec-info">
-                                        <div className="kavak-spec-value">{getVal(car.doors)}</div>
-                                        <div className="kavak-spec-label">Puertas</div>
+                                <div className="takeoff-spec-item">
+                                    <DoorClosed className="takeoff-spec-icon" />
+                                    <div className="takeoff-spec-info">
+                                        <div className="takeoff-spec-value">{getVal(car.doors)}</div>
+                                        <div className="takeoff-spec-label">Puertas</div>
                                     </div>
                                 </div>
                             </div>
                         </section>
 
                         {/* 1c. Características (Relocated below Descripción General) */}
-                        <section className="kavak-section-gallery">
-                            <h2 className="kavak-section-title-small">Características del {car.brand} {car.model}</h2>
-                            <div className="kavak-features-checklist">
+                        <section className="takeoff-section-gallery">
+                            <h2 className="takeoff-section-title-small">Características del {car.brand} {car.model}</h2>
+                            <div className="takeoff-features-checklist">
                                 {carFeatures.map((feature, index) => (
-                                    <div key={index} className="kavak-feature-check">
-                                        <Check size={18} className="kavak-check-blue" />
+                                    <div key={index} className="takeoff-feature-check">
+                                        <Check size={18} className="takeoff-check-blue" />
                                         <span>{feature}</span>
                                     </div>
                                 ))}
@@ -338,25 +338,25 @@ const CarDetail = () => {
                     </div>
 
                     {/* 2. RIGHT COLUMN (Price, CTA, Credits) */}
-                    <div className="kavak-right-column">
-                        <div className="kavak-sticky-wrapper">
+                    <div className="takeoff-right-column">
+                        <div className="takeoff-sticky-wrapper">
                             {/* Car Header Info */}
-                            <div className="kavak-header-right">
-                                <div className="kavak-header-info">
-                                    <h1 className="kavak-model-large">
+                            <div className="takeoff-header-right">
+                                <div className="takeoff-header-info">
+                                    <h1 className="takeoff-model-large">
                                         {car.brand} {car.model} {car.version} {car.year}
                                     </h1>
-                                    <div className="kavak-meta-small">
-                                        <div className="kavak-meta-line">{Number(car.km).toLocaleString('es-AR')} km • {car.city}</div>
-                                        <div className="kavak-delivery-estimate">
+                                    <div className="takeoff-meta-small">
+                                        <div className="takeoff-meta-line">{Number(car.km).toLocaleString('es-AR')} km • {car.city}</div>
+                                        <div className="takeoff-delivery-estimate">
                                             <Clock size={14} /> Entrega inmediata
                                         </div>
                                     </div>
                                 </div>
-                                <div className="kavak-header-actions">
-                                    <button className="kavak-action-btn" onClick={handleShare}><Share2 size={20} /></button>
+                                <div className="takeoff-header-actions">
+                                    <button className="takeoff-action-btn" onClick={handleShare}><Share2 size={20} /></button>
                                     <button
-                                        className={`kavak-action-btn ${isFavorite ? 'favorite' : ''}`}
+                                        className={`takeoff-action-btn ${isFavorite ? 'favorite' : ''}`}
                                         onClick={handleToggleFavorite}
                                     >
                                         <Heart size={20} fill={isFavorite ? '#E74C3C' : 'none'} color={isFavorite ? '#E74C3C' : 'currentColor'} />
@@ -365,23 +365,23 @@ const CarDetail = () => {
                             </div>
 
                             {/* Price Boxes Section */}
-                            <div className="kavak-price-section">
-                                <div className="kavak-price-box regular">
-                                    <div className="kavak-price-box-label">Precio regular</div>
-                                    <div className="kavak-price-box-amount">
+                            <div className="takeoff-price-section">
+                                <div className="takeoff-price-box regular">
+                                    <div className="takeoff-price-box-label">Precio regular</div>
+                                    <div className="takeoff-price-box-amount">
                                         ${Number(car.price).toLocaleString('es-AR')}
-                                        <button className="kavak-info-icon-btn"><Check size={14} /></button>
+                                        <button className="takeoff-info-icon-btn"><Check size={14} /></button>
                                     </div>
                                 </div>
 
-                                <div className="kavak-price-box credit">
-                                    <div className="kavak-price-box-label">Llevatelo hoy por tan solo:</div>
-                                    <div className="kavak-price-box-amount">
+                                <div className="takeoff-price-box credit">
+                                    <div className="takeoff-price-box-label">Llevatelo hoy por tan solo:</div>
+                                    <div className="takeoff-price-box-amount">
                                         ${(Number(car.price) * 0.20).toLocaleString('es-AR')}
-                                        <button className="kavak-info-icon-btn"><Check size={14} /></button>
+                                        <button className="takeoff-info-icon-btn"><Check size={14} /></button>
                                     </div>
-                                    <div className="kavak-credit-installment-row promo-highlight">
-                                        <span className="kavak-installment-text">100% FINANCIADO SOLO POR {
+                                    <div className="takeoff-credit-installment-row promo-highlight">
+                                        <span className="takeoff-installment-text">100% FINANCIADO SOLO POR {
                                             ["ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO",
                                                 "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"][new Date().getMonth()]
                                         }</span>
@@ -390,44 +390,44 @@ const CarDetail = () => {
                             </div>
 
                             {/* Trade-in Box */}
-                            <div className="kavak-tradein-box">
-                                <div className="kavak-tradein-header">
-                                    <div className="kavak-tradein-title">Aceptamos autos en forma de pago, llave por llave</div>
-                                    <button className="kavak-quote-btn" onClick={() => setIsQuoteModalOpen(true)}>
+                            <div className="takeoff-tradein-box">
+                                <div className="takeoff-tradein-header">
+                                    <div className="takeoff-tradein-title">Aceptamos autos en forma de pago, llave por llave</div>
+                                    <button className="takeoff-quote-btn" onClick={() => setIsQuoteModalOpen(true)}>
                                         <Check size={14} /> Mandanos tu auto
                                     </button>
                                 </div>
-                                <p className="kavak-tradein-desc">
+                                <p className="takeoff-tradein-desc">
                                     Cotiza para conocer el valor de tu auto y úsalo como parte de pago.
                                 </p>
                             </div>
 
                             {/* Main CTA Button */}
                             <button
-                                className="kavak-main-cta blue-btn"
+                                className="takeoff-main-cta blue-btn"
                                 onClick={handleSimulationClick}
                             >
                                 Calcular cuota
                             </button>
 
                             {/* Right Column Specs List */}
-                            <div className="kavak-specs-list">
-                                <div className="kavak-spec-list-item">
-                                    <div className="kavak-spec-list-left">
-                                        <span className="kavak-spec-list-label">Año</span>
-                                        <span className="kavak-spec-list-value">{car.year}</span>
+                            <div className="takeoff-specs-list">
+                                <div className="takeoff-spec-list-item">
+                                    <div className="takeoff-spec-list-left">
+                                        <span className="takeoff-spec-list-label">Año</span>
+                                        <span className="takeoff-spec-list-value">{car.year}</span>
                                     </div>
                                 </div>
-                                <div className="kavak-spec-list-item">
-                                    <div className="kavak-spec-list-left">
-                                        <span className="kavak-spec-list-label">Versión</span>
-                                        <span className="kavak-spec-list-value">{car.version || car.model?.toUpperCase()}</span>
+                                <div className="takeoff-spec-list-item">
+                                    <div className="takeoff-spec-list-left">
+                                        <span className="takeoff-spec-list-label">Versión</span>
+                                        <span className="takeoff-spec-list-value">{car.version || car.model?.toUpperCase()}</span>
                                     </div>
                                 </div>
-                                <div className="kavak-spec-list-item">
-                                    <div className="kavak-spec-list-left">
-                                        <span className="kavak-spec-list-label">Transmisión</span>
-                                        <span className="kavak-spec-list-value">{car.transmission === 'automatico' ? 'Automático' : 'Manual'}</span>
+                                <div className="takeoff-spec-list-item">
+                                    <div className="takeoff-spec-list-left">
+                                        <span className="takeoff-spec-list-label">Transmisión</span>
+                                        <span className="takeoff-spec-list-value">{car.transmission === 'automatico' ? 'Automático' : 'Manual'}</span>
                                     </div>
                                 </div>
                             </div>
@@ -436,24 +436,24 @@ const CarDetail = () => {
                 </div>
 
                 {/* Guarantees Banner */}
-                <section className="kavak-guarantees-banner">
-                    <div className="kavak-guarantee-item">
+                <section className="takeoff-guarantees-banner">
+                    <div className="takeoff-guarantee-item">
                         <Shield size={32} />
-                        <div className="kavak-guarantee-content">
+                        <div className="takeoff-guarantee-content">
                             <strong>Inspección Total Certificada</strong>
                             <p>Cada vehículo pasa por una revisión técnica exhaustiva antes de la entrega.</p>
                         </div>
                     </div>
-                    <div className="kavak-guarantee-item">
+                    <div className="takeoff-guarantee-item">
                         <RotateCcw size={32} />
-                        <div className="kavak-guarantee-content">
+                        <div className="takeoff-guarantee-content">
                             <strong>Garantía Mecánica</strong>
                             <p>Cobertura de 3 meses en motor y caja de cambios para tu tranquilidad.</p>
                         </div>
                     </div>
-                    <div className="kavak-guarantee-item">
+                    <div className="takeoff-guarantee-item">
                         <Clock size={32} />
-                        <div className="kavak-guarantee-content">
+                        <div className="takeoff-guarantee-content">
                             <strong>Test Drive y Soporte</strong>
                             <p>Prueba el auto antes de comprarlo y cuenta con atención de lunes a viernes.</p>
                         </div>
@@ -461,11 +461,11 @@ const CarDetail = () => {
                 </section>
 
                 {/* Financing Promotion */}
-                <section className="kavak-financing-promo">
-                    <div className="kavak-promo-content">
+                <section className="takeoff-financing-promo">
+                    <div className="takeoff-promo-content">
                         <h3>¿Necesitas un financiamiento?</h3>
                         <p>Obtén las mejores tasas del mercado con nuestros bancos aliados</p>
-                        <button className="kavak-promo-btn" onClick={() => setIsFinancingModalOpen(true)}>
+                        <button className="takeoff-promo-btn" onClick={() => setIsFinancingModalOpen(true)}>
                             SIMULAR CRÉDITO
                         </button>
                     </div>
@@ -473,31 +473,31 @@ const CarDetail = () => {
 
                 {/* Similar Vehicles Grid */}
                 {similarCars.length > 0 && (
-                    <section className="kavak-similar-section">
-                        <h2 className="kavak-similar-title">Vehículos similares</h2>
-                        <div className="kavak-similar-grid">
+                    <section className="takeoff-similar-section">
+                        <h2 className="takeoff-similar-title">Vehículos similares</h2>
+                        <div className="takeoff-similar-grid">
                             {similarCars.map((similarCar, index) => (
                                 <Link
                                     key={similarCar.id}
                                     to={`/car/${similarCar.id}`}
-                                    className="kavak-similar-card"
+                                    className="takeoff-similar-card"
                                 >
                                     <img
                                         src={getImageUrl(similarCar.images?.[0])}
                                         alt={`${similarCar.brand} ${similarCar.model}`}
-                                        className="kavak-similar-img"
+                                        className="takeoff-similar-img"
                                     />
-                                    <div className="kavak-similar-info">
-                                        <h3 className="kavak-similar-name">
+                                    <div className="takeoff-similar-info">
+                                        <h3 className="takeoff-similar-name">
                                             {similarCar.brand} {similarCar.model}
                                         </h3>
-                                        <p className="kavak-similar-specs">
+                                        <p className="takeoff-similar-specs">
                                             {similarCar.year} • {Number(similarCar.km).toLocaleString('es-AR')} km
                                         </p>
-                                        <p className="kavak-similar-location">
+                                        <p className="takeoff-similar-location">
                                             <MapPin size={14} /> {similarCar.city || 'Córdoba Capital'}
                                         </p>
-                                        <div className="kavak-similar-price">
+                                        <div className="takeoff-similar-price">
                                             ${Number(similarCar.price).toLocaleString('es-AR')}
                                         </div>
                                     </div>

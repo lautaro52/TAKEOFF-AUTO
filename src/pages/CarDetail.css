@@ -1,11 +1,11 @@
 /* ==========================================================================
-   KAVAK CAR DETAIL PAGE - HIGH FIDELITY CLONE
+   TAKEOFF AUTO CAR DETAIL PAGE - HIGH FIDELITY CLONE
    ========================================================================== */
 
 :root {
-    --kavak-blue: #0040C1;
-    --kavak-blue-dark: #003091;
-    --kavak-blue-light: #EBF2FF;
+    --takeoff-blue: #0040C1;
+    --takeoff-blue-dark: #003091;
+    --takeoff-blue-light: #EBF2FF;
     --text-primary: #1A1A1A;
     --text-secondary: #666666;
     --text-tertiary: #999999;
@@ -20,7 +20,7 @@
 }
 
 /* Global Page Styles */
-.kavak-car-detail {
+.takeoff-car-detail {
     background-color: #ffffff;
     padding-top: 0;
     /* Tight alignment with header */
@@ -48,12 +48,12 @@
 }
 
 /* Global Container Adjustment */
-.kavak-container.no-padding-top {
+.takeoff-container.no-padding-top {
     padding-top: 0 !important;
 }
 
 /* Unified Search Bar Style */
-.kavak-search-bar-container {
+.takeoff-search-bar-container {
     position: relative;
     max-width: 1162px;
     margin: 65px auto 24px auto;
@@ -62,7 +62,7 @@
     z-index: 1000;
 }
 
-.kavak-search-input-wrapper {
+.takeoff-search-input-wrapper {
     display: flex;
     align-items: center;
     background: #f8f9fa;
@@ -73,17 +73,17 @@
     transition: all 0.3s ease;
 }
 
-.kavak-search-input-wrapper:focus-within {
+.takeoff-search-input-wrapper:focus-within {
     border-color: #316be2;
     background: #fff;
     box-shadow: 0 4px 12px rgba(49, 107, 226, 0.1);
 }
 
-.kavak-search-input-wrapper .kavak-search-icon {
+.takeoff-search-input-wrapper .takeoff-search-icon {
     color: #666;
 }
 
-.kavak-search-input-wrapper input {
+.takeoff-search-input-wrapper input {
     border: none;
     background: transparent;
     width: 100%;
@@ -93,7 +93,7 @@
 }
 
 /* Search Results Dropdown */
-.kavak-search-results {
+.takeoff-search-results {
     position: absolute;
     top: 100%;
     left: 20px;
@@ -107,7 +107,7 @@
     border: 1px solid #eee;
 }
 
-.kavak-search-item {
+.takeoff-search-item {
     display: flex;
     align-items: center;
     padding: 12px;
@@ -118,16 +118,16 @@
     transition: background 0.2s;
 }
 
-.kavak-search-item:last-child {
+.takeoff-search-item:last-child {
     border-bottom: none;
 }
 
-.kavak-search-item:hover,
-.kavak-search-item:active {
+.takeoff-search-item:hover,
+.takeoff-search-item:active {
     background: #f0f4ff;
 }
 
-.kavak-search-item-thumb {
+.takeoff-search-item-thumb {
     width: 60px;
     height: 45px;
     border-radius: 6px;
@@ -135,41 +135,41 @@
     flex-shrink: 0;
 }
 
-.kavak-search-item-thumb img {
+.takeoff-search-item-thumb img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.kavak-search-item-info {
+.takeoff-search-item-info {
     flex: 1;
 }
 
-.kavak-search-item-name {
+.takeoff-search-item-name {
     font-size: 14px;
     font-weight: 600;
     color: #333;
     margin-bottom: 2px;
 }
 
-.kavak-search-item-meta {
+.takeoff-search-item-meta {
     font-size: 12px;
     color: #888;
 }
 
-.kavak-search-arrow {
+.takeoff-search-arrow {
     color: #ccc;
     flex-shrink: 0;
 }
 
-.kavak-container {
+.takeoff-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 16px;
 }
 
 /* Breadcrumbs */
-.kavak-breadcrumbs {
+.takeoff-breadcrumbs {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -179,21 +179,21 @@
     text-transform: uppercase;
 }
 
-.kavak-breadcrumbs a {
-    color: var(--kavak-blue);
+.takeoff-breadcrumbs a {
+    color: var(--takeoff-blue);
     text-decoration: none;
     font-weight: 600;
 }
 
 /* Main Grid Structure */
-.kavak-detail-grid {
+.takeoff-detail-grid {
     display: flex;
     flex-direction: column;
     gap: 32px;
 }
 
 @media (min-width: 768px) {
-    .kavak-detail-grid {
+    .takeoff-detail-grid {
         display: flex !important;
         flex-direction: row !important;
         gap: 32px !important;
@@ -203,21 +203,21 @@
 }
 
 /* Gallery (Left Top) */
-.kavak-gallery-top {
+.takeoff-gallery-top {
     order: 1;
     /* First on mobile */
     width: 100%;
 }
 
 @media (min-width: 768px) {
-    .kavak-gallery-top {
+    .takeoff-gallery-top {
         flex: 1 !important;
         max-width: 750px !important;
         /* Cap the width so it doesn't get huge */
     }
 }
 
-.kavak-gallery-main-v2 {
+.takeoff-gallery-main-v2 {
     position: relative;
     width: 100% !important;
     aspect-ratio: 16/9;
@@ -232,14 +232,14 @@
 }
 
 @media (min-width: 768px) {
-    .kavak-gallery-main-v2 {
+    .takeoff-gallery-main-v2 {
         height: 480px !important;
         /* Fixed height on desktop for better control */
         aspect-ratio: auto !important;
     }
 }
 
-.kavak-main-image {
+.takeoff-main-image {
     width: 100% !important;
     /* Prevent from touching edges */
     height: 100% !important;
@@ -250,7 +250,7 @@
     transition: transform 0.3s ease;
 }
 
-.kavak-gallery-nav {
+.takeoff-gallery-nav {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -268,20 +268,20 @@
     transition: all 0.2s ease;
 }
 
-.kavak-gallery-nav:hover {
+.takeoff-gallery-nav:hover {
     background: #fff;
     transform: translateY(-50%) scale(1.1);
 }
 
-.kavak-gallery-nav.prev {
+.takeoff-gallery-nav.prev {
     left: 20px;
 }
 
-.kavak-gallery-nav.next {
+.takeoff-gallery-nav.next {
     right: 20px;
 }
 
-.kavak-gallery-thumbnails {
+.takeoff-gallery-thumbnails {
     display: flex;
     gap: 8px;
     overflow-x: auto;
@@ -289,7 +289,7 @@
     scrollbar-width: thin;
 }
 
-.kavak-thumbnail {
+.takeoff-thumbnail {
     flex: 0 0 100px;
     height: 70px;
     border-radius: 6px;
@@ -300,43 +300,43 @@
     transition: all 0.2s ease;
 }
 
-.kavak-thumbnail.active {
-    border-color: var(--kavak-blue);
+.takeoff-thumbnail.active {
+    border-color: var(--takeoff-blue);
     opacity: 1;
 }
 
-.kavak-thumbnail img {
+.takeoff-thumbnail img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
 /* Right Column (Pricing) */
-.kavak-right-column {
+.takeoff-right-column {
     order: 2;
     /* Second on mobile */
 }
 
 @media (min-width: 768px) {
-    .kavak-right-column {
+    .takeoff-right-column {
         width: 380px !important;
         flex-shrink: 0 !important;
     }
 }
 
-.kavak-sticky-wrapper {
+.takeoff-sticky-wrapper {
     position: sticky;
     top: 80px;
 }
 
-.kavak-header-right {
+.takeoff-header-right {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 16px;
 }
 
-.kavak-model-large {
+.takeoff-model-large {
     font-size: 18px;
     font-weight: 700;
     color: #1a1a1a;
@@ -344,7 +344,7 @@
     margin-bottom: 4px;
 }
 
-.kavak-meta-small {
+.takeoff-meta-small {
     font-size: 13px;
     color: #666;
     display: flex;
@@ -354,12 +354,12 @@
     margin-top: 4px;
 }
 
-.kavak-meta-line {
+.takeoff-meta-line {
     font-size: 14px;
     color: #444;
 }
 
-.kavak-delivery-estimate {
+.takeoff-delivery-estimate {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -368,12 +368,12 @@
     font-size: 14px;
 }
 
-.kavak-header-actions {
+.takeoff-header-actions {
     display: flex;
     gap: 8px;
 }
 
-.kavak-action-btn {
+.takeoff-action-btn {
     width: 32px;
     height: 32px;
     border: none;
@@ -382,30 +382,30 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: var(--kavak-blue);
+    color: var(--takeoff-blue);
 }
 
-.kavak-price-section {
+.takeoff-price-section {
     display: flex;
     flex-direction: column;
     gap: 12px;
     margin-bottom: 16px;
 }
 
-.kavak-price-box {
+.takeoff-price-box {
     background: #fff;
     border: 1px solid #eee;
     border-radius: 8px;
     padding: 16px;
 }
 
-.kavak-price-box-label {
+.takeoff-price-box-label {
     font-size: 13px;
     color: #666;
     margin-bottom: 8px;
 }
 
-.kavak-price-box-amount {
+.takeoff-price-box-amount {
     font-size: 24px;
     font-weight: 800;
     color: #1a1a1a;
@@ -414,9 +414,9 @@
     gap: 6px;
 }
 
-.kavak-info-icon-btn {
+.takeoff-info-icon-btn {
     background: #eee;
-    color: var(--kavak-blue);
+    color: var(--takeoff-blue);
     width: 20px;
     height: 20px;
     border-radius: 50%;
@@ -426,11 +426,11 @@
     border: none;
 }
 
-.kavak-price-box.credit {
+.takeoff-price-box.credit {
     border: 1px solid #f0f4ff;
 }
 
-.kavak-credit-installment-row {
+.takeoff-credit-installment-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -440,14 +440,14 @@
     border-radius: 4px;
 }
 
-.kavak-installment-text {
+.takeoff-installment-text {
     font-size: 14px;
     color: #1a1a1a;
 }
 
-.kavak-edit-btn {
+.takeoff-edit-btn {
     background: #eff4ff;
-    color: var(--kavak-blue);
+    color: var(--takeoff-blue);
     font-size: 12px;
     font-weight: 700;
     padding: 4px 12px;
@@ -459,12 +459,12 @@
     cursor: pointer;
 }
 
-.kavak-simulate-link {
+.takeoff-simulate-link {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    color: var(--kavak-blue);
+    color: var(--takeoff-blue);
     font-size: 14px;
     font-weight: 600;
     margin-top: 16px;
@@ -473,30 +473,30 @@
     cursor: pointer;
 }
 
-.kavak-tradein-box {
+.takeoff-tradein-box {
     background: #f8f9fa;
     border-radius: 8px;
     padding: 16px;
     margin-bottom: 16px;
 }
 
-.kavak-tradein-header {
+.takeoff-tradein-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 12px;
 }
 
-.kavak-tradein-title {
+.takeoff-tradein-title {
     font-size: 14px;
     font-weight: 700;
     color: #1a1a1a;
 }
 
-.kavak-quote-btn {
+.takeoff-quote-btn {
     background: transparent;
-    border: 1px solid var(--kavak-blue);
-    color: var(--kavak-blue);
+    border: 1px solid var(--takeoff-blue);
+    color: var(--takeoff-blue);
     font-size: 12px;
     font-weight: 700;
     padding: 4px 12px;
@@ -507,15 +507,15 @@
     cursor: pointer;
 }
 
-.kavak-tradein-desc {
+.takeoff-tradein-desc {
     font-size: 12px;
     color: #666;
     line-height: 1.4;
 }
 
-.kavak-main-cta.blue-btn {
+.takeoff-main-cta.blue-btn {
     width: 100%;
-    background: var(--kavak-blue);
+    background: var(--takeoff-blue);
     color: #fff;
     border: none;
     border-radius: 8px;
@@ -526,11 +526,11 @@
     margin-bottom: 24px;
 }
 
-.kavak-specs-list {
+.takeoff-specs-list {
     border-top: 1px solid #eee;
 }
 
-.kavak-spec-list-item {
+.takeoff-spec-list-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -538,31 +538,31 @@
     border-bottom: 1px solid #eee;
 }
 
-.kavak-spec-list-left {
+.takeoff-spec-list-left {
     display: flex;
     flex-direction: column;
     gap: 2px;
 }
 
-.kavak-spec-list-label {
+.takeoff-spec-list-label {
     font-size: 12px;
     color: #666;
 }
 
-.kavak-spec-list-value {
+.takeoff-spec-list-value {
     font-size: 14px;
     font-weight: 700;
     color: #1a1a1a;
 }
 
-.kavak-spec-list-right {
+.takeoff-spec-list-right {
     display: flex;
     align-items: center;
     gap: 8px;
     color: #999;
 }
 
-.kavak-spec-tag {
+.takeoff-spec-tag {
     background: #f0f0f0;
     color: #666;
     font-size: 10px;
@@ -572,48 +572,48 @@
 }
 
 /* Left Column (Details) */
-.kavak-left-column {
+.takeoff-left-column {
     order: 3;
     /* Third on mobile */
 }
 
 @media (min-width: 768px) {
-    .kavak-left-column {
+    .takeoff-left-column {
         grid-column: 1;
         grid-row: 2;
     }
 }
 
-.kavak-section {
+.takeoff-section {
     padding-bottom: 40px;
     border-bottom: 1px solid #eee;
     margin-bottom: 40px;
 }
 
-.kavak-section:last-child {
+.takeoff-section:last-child {
     border-bottom: none;
 }
 
-.kavak-section-title {
+.takeoff-section-title {
     font-size: 24px;
     font-weight: 800;
     color: #1a1a1a;
     margin-bottom: 24px;
 }
 
-.kavak-specs-main-grid {
+.takeoff-specs-main-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
 }
 
 @media (min-width: 768px) {
-    .kavak-specs-main-grid {
+    .takeoff-specs-main-grid {
         grid-template-columns: repeat(3, 1fr);
     }
 }
 
-.kavak-spec-item {
+.takeoff-spec-item {
     background: #fff;
     border: 1px solid #efefef;
     border-radius: 12px;
@@ -625,50 +625,50 @@
     gap: 10px;
 }
 
-.kavak-spec-icon {
-    color: var(--kavak-blue);
+.takeoff-spec-icon {
+    color: var(--takeoff-blue);
     width: 24px;
     height: 24px;
 }
 
-.kavak-spec-value {
+.takeoff-spec-value {
     font-size: 16px;
     font-weight: 700;
     color: #1a1a1a;
 }
 
-.kavak-spec-label {
+.takeoff-spec-label {
     font-size: 13px;
     color: #666;
 }
 
-.kavak-year-display {
+.takeoff-year-display {
     background: #f8f9fa;
     padding: 40px;
     border-radius: 16px;
     text-align: center;
 }
 
-.kavak-year-value {
+.takeoff-year-value {
     font-size: 64px;
     font-weight: 900;
     color: #1a1a1a;
     line-height: 1;
 }
 
-.kavak-year-text {
+.takeoff-year-text {
     font-size: 18px;
     color: #666;
     margin-top: 8px;
 }
 
-.kavak-features-checklist {
+.takeoff-features-checklist {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 16px;
 }
 
-.kavak-feature-check {
+.takeoff-feature-check {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -676,13 +676,13 @@
     color: #444;
 }
 
-.kavak-check-blue {
-    color: var(--kavak-blue);
+.takeoff-check-blue {
+    color: var(--takeoff-blue);
     flex-shrink: 0;
 }
 
 /* Bottom Sections */
-.kavak-guarantees-banner {
+.takeoff-guarantees-banner {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 24px;
@@ -692,31 +692,31 @@
     margin: 40px 0;
 }
 
-.kavak-guarantee-item {
+.takeoff-guarantee-item {
     display: flex;
     gap: 20px;
     align-items: center;
 }
 
-.kavak-guarantee-item svg {
-    color: var(--kavak-blue);
+.takeoff-guarantee-item svg {
+    color: var(--takeoff-blue);
     flex-shrink: 0;
 }
 
-.kavak-guarantee-content strong {
+.takeoff-guarantee-content strong {
     display: block;
     font-size: 16px;
     color: #1a1a1a;
     margin-bottom: 4px;
 }
 
-.kavak-guarantee-content p {
+.takeoff-guarantee-content p {
     font-size: 14px;
     color: #666;
     margin: 0;
 }
 
-.kavak-financing-promo {
+.takeoff-financing-promo {
     background: linear-gradient(135deg, #0040c1 0%, #002b85 100%);
     color: #fff;
     padding: 60px;
@@ -727,21 +727,21 @@
     margin-bottom: 60px;
 }
 
-.kavak-promo-content h3 {
+.takeoff-promo-content h3 {
     font-size: 32px;
     font-weight: 900;
     margin-bottom: 12px;
 }
 
-.kavak-promo-content p {
+.takeoff-promo-content p {
     font-size: 18px;
     opacity: 0.9;
     margin-bottom: 32px;
 }
 
-.kavak-promo-btn {
+.takeoff-promo-btn {
     background: #fff;
-    color: var(--kavak-blue);
+    color: var(--takeoff-blue);
     border: none;
     padding: 16px 32px;
     border-radius: 8px;
@@ -750,24 +750,24 @@
     cursor: pointer;
 }
 
-.kavak-similar-section {
+.takeoff-similar-section {
     margin-bottom: 80px;
 }
 
-.kavak-similar-title {
+.takeoff-similar-title {
     font-size: 28px;
     font-weight: 900;
     color: #1a1a1a;
     margin-bottom: 32px;
 }
 
-.kavak-similar-grid {
+.takeoff-similar-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 24px;
 }
 
-.kavak-similar-card {
+.takeoff-similar-card {
     background: #fff;
     border: 1px solid #efefef;
     border-radius: 12px;
@@ -776,35 +776,35 @@
     text-decoration: none;
 }
 
-.kavak-similar-card:hover {
+.takeoff-similar-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
 }
 
-.kavak-similar-img {
+.takeoff-similar-img {
     width: 100%;
     height: 180px;
     object-fit: cover;
 }
 
-.kavak-similar-info {
+.takeoff-similar-info {
     padding: 20px;
 }
 
-.kavak-similar-name {
+.takeoff-similar-name {
     font-size: 18px;
     font-weight: 700;
     color: #1a1a1a;
     margin-bottom: 8px;
 }
 
-.kavak-similar-specs {
+.takeoff-similar-specs {
     font-size: 14px;
     color: #999;
     margin-bottom: 8px;
 }
 
-.kavak-similar-location {
+.takeoff-similar-location {
     font-size: 13px;
     color: #666;
     display: flex;
@@ -813,46 +813,46 @@
     margin-bottom: 16px;
 }
 
-.kavak-similar-price {
+.takeoff-similar-price {
     font-size: 20px;
     font-weight: 800;
     color: #1a1a1a;
 }
 
-.kavak-similar-installment {
+.takeoff-similar-installment {
     font-size: 12px;
     color: #666;
     margin-top: 4px;
 }
 
 /* Relocated Specs Section (under gallery) */
-.kavak-section-gallery {
+.takeoff-section-gallery {
     padding-top: 24px;
     border-top: 1px solid #eee;
     margin-top: 24px;
 }
 
-.kavak-section-title-small {
+.takeoff-section-title-small {
     font-size: 18px;
     font-weight: 800;
     color: #1a1a1a;
     margin-bottom: 20px;
 }
 
-.kavak-specs-main-grid-v2 {
+.takeoff-specs-main-grid-v2 {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
 }
 
 @media (min-width: 480px) {
-    .kavak-specs-main-grid-v2 {
+    .takeoff-specs-main-grid-v2 {
         grid-template-columns: repeat(3, 1fr);
     }
 }
 
 /* Hide old year display */
-.kavak-year-display {
+.takeoff-year-display {
     display: none !important;
 }
 
@@ -866,7 +866,7 @@
     animation: pulse-red 2s infinite;
 }
 
-.promo-highlight .kavak-installment-text {
+.promo-highlight .takeoff-installment-text {
     color: #ffffff !important;
     font-weight: 900 !important;
     font-size: 16px !important;

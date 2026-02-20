@@ -1,6 +1,6 @@
 # TAKE OFF AUTO - FIAT TURING
 
-Este es el proyecto de la web clonada de Kavak para **TAKE OFF AUTO**.
+Este es el proyecto de la web clonada de TAKEOFF AUTO para **TAKE OFF AUTO**.
 
 ## Características
 - Catálogo de autos dinámico.
