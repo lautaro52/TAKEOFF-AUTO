@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { ChevronRight, ChevronDown, CheckCircle, Shield, Clock, TrendingUp, MapPin, MessageCircle, Pencil } from 'lucide-react';
 import { getCars } from '../services/carsService';
+import { API_CONFIG } from '../config';
 import DeliveryCarousel from '../components/DeliveryCarousel';
 import ZeroKmShowcase from '../components/ZeroKmShowcase';
 import PromiseCarousel from '../components/PromiseCarousel';
@@ -20,9 +21,19 @@ const loanVisual = "/src/assets/loan-visual.png";
 
 const Credit = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const [activeTab, setActiveTab] = useState('usados'); // 'usados' o '0km'
     const [openFaq, setOpenFaq] = useState(null);
     const [carouselIndex, setCarouselIndex] = useState(0);
+
+    // Initial check for tab in URL
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const tab = params.get('tab');
+        if (tab === '0km') {
+            setActiveTab('0km');
+        }
+    }, [location]);
 
     // Track carousel scroll position for indicators + Auto-play (infinite loop)
     useEffect(() => {
@@ -247,15 +258,15 @@ const Credit = () => {
                     {/* AUTO FINANCING CALCULATOR PREVIEW */}
                     <section id="calculadora" className="section financing-preview">
                         <div className="container">
-                            <Reveal direction="up" duration={1.2}>
+                            <Reveal direction="up" duration={0.85}>
                                 <h2 className="section-title">Usados Certificados - Financiamos el 100%</h2>
                             </Reveal>
-                            <Reveal direction="up" duration={1.2} delay={0.4}>
+                            <Reveal direction="up" duration={0.85} delay={0.4}>
                                 <p className="section-subtitle">Sin entrega inicial. Hasta 72 cuotas. Llevate tu auto hoy.</p>
                             </Reveal>
 
                             <div className="financing-staggered-grid">
-                                <Reveal direction="left" duration={1.2} delay={0.5}>
+                                <Reveal direction="left" duration={0.85} delay={0.5}>
                                     <div className="financing-staggered-card">
                                         <div className="car-top-label">Usado Certificado</div>
                                         <div className="staggered-img-container">
@@ -273,7 +284,7 @@ const Credit = () => {
                                     </div>
                                 </Reveal>
 
-                                <Reveal direction="up" duration={1.2} delay={0.7}>
+                                <Reveal direction="up" duration={0.85} delay={0.7}>
                                     <div className="financing-staggered-card featured">
                                         <div className="car-top-label">Usado Certificado</div>
                                         <div className="staggered-img-container">
@@ -291,7 +302,7 @@ const Credit = () => {
                                     </div>
                                 </Reveal>
 
-                                <Reveal direction="right" duration={1.2} delay={0.9}>
+                                <Reveal direction="right" duration={0.85} delay={0.9}>
                                     <div className="financing-staggered-card">
                                         <div className="car-top-label">Usado Certificado</div>
                                         <div className="staggered-img-container">
@@ -375,28 +386,28 @@ const Credit = () => {
                     <section className="section steps-section-staggered">
                         <div className="container">
                             <div className="steps-split-layout">
-                                <Reveal direction="left" duration={1.2} className="steps-left-col">
+                                <Reveal direction="left" duration={0.85} className="steps-left-col">
                                     <h2 className="steps-main-title">Comprá tu Usado Certificado</h2>
                                     <button onClick={() => navigate('/catalogo')} className="comenzar-ahora-link" style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
                                         Comenzar ahora <ChevronRight size={18} />
                                     </button>
                                 </Reveal>
                                 <div className="steps-right-col">
-                                    <Reveal direction="right" duration={1.2} delay={0.2} className="step-card-k">
+                                    <Reveal direction="right" duration={0.85} delay={0.2} className="step-card-k">
                                         <div className="step-badge">1</div>
                                         <div>
                                             <h4>Busca tu auto en nuestro catálogo</h4>
                                             <p>Filtra y encuentra autos para tu presupuesto</p>
                                         </div>
                                     </Reveal>
-                                    <Reveal direction="right" duration={1.2} delay={0.4} className="step-card-k">
+                                    <Reveal direction="right" duration={0.85} delay={0.4} className="step-card-k">
                                         <div className="step-badge">2</div>
                                         <div>
                                             <h4>Elige tu ingreso y simula tu plan de pagos</h4>
                                             <p>Ingresa tus datos y descubre las opciones que tenemos para ti</p>
                                         </div>
                                     </Reveal>
-                                    <Reveal direction="right" duration={1.2} delay={0.6} className="step-card-k">
+                                    <Reveal direction="right" duration={0.85} delay={0.6} className="step-card-k">
                                         <div className="step-badge">3</div>
                                         <div>
                                             <h4>Compra tu auto</h4>
@@ -411,26 +422,26 @@ const Credit = () => {
                     {/* BLUE BENEFITS SECTION */}
                     <section className="section benefits-blue">
                         <div className="container">
-                            <Reveal direction="up" duration={1.2}>
+                            <Reveal direction="up" duration={0.85}>
                                 <div className="benefits-header">
                                     <h2>Las ventajas de nuestros Usados Certificados</h2>
                                     <a href="#" className="link-white">Más información <ChevronRight size={16} /></a>
                                 </div>
                             </Reveal>
                             <div className="benefits-row">
-                                <Reveal direction="up" duration={1.2} delay={0.2} className="benefit-col">
+                                <Reveal direction="up" duration={0.85} delay={0.2} className="benefit-col">
                                     <CheckCircle size={32} />
                                     <p>Financiá hasta en 72 cuotas con una entrega inicial mínima del 30%</p>
                                 </Reveal>
-                                <Reveal direction="up" duration={1.2} delay={0.4} className="benefit-col">
+                                <Reveal direction="up" duration={0.85} delay={0.4} className="benefit-col">
                                     <Shield size={32} />
                                     <p>Cuotas Fijas y Créditos UVA</p>
                                 </Reveal>
-                                <Reveal direction="up" duration={1.2} delay={0.6} className="benefit-col">
+                                <Reveal direction="up" duration={0.85} delay={0.6} className="benefit-col">
                                     <Clock size={32} />
                                     <p>Calculá tu plan en 60 segundos</p>
                                 </Reveal>
-                                <Reveal direction="up" duration={1.2} delay={0.8} className="benefit-col">
+                                <Reveal direction="up" duration={0.85} delay={0.8} className="benefit-col">
                                     <TrendingUp size={32} />
                                     <p>Unidades con respaldo de 3 meses en caja y motor</p>
                                 </Reveal>
@@ -443,20 +454,20 @@ const Credit = () => {
                     {/* LOAN SECTION - 0KM SHOWCASE */}
                     <section className="section loans-section">
                         <div className="container">
-                            <Reveal direction="up" duration={1.2}>
+                            <Reveal direction="up" duration={0.85}>
                                 <h2 className="section-title">TU 0KM A TASA 0%: SIN INTERÉS NI SORPRESAS</h2>
                             </Reveal>
-                            <Reveal direction="up" duration={1.2} delay={0.3}>
+                            <Reveal direction="up" duration={0.85} delay={0.3}>
                                 <p className="section-subtitle">Accedé al stock más completo con entrega inmediata. Financiá en 18 cuotas fijas y simulá tu plan a medida en segundos con nuestra IA.</p>
                             </Reveal>
 
-                            <Reveal direction="scale" duration={1.2} delay={0.5}>
+                            <Reveal direction="scale" duration={0.85} delay={0.5}>
                                 <ZeroKmShowcase />
                             </Reveal>
 
-                            <Reveal direction="up" duration={1.2} delay={0.7}>
+                            <Reveal direction="up" duration={0.85} delay={0.7}>
                                 <div className="center-btn" style={{ marginTop: '20px' }}>
-                                    <button className="btn-primary-k big-blue" onClick={() => window.open('https://wa.me/5493516752879?text=Hola,%20quiero%20un%20Auto%200km', '_blank')}>Consulta el Mejor Plan</button>
+                                    <button className="btn-primary-k big-blue" onClick={() => window.open(`${API_CONFIG.WHATSAPP_LINK}?text=Hola,%20quiero%20un%20Auto%200km`, '_blank')}>Consulta el Mejor Plan</button>
                                 </div>
                             </Reveal>
                         </div>
@@ -466,28 +477,28 @@ const Credit = () => {
                     <section className="section steps-section-staggered">
                         <div className="container">
                             <div className="steps-split-layout">
-                                <Reveal direction="left" duration={1.2} className="steps-left-col">
+                                <Reveal direction="left" duration={0.85} className="steps-left-col">
                                     <h2 className="steps-main-title">Pedí tu 0km ahora</h2>
                                     <button onClick={() => navigate('/catalogo')} className="comenzar-ahora-link" style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
                                         Comenzar ahora <ChevronRight size={18} />
                                     </button>
                                 </Reveal>
                                 <div className="steps-right-col">
-                                    <Reveal direction="right" duration={1.2} delay={0.2} className="step-card-k">
+                                    <Reveal direction="right" duration={0.85} delay={0.2} className="step-card-k">
                                         <div className="step-badge">1</div>
                                         <div>
                                             <h4>ELEGÍ TU UNIDAD 0KM</h4>
                                             <p>Explorá el catálogo con stock real de las mejores marcas y seleccioná el modelo que buscás.</p>
                                         </div>
                                     </Reveal>
-                                    <Reveal direction="right" duration={1.2} delay={0.4} className="step-card-k">
+                                    <Reveal direction="right" duration={0.85} delay={0.4} className="step-card-k">
                                         <div className="step-badge">2</div>
                                         <div>
                                             <h4>SIMULÁ TU TASA 0%</h4>
                                             <p>Usá nuestra calculadora para armar tu plan en 18 cuotas fijas y sin interés de forma inmediata.</p>
                                         </div>
                                     </Reveal>
-                                    <Reveal direction="right" duration={1.2} delay={0.6} className="step-card-k">
+                                    <Reveal direction="right" duration={0.85} delay={0.6} className="step-card-k">
                                         <div className="step-badge">3</div>
                                         <div>
                                             <h4>RESERVÁ Y RETIRÁ</h4>
@@ -531,7 +542,7 @@ const Credit = () => {
 
             <section id="promesas" className="section deliveries-section">
                 <div className="container">
-                    <Reveal direction="up" duration={1.2}>
+                    <Reveal direction="up" duration={0.85}>
                         <h2 className="section-title">Nuestra promesa TakeOff</h2>
                         <PromiseCarousel />
                     </Reveal>
@@ -541,21 +552,21 @@ const Credit = () => {
             {/* WHY CHOOSE US */}
             <section className="section why-choose">
                 <div className="container">
-                    <Reveal direction="up" duration={1.2}>
+                    <Reveal direction="up" duration={0.85}>
                         <h2 className="section-title">¿Por qué elegirnos?</h2>
                     </Reveal>
                     <div className="why-grid">
-                        <Reveal direction="up" duration={1.2} delay={0.2} className="why-item">
+                        <Reveal direction="up" duration={0.85} delay={0.2} className="why-item">
                             <MessageCircle className="icon-teal" />
                             <h4>Atención personalizada</h4>
                             <p>Contamos con múltiples asesores, disponibles para acompañarte en el proceso.</p>
                         </Reveal>
-                        <Reveal direction="up" duration={1.2} delay={0.4} className="why-item">
+                        <Reveal direction="up" duration={0.85} delay={0.4} className="why-item">
                             <CheckCircle className="icon-teal" />
                             <h4>Altas tasas de aprobación</h4>
                             <p>Aprobamos a 4 de cada 5 personas que solicitan un préstamo.</p>
                         </Reveal>
-                        <Reveal direction="up" duration={1.2} delay={0.6} className="why-item">
+                        <Reveal direction="up" duration={0.85} delay={0.6} className="why-item">
                             <Pencil className="icon-teal" />
                             <h4>Préstamos a medida</h4>
                             <p>Te damos la oportunidad de personalizar el pago de tu préstamo.</p>
@@ -567,10 +578,10 @@ const Credit = () => {
             {/* FAQ SECTION */}
             <section className="section faq-section gray-bg">
                 <div className="container">
-                    <Reveal direction="up" duration={1.2}>
+                    <Reveal direction="up" duration={0.85}>
                         <h2 className="section-title">Qué tienes que saber</h2>
                     </Reveal>
-                    <Reveal direction="up" duration={1.2} delay={0.3} className="faq-wrapper">
+                    <Reveal direction="up" duration={0.85} delay={0.3} className="faq-wrapper">
                         {faqs.map((faq, index) => (
                             <div key={index} className={`faq-item ${openFaq === index ? 'open' : ''}`} onClick={() => toggleFaq(index)}>
                                 <div className="faq-question">

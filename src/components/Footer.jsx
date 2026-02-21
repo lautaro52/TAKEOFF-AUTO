@@ -1,10 +1,11 @@
 import React from 'react';
 import { Facebook, Instagram, Twitter, Youtube, Linkedin } from 'lucide-react';
+import { API_CONFIG } from '../config';
 import Logo from './Logo';
 import './Footer.css';
 
 const Footer = () => {
-    const whatsappLink = "https://wa.me/5493516752879?text=Hola,%20tengo%20una%20consulta";
+    const whatsappLink = API_CONFIG.WHATSAPP_LINK + "?text=Hola,%20tengo%20una%20consulta";
 
     return (
         <footer className="footer">
@@ -14,9 +15,8 @@ const Footer = () => {
                         <Logo variant="dark" />
                     </div>
                     <div className="social-links">
-                        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"><Facebook size={20} /></a>
-                        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"><Instagram size={20} /></a>
-                        <a href="https://youtube.com" target="_blank" rel="noopener noreferrer"><Youtube size={20} /></a>
+                        <a href={API_CONFIG.INSTAGRAM_LINK} target="_blank" rel="noopener noreferrer"><Instagram size={20} /></a>
+                        <a href={API_CONFIG.YOUTUBE_LINK} target="_blank" rel="noopener noreferrer"><Youtube size={20} /></a>
                     </div>
                 </div>
 
@@ -25,9 +25,9 @@ const Footer = () => {
                         <h4>Catalogo de usados</h4>
                         <ul>
                             <li><a href="/catalogo">Catalogo de usados</a></li>
-                            <li><a href="/catalogo">Catálogo</a></li>
-                            <li><a href="/credito">Cómo comprar</a></li>
-                            <li><a href="/credito#calculadora">Financiamiento</a></li>
+                            <li><a href="/credito?tab=0km">Catalogo de 0km</a></li>
+                            <li><a href="/#purchase-process">Cómo comprar</a></li>
+                            <li><a href="/#simulation-section">Financiamiento</a></li>
                             <li><a href="/credito#promesas">Garantía</a></li>
                         </ul>
                     </div>
@@ -35,15 +35,14 @@ const Footer = () => {
                         <h4>Nosotros</h4>
                         <ul>
                             <li><a href="/nosotros">Nosotros</a></li>
-                            <li><a href="/nosotros">Conócenos</a></li>
-                            <li><a href="/partner/dashboard">Trabaja con nosotros</a></li>
+                            <li><button onClick={() => window.dispatchEvent(new CustomEvent('open-location'))} className="footer-trigger-btn">Conócenos</button></li>
                         </ul>
                     </div>
                     <div className="footer-col">
                         <h4>Soporte</h4>
                         <ul>
-                            <li><a href={whatsappLink} target="_blank" rel="noopener noreferrer">Soporte</a></li>
-                            <li><a href={whatsappLink} target="_blank" rel="noopener noreferrer">Contacto</a></li>
+                            <li><button onClick={() => window.dispatchEvent(new CustomEvent('open-chatbot'))} className="footer-trigger-btn">Soporte</button></li>
+                            <li><a href={API_CONFIG.WHATSAPP_LINK} target="_blank" rel="noopener noreferrer">Contacto</a></li>
                         </ul>
                     </div>
                 </div>

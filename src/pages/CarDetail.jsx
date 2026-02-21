@@ -220,7 +220,7 @@ const CarDetail = () => {
                                     <div className="takeoff-search-item-info">
                                         <div className="takeoff-search-item-name">{res.brand} {res.model}</div>
                                         <div className="takeoff-search-item-meta">
-                                            {res.year} • {Number(res.km).toLocaleString('es-AR')} km • ${Number(res.price).toLocaleString('es-AR')}
+                                            {res.year} • {Number(res.km).toLocaleString('es-AR')} km • ${Number(res.price).toLocaleString('es-AR')}{res.isUSD ? ' USD' : ''}
                                         </div>
                                     </div>
                                     <ChevronRight size={16} className="takeoff-search-arrow" />
@@ -370,6 +370,7 @@ const CarDetail = () => {
                                     <div className="takeoff-price-box-label">Precio regular</div>
                                     <div className="takeoff-price-box-amount">
                                         ${Number(car.price).toLocaleString('es-AR')}
+                                        {car.isUSD && <span className="usd-label-inline" style={{ marginLeft: '4px', opacity: 0.8 }}>USD</span>}
                                         <button className="takeoff-info-icon-btn"><Check size={14} /></button>
                                     </div>
                                 </div>
@@ -378,6 +379,7 @@ const CarDetail = () => {
                                     <div className="takeoff-price-box-label">Llevatelo hoy por tan solo:</div>
                                     <div className="takeoff-price-box-amount">
                                         ${(Number(car.price) * 0.20).toLocaleString('es-AR')}
+                                        {car.isUSD && <span className="usd-label-inline" style={{ marginLeft: '4px', opacity: 0.8 }}>USD</span>}
                                         <button className="takeoff-info-icon-btn"><Check size={14} /></button>
                                     </div>
                                     <div className="takeoff-credit-installment-row promo-highlight">

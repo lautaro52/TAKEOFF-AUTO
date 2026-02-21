@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FileText, Car, CheckCircle } from 'lucide-react';
 import './HowItWorks.css';
@@ -10,6 +10,7 @@ const HowItWorks = () => {
     const [showQuoteModal, setShowQuoteModal] = useState(false);
     const [isHighlighted, setIsHighlighted] = useState(false);
     const location = useLocation();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (location.hash === '#renova') {
@@ -66,6 +67,14 @@ const HowItWorks = () => {
         }
     ];
 
+    const handleCardClick = (stepNum) => {
+        if (stepNum === 1) {
+            setShowQuoteModal(true);
+        } else if (stepNum === 2) {
+            navigate('/credito');
+        }
+    };
+
     const steps = activeTab === 'compra' ? stepsCompra : stepsVende;
     const title = activeTab === 'compra'
         ? 'Renová tu auto en 3 simples pasos'
@@ -80,7 +89,7 @@ const HowItWorks = () => {
                     <div className="how-info-sidebar">
                         <div className="how-tabs">
                             <button
-                                className={`how-tab active`}
+                                className={`how-tab active pulse-glow`}
                                 onClick={() => setShowQuoteModal(true)}
                             >
                                 Cotizá tu Auto
@@ -105,7 +114,8 @@ const HowItWorks = () => {
                                 initial={{ opacity: 0, x: 20 }}
                                 whileInView={{ opacity: 1, x: 0 }}
                                 viewport={{ once: true, margin: "-50px" }}
-                                transition={{ duration: 0.5, delay: index * 0.2 }}
+                                transition={{ duration: 0.35, delay: index * 0.2 }}
+                                onClick={() => handleCardClick(step.num)}
                             >
                                 <div className="how-step-icon-wrapper">
                                     <div className="step-number">{step.num}</div>

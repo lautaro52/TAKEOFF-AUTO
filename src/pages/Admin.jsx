@@ -444,7 +444,7 @@ const Admin = () => {
                                     <div className="admin-car-info">
                                         <h4>{car.brand} {car.model}</h4>
                                         <p className="car-specs-small">{car.year} • {car.specs}</p>
-                                        <p className="car-price-small">${Number(car.price).toLocaleString('es-AR', { maximumFractionDigits: 0 })}{Number(car.price) < 100000 ? ' USD' : ''}</p>
+                                        <p className="car-price-small">${Number(car.price).toLocaleString('es-AR', { maximumFractionDigits: 0 })}{car.isUSD ? ' USD' : ''}</p>
                                         <p className="car-images-count">{car.images?.length || 0} imágenes</p>
                                         {car.home_section && (
                                             <span className="badge-tag" style={{

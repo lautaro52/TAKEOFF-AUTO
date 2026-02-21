@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const CATALOG_BASE_DIR = 'C:\\Users\\lauta\\OneDrive\\Desktop\\lautaro\\TAKE OFF\\TAKE OFF AUTO FIAT TURING\\autos del catalogo';
-const UPLOADS_DIR = 'c:\\Users\\lauta\\OneDrive\\Desktop\\lautaro\\TAKE OFF\\TAKE OFF AUTO FIAT TURING\\web clonada de kavak\\backend\\api\\uploads\\cars\\';
+const CATALOG_BASE_DIR = path.join(__dirname, 'catalog_source');
+const UPLOADS_DIR = path.join(__dirname, 'backend', 'api', 'uploads', 'cars');
 const OUTPUT_SQL = 'database/ingest_90_cars.sql';
 
 if (!fs.existsSync(UPLOADS_DIR)) {

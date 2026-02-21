@@ -150,3 +150,19 @@
         justify-content: center;
     }
 }
+
+.footer-trigger-btn {
+    background: none;
+    border: none;
+    color: #aaa;
+    padding: 0;
+    font-size: 0.9rem;
+    font-family: inherit;
+    cursor: pointer;
+    text-align: left;
+    transition: color 0.2s;
+}
+
+.footer-trigger-btn:hover {
+    color: white;
+}

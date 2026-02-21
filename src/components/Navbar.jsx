@@ -18,6 +18,16 @@ const Navbar = () => {
         setUser(currentUser);
     }, []);
 
+    // Listen for custom event to open location modal
+    useEffect(() => {
+        const handleOpen = () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setShowLocation(true);
+        };
+        window.addEventListener('open-location', handleOpen);
+        return () => window.removeEventListener('open-location', handleOpen);
+    }, []);
+
     useEffect(() => {
         const handleScroll = () => {
             // Hide navbar on scroll

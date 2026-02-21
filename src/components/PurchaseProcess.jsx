@@ -56,7 +56,7 @@ const PurchaseProcess = () => {
     ];
 
     return (
-        <section className="purchase-process">
+        <section className="purchase-process" id="purchase-process">
             <div className="container">
                 <div className="process-flow">
                     <div className="flow-line"></div>

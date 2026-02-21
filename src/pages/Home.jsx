@@ -12,11 +12,7 @@ import FinancingModal from '../components/FinancingModal'
 import { getCars } from '../services/carsService'
 import { API_CONFIG, USD_QUOTATION } from '../config';
 
-const getNormalizedPrice = (price) => {
-    const num = Number(price);
-    if (isNaN(num)) return 0;
-    return num < 100000 ? num * USD_QUOTATION : num;
-};
+// Local getNormalizedPrice removed, using arsPrice from carsService.js
 
 const Home = () => {
     const [bestSellers, setBestSellers] = useState([]);
@@ -37,15 +33,14 @@ const Home = () => {
             const allCars = await getCars();
             const availableCars = allCars.filter(car => car.status === 'disponible');
 
-            const arsCars = availableCars.map(car => ({ ...car, normalizedPrice: getNormalizedPrice(car.price) }));
-            const calculatedMinArsPrice = arsCars.length > 0
-                ? Math.min(...arsCars.map(car => car.normalizedPrice))
+            const calculatedMinArsPrice = availableCars.length > 0
+                ? Math.min(...availableCars.map(car => car.arsPrice).filter(p => p > 0))
                 : 0;
             setMinArsPrice(calculatedMinArsPrice);
 
             let sellers = availableCars
-                .filter(car => Number(car.price) >= 1000000) // ARS prices have 7+ digits
-                .sort((a, b) => Number(a.price) - Number(b.price)) // cheapest first
+                .filter(car => car.arsPrice >= 1000000) // Focus on regular ARS range or normalized USD
+                .sort((a, b) => a.arsPrice - b.arsPrice) // cheapest first
                 .slice(0, 4);
             setBestSellers(sellers);
 

@@ -3,46 +3,15 @@ import { MessageCircle, X, Send } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import './Chatbot.css';
 
+const N8N_WEBHOOK_URL = 'https://n8n-turin-n8n.fcimcq.easypanel.host/webhook/Paginabot';
+
 const Chatbot = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([]);
     const [inputValue, setInputValue] = useState('');
+    const [isTyping, setIsTyping] = useState(false);
     const messagesEndRef = useRef(null);
     const navigate = useNavigate();
-
-    // Respuestas automáticas del bot
-    const botResponses = {
-        comprar: {
-            keywords: ['comprar', 'compra', 'auto', 'vehiculo', 'carro', 'catalogo'],
-            response: '¡Excelente! Tenemos más de 15 autos disponibles. ¿Te gustaría ver nuestro catálogo completo?',
-            action: { text: 'Ver catálogo', link: '/catalogo' }
-        },
-        vender: {
-            keywords: ['vender', 'venta', 'vendo mi auto', 'quiero vender'],
-            response: '¡Perfecto! En TAKEOFF AUTO compramos tu auto al mejor precio. Te hacemos una oferta en minutos.',
-            action: { text: 'Vender mi auto', link: '/vender' }
-        },
-        financiamiento: {
-            keywords: ['financiar', 'credito', 'prestamo', 'financiamiento', 'cuotas'],
-            response: 'Contamos con planes de financiamiento flexibles. ¿Te gustaría conocer nuestras opciones de crédito?',
-            action: { text: 'Ver opciones', link: '/credito' }
-        },
-        precios: {
-            keywords: ['precio', 'cuanto', 'costo', 'vale'],
-            response: 'Nuestros precios son muy competitivos. Los autos van desde $300,000 hasta $650,000. ¿Buscas algo en particular?',
-        },
-        saludo: {
-            keywords: ['hola', 'buenos dias', 'buenas tardes', 'buenas noches', 'hey'],
-            response: '¡Hola! 👋 Soy el asistente virtual de TAKEOFF AUTO. ¿En qué puedo ayudarte hoy?',
-        },
-        ayuda: {
-            keywords: ['ayuda', 'como', 'que puedes'],
-            response: 'Puedo ayudarte con: Comprar un auto, Vender tu auto, Información de financiamiento, Precios y modelos disponibles. ¿Qué te interesa?',
-        },
-        default: {
-            response: 'Interesante pregunta. Te recomiendo explorar nuestro catálogo o contactar con nuestros asesores para más información personalizada. ¿Puedo ayudarte con algo más?',
-        }
-    };
 
     // Scroll automático al último mensaje
     const scrollToBottom = () => {
@@ -51,7 +20,7 @@ const Chatbot = () => {
 
     useEffect(() => {
         scrollToBottom();
-    }, [messages]);
+    }, [messages, isTyping]);
 
     // Mensaje de bienvenida al abrir el chat
     useEffect(() => {
@@ -86,32 +55,58 @@ const Chatbot = () => {
         }]);
     };
 
-    const getBotResponse = (userMessage) => {
-        const lowerMessage = userMessage.toLowerCase();
+    // Enviar mensaje al webhook de n8n y obtener respuesta
+    const getBotResponseFromN8N = async (userMessage) => {
+        try {
+            const response = await fetch(N8N_WEBHOOK_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    message: userMessage,
+                    sessionId: 'web-chat-' + Date.now(),
+                }),
+            });
 
-        // Buscar coincidencias en las keywords
-        for (const [key, data] of Object.entries(botResponses)) {
-            if (key !== 'default' && data.keywords.some(keyword => lowerMessage.includes(keyword))) {
-                return { response: data.response, action: data.action };
+            if (!response.ok) {
+                throw new Error(`Error ${response.status}`);
             }
-        }
 
-        return { response: botResponses.default.response, action: null };
+            const data = await response.json();
+
+            // n8n puede devolver la respuesta en diferentes formatos
+            // Intentamos los más comunes
+            const botText = data.output
+                || data.response
+                || data.message
+                || data.text
+                || data.reply
+                || (typeof data === 'string' ? data : JSON.stringify(data));
+
+            return botText;
+        } catch (error) {
+            console.error('Error al contactar al agente:', error);
+            return 'Lo siento, tuve un problema al procesar tu mensaje. Por favor intentá de nuevo en unos segundos.';
+        }
     };
 
-    const handleSendMessage = () => {
-        if (inputValue.trim() === '') return;
+    const handleSendMessage = async () => {
+        if (inputValue.trim() === '' || isTyping) return;
 
         // Agregar mensaje del usuario
-        addUserMessage(inputValue);
         const userMsg = inputValue;
+        addUserMessage(userMsg);
         setInputValue('');
 
-        // Simular "escribiendo..." y responder
-        setTimeout(() => {
-            const { response, action } = getBotResponse(userMsg);
-            addBotMessage(response, action);
-        }, 800);
+        // Mostrar indicador de "escribiendo..."
+        setIsTyping(true);
+
+        // Llamar al webhook de n8n
+        const botResponse = await getBotResponseFromN8N(userMsg);
+
+        setIsTyping(false);
+        addBotMessage(botResponse);
     };
 
     const handleKeyPress = (e) => {
@@ -125,6 +120,16 @@ const Chatbot = () => {
             navigate(link);
             setIsOpen(false);
         }
+    };
+
+    // Quick buttons que envían al webhook de n8n
+    const handleQuickButton = async (displayText) => {
+        if (isTyping) return;
+        addUserMessage(displayText);
+        setIsTyping(true);
+        const botResponse = await getBotResponseFromN8N(displayText);
+        setIsTyping(false);
+        addBotMessage(botResponse);
     };
 
     return (
@@ -166,36 +171,18 @@ const Chatbot = () => {
                                 )}
                             </div>
                         ))}
+                        {isTyping && (
+                            <div className="message bot-message typing-indicator">
+                                <span className="dot"></span>
+                                <span className="dot"></span>
+                                <span className="dot"></span>
+                            </div>
+                        )}
                         <div ref={messagesEndRef} />
                     </div>
 
                     <div className="chat-footer">
-                        <div className="quick-actions">
-                            <button
-                                className="quick-btn"
-                                onClick={() => {
-                                    addUserMessage('Quiero comprar un auto');
-                                    setTimeout(() => {
-                                        const { response, action } = getBotResponse('comprar');
-                                        addBotMessage(response, action);
-                                    }, 800);
-                                }}
-                            >
-                                🚗 Comprar
-                            </button>
-                            <button
-                                className="quick-btn"
-                                onClick={() => {
-                                    addUserMessage('Quiero vender mi auto');
-                                    setTimeout(() => {
-                                        const { response, action } = getBotResponse('vender');
-                                        addBotMessage(response, action);
-                                    }, 800);
-                                }}
-                            >
-                                💰 Vender
-                            </button>
-                        </div>
+
                         <div className="chat-input-area">
                             <input
                                 type="text"
@@ -203,8 +190,9 @@ const Chatbot = () => {
                                 value={inputValue}
                                 onChange={(e) => setInputValue(e.target.value)}
                                 onKeyPress={handleKeyPress}
+                                disabled={isTyping}
                             />
-                            <button className="btn-send" onClick={handleSendMessage}>
+                            <button className="btn-send" onClick={handleSendMessage} disabled={isTyping}>
                                 <Send size={18} />
                             </button>
                         </div>

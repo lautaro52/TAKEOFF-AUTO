@@ -94,11 +94,11 @@ const ProductCard = ({ car }) => {
                     <p className="car-price-label-premium">Entrega inmediata con el 20%</p>
                     <p className="car-card-price-value">
                         ${(Number(car.price) * 0.2).toLocaleString('es-AR', { maximumFractionDigits: 0 })}
-                        {Number(car.price) < 100000 && <span className="usd-label"> USD</span>}
+                        {car.isUSD && <span className="usd-label"> USD</span>}
                     </p>
                     <p className="car-card-total-ref">
                         Precio total: ${Number(car.price).toLocaleString('es-AR', { maximumFractionDigits: 0 })}
-                        {Number(car.price) < 100000 ? ' USD' : ''}
+                        {car.isUSD ? ' USD' : ''}
                     </p>
                 </div>
             </div>

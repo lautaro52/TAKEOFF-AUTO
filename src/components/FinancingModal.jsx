@@ -20,8 +20,8 @@ const FinancingModal = ({ isOpen, onClose, car, initialDownPayment }) => {
     });
 
     const carName = car ? `${car.brand} ${car.model} ${car.year}` : '';
-    const carPrice = car ? car.price : 0;
-    const price = parseFloat(carPrice) || 0;
+    const carPrice = car ? (car.arsPrice || Number(car.price)) : 0;
+    const price = carPrice || 0;
     const [downPayment, setDownPayment] = useState(initialDownPayment || Math.round(price * 0.2));
     const [term, setTerm] = useState(36);
     const [bancorPlan, setBancorPlan] = useState('uva'); // 'uva' or 'fija'
@@ -139,7 +139,7 @@ const FinancingModal = ({ isOpen, onClose, car, initialDownPayment }) => {
         const currentInstallment = Math.round(calculateInstallment(term));
 
         // 1. Prepare WhatsApp Message
-        const whatsappNumber = "5493516752879";
+        const whatsappNumber = API_CONFIG.WHATSAPP_NUMBER;
         const message = `Hola, mi nombre es ${leadData.name}. Estoy interesado en financiar un ${carName}.
         
 *Detalles de mi solicitud:*
@@ -283,7 +283,10 @@ Precio del auto: $${price.toLocaleString('es-AR')}`;
                     <div className="calc-inputs-section">
                         <div className="calc-field">
                             <label>Precio del auto</label>
-                            <div className="static-value">${Number(price).toLocaleString('es-AR')}</div>
+                            <div className="static-value">
+                                ${Number(car.price).toLocaleString('es-AR')}
+                                {car.isUSD && <span style={{ marginLeft: '4px', opacity: 0.7 }}>USD</span>}
+                            </div>
                         </div>
 
                         <div className="calc-field">
@@ -377,7 +380,10 @@ Precio del auto: $${price.toLocaleString('es-AR')}`;
                     <div className="calc-inputs-section">
                         <div className="calc-field">
                             <label>Precio del auto</label>
-                            <div className="static-value">${Number(price).toLocaleString('es-AR')}</div>
+                            <div className="static-value">
+                                ${Number(car.price).toLocaleString('es-AR')}
+                                {car.isUSD && <span style={{ marginLeft: '4px', opacity: 0.7 }}>USD</span>}
+                            </div>
                         </div>
 
                         <div className="calc-field">
@@ -468,7 +474,10 @@ Precio del auto: $${price.toLocaleString('es-AR')}`;
                     <div className="calc-inputs-section">
                         <div className="calc-field">
                             <label>Precio del auto</label>
-                            <div className="static-value">${Number(price).toLocaleString('es-AR')}</div>
+                            <div className="static-value">
+                                ${Number(car.price).toLocaleString('es-AR')}
+                                {car.isUSD && <span style={{ marginLeft: '4px', opacity: 0.7 }}>USD</span>}
+                            </div>
                         </div>
 
                         <div className="calc-field">
@@ -562,7 +571,10 @@ Precio del auto: $${price.toLocaleString('es-AR')}`;
                     <div className="calc-inputs-section">
                         <div className="calc-field">
                             <label>Precio del auto</label>
-                            <div className="static-value">${Number(price).toLocaleString('es-AR')}</div>
+                            <div className="static-value">
+                                ${Number(car.price).toLocaleString('es-AR')}
+                                {car.isUSD && <span style={{ marginLeft: '4px', opacity: 0.7 }}>USD</span>}
+                            </div>
                         </div>
 
                         <div className="calc-field">

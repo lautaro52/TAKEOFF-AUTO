@@ -8,12 +8,7 @@ import { carBrands } from '../data/carsData';
 import { API_CONFIG, USD_QUOTATION } from '../config';
 import './Catalog.css';
 
-const getNormalizedPrice = (price) => {
-    const num = Number(price);
-    if (isNaN(num)) return 0;
-    // Assume prices < 100,000 are in USD
-    return num < 100000 ? num * USD_QUOTATION : num;
-};
+// getNormalizedPrice removed, functionality moved to carsService.js as car.arsPrice
 
 const COLOR_MAPPING = {
     'gris plata': 'plateado',
@@ -112,9 +107,6 @@ const Catalog = () => {
     const [absMinPrice, setAbsMinPrice] = useState(0);
     const [absMaxPrice, setAbsMaxPrice] = useState(0);
     const [selectedBrands, setSelectedBrands] = useState([]);
-
-    const initialType = searchParams.get('type') || '';
-    const [selectedType, setSelectedType] = useState(initialType);
     const [selectedTransmission, setSelectedTransmission] = useState([]);
     const [selectedColors, setSelectedColors] = useState([]);
     const [searchBrand, setSearchBrand] = useState('');
@@ -125,7 +117,6 @@ const Catalog = () => {
     const [openSections, setOpenSections] = useState({
         price: false,
         brand: false,
-        type: false,
         mechanical: false,
         color: false
     });
@@ -141,10 +132,10 @@ const Catalog = () => {
 
                 // Calculate min and max prices dynamically (normalized to ARS)
                 if (carsData.length > 0) {
-                    const normalizedPrices = carsData.map(car => getNormalizedPrice(car.price)).filter(p => !isNaN(p) && p > 0);
+                    const normalizedPrices = carsData.map(car => car.arsPrice).filter(p => p > 0);
                     if (normalizedPrices.length > 0) {
-                        const min = Math.min(...normalizedPrices);
-                        const max = Math.max(...normalizedPrices);
+                        const min = Math.floor(Math.min(...normalizedPrices));
+                        const max = Math.ceil(Math.max(...normalizedPrices));
                         setAbsMinPrice(min);
                         setAbsMaxPrice(max);
 
@@ -178,7 +169,7 @@ const Catalog = () => {
     const filteredCars = useMemo(() => {
         return cars.filter(car => {
             // Price filter (on normalized values)
-            const normalizedCarPrice = getNormalizedPrice(car.price);
+            const normalizedCarPrice = car.arsPrice;
             const min = priceMin ? parseInt(priceMin) : 0;
             const max = priceMax ? parseInt(priceMax) : Infinity;
 
@@ -191,13 +182,19 @@ const Catalog = () => {
                 if (!selectedBrands.some(b => b.toLowerCase() === carBrand)) return false;
             }
 
-            // Type filter
-            if (selectedType && car.type !== selectedType) return false;
 
             // Transmission filter
             if (selectedTransmission.length > 0) {
                 const normalizedTrans = car.transmission?.toLowerCase();
                 if (!selectedTransmission.includes(normalizedTrans)) return false;
+            }
+
+            // Color filter
+            if (selectedColors.length > 0) {
+                const raw = car.color?.toLowerCase();
+                if (!raw) return false;
+                const normalizedColor = COLOR_MAPPING[raw] || raw;
+                if (!selectedColors.includes(normalizedColor)) return false;
             }
 
             // Search query filter
@@ -214,7 +211,7 @@ const Catalog = () => {
 
             return true;
         });
-    }, [cars, priceMin, priceMax, selectedBrands, selectedType, selectedTransmission, selectedColors, searchQuery]);
+    }, [cars, priceMin, priceMax, selectedBrands, selectedTransmission, selectedColors, searchQuery]);
 
     // Sorted cars based on selected sort option
     const sortedCars = useMemo(() => {
@@ -222,9 +219,9 @@ const Catalog = () => {
 
         switch (sortBy) {
             case 'price-asc':
-                return sorted.sort((a, b) => getNormalizedPrice(a.price) - getNormalizedPrice(b.price));
+                return sorted.sort((a, b) => a.arsPrice - b.arsPrice);
             case 'price-desc':
-                return sorted.sort((a, b) => getNormalizedPrice(b.price) - getNormalizedPrice(a.price));
+                return sorted.sort((a, b) => b.arsPrice - a.arsPrice);
             case 'year-desc':
                 return sorted.sort((a, b) => Number(b.year) - Number(a.year));
             case 'km-asc':
@@ -251,14 +248,13 @@ const Catalog = () => {
 
                 // Only track if at least one filter is active
                 const hasActiveFilters = priceMin || priceMax || selectedBrands.length > 0 ||
-                    selectedType || selectedTransmission.length > 0 || selectedColors.length > 0;
+                    selectedTransmission.length > 0 || selectedColors.length > 0;
 
                 if (hasActiveFilters) {
                     trackSearch({
                         priceMin,
                         priceMax,
                         selectedBrands,
-                        selectedType,
                         selectedTransmission,
                         selectedColors
                     });
@@ -273,7 +269,7 @@ const Catalog = () => {
         const debounceTimer = setTimeout(trackFilters, 2000);
 
         return () => clearTimeout(debounceTimer);
-    }, [priceMin, priceMax, selectedBrands, selectedType, selectedTransmission, selectedColors, searchQuery]);
+    }, [priceMin, priceMax, selectedBrands, selectedTransmission, selectedColors, searchQuery]);
 
     const toggleBrand = (brand) => {
         setSelectedBrands(prev =>
@@ -293,16 +289,6 @@ const Catalog = () => {
         );
     };
 
-    const carTypes = [
-        { id: 'sedan', name: 'Sedán', icon: '🚗' },
-        { id: 'suv', name: 'SUV', icon: '🚙' },
-        { id: 'hatchback', name: 'Hatchback', icon: '🚗' },
-        { id: 'pickup', name: 'Pickup', icon: '🛻' },
-        { id: 'coupe', name: 'Coupe', icon: '🏎️' },
-        { id: 'convertible', name: 'Convertible', icon: '🚗' },
-        { id: 'van', name: 'Van', icon: '🚐' },
-        { id: 'wagon', name: 'Wagon', icon: '🚗' }
-    ];
 
     const availableColors = useMemo(() => {
         const inStockColorIds = new Set();
@@ -339,7 +325,7 @@ const Catalog = () => {
         }));
 
         cars.forEach(car => {
-            const price = getNormalizedPrice(car.price);
+            const price = car.arsPrice;
             if (price === 0) return;
             const binIndex = Math.min(
                 Math.floor((price - absMinPrice) / binSize),
@@ -437,8 +423,8 @@ const Catalog = () => {
                                         {histogramData.map((bin, i) => (
                                             <div
                                                 key={i}
-                                                className={`histogram - bar ${parseInt(priceMin) === bin.min && parseInt(priceMax) === bin.max ? 'active' : ''} `}
-                                                style={{ height: `${Math.max(bin.height, 5)}% ` }} // Min 5% height
+                                                className={`histogram-bar ${parseInt(priceMin) === bin.min && parseInt(priceMax) === bin.max ? 'active' : ''}`}
+                                                style={{ height: `${Math.max(bin.height, 5)}%` }} // Min 5% height
                                                 onClick={() => handleHistogramClick(bin)}
                                                 title={`Rango: $${bin.min.toLocaleString()} - $${bin.max.toLocaleString()} (${bin.count} autos)`}
                                             ></div>
@@ -470,7 +456,7 @@ const Catalog = () => {
                                             {activePopularBrands.map(brand => (
                                                 <button
                                                     key={brand.name}
-                                                    className={`brand - card ${selectedBrands.includes(brand.name) ? 'active' : ''} `}
+                                                    className={`brand-card ${selectedBrands.includes(brand.name) ? 'active' : ''}`}
                                                     onClick={() => toggleBrand(brand.name)}
                                                 >
                                                     {brand.logo && <img src={brand.logo} alt={brand.name} />}
@@ -496,29 +482,6 @@ const Catalog = () => {
                             )}
                         </div>
 
-                        {/* Car Type Filter */}
-                        <div className="filter-section">
-                            <button className="filter-header" onClick={() => toggleSection('type')}>
-                                <span>Tipo de auto</span>
-                                {openSections.type ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                            </button>
-                            {openSections.type && (
-                                <div className="filter-content">
-                                    <div className="type-grid">
-                                        {carTypes.map(type => (
-                                            <button
-                                                key={type.id}
-                                                className={`type - card ${selectedType === type.id ? 'active' : ''} `}
-                                                onClick={() => setSelectedType(selectedType === type.id ? '' : type.id)}
-                                            >
-                                                <span className="type-icon">{type.icon}</span>
-                                                <span className="type-name">{type.name}</span>
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-                        </div>
 
                         {/* Mechanical Filter */}
                         <div className="filter-section">
@@ -533,7 +496,7 @@ const Catalog = () => {
                                         {availableTransmissions.map(trans => (
                                             <button
                                                 key={trans}
-                                                className={`pill - btn ${selectedTransmission.includes(trans) ? 'active' : ''} `}
+                                                className={`pill-btn ${selectedTransmission.includes(trans) ? 'active' : ''}`}
                                                 onClick={() => toggleTransmission(trans)}
                                             >
                                                 {trans.charAt(0).toUpperCase() + trans.slice(1)}
@@ -556,7 +519,7 @@ const Catalog = () => {
                                         {availableColors.map(color => (
                                             <button
                                                 key={color.id}
-                                                className={`color - card ${selectedColors.includes(color.id) ? 'active' : ''} `}
+                                                className={`color-card ${selectedColors.includes(color.id) ? 'active' : ''}`}
                                                 onClick={() => toggleColor(color.id)}
                                             >
                                                 <div

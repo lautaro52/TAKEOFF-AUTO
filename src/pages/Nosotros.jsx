@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './Nosotros.css';
 import { motion } from "framer-motion";
+import { API_CONFIG } from '../config';
 import {
     ShieldCheck,
     Handshake,
@@ -28,6 +29,7 @@ const grayPlaceholder = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000
 // ─────────────────────────────────────────────
 // HERO — diseño basado en referencia exacta
 // ─────────────────────────────────────────────
+
 const Hero = () => (
     <section className="w-full bg-white" style={{ paddingTop: '80px', borderTop: '2px solid transparent' }}>
         {/* Marcador de Versión Invisible para Refresh Check: V12 */}
@@ -46,7 +48,7 @@ const Hero = () => (
                 className="nosotros-hero-text"
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7 }}
+                transition={{ duration: 0.5 }}
                 style={{
                     display: 'flex',
                     flexDirection: 'column',
@@ -150,7 +152,7 @@ const Hero = () => (
                 className="nosotros-hero-image"
                 initial={{ opacity: 0, x: 28 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.9 }}
+                transition={{ duration: 0.65 }}
                 style={{ position: 'relative', paddingTop: '16px', paddingRight: '16px' }}
             >
                 {/* Badge flotante — sale del borde superior derecho del card */}
@@ -411,7 +413,7 @@ const Pillars = () => (
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, margin: "-100px" }}
-                        transition={{ duration: 0.6, delay: i * 0.1, ease: [0.21, 0.45, 0.32, 0.9] }}
+                        transition={{ duration: 0.4, delay: i * 0.1, ease: [0.21, 0.45, 0.32, 0.9] }}
                         whileHover={{
                             y: -12,
                             scale: 1.02,
@@ -470,12 +472,12 @@ const Transparency = () => (
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.8 }}
+                transition={{ duration: 0.55 }}
                 className="nosotros-transparency-card bg-white rounded-[4rem] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.12)] overflow-hidden flex flex-col md:flex-row items-stretch"
             >
                 {/* Left Column: Text Content — Absolute Balance */}
-                <div className="nosotros-transparency-text flex-1 p-10 md:p-14 lg:p-20 flex flex-col justify-center bg-white">
-                    <div className="max-w-[440px] w-full mx-auto">
+                <div className="nosotros-transparency-text flex-1 flex flex-col justify-center bg-white" style={{ padding: '80px 56px 80px 80px' }}>
+                    <div className="max-w-[440px] w-full">
                         <h2 className="text-4xl lg:text-[44px] font-[1000] tracking-tighter uppercase text-black mb-12 leading-[0.95]">
                             TRANSPARENCIA EN EL PROCESO
                         </h2>
@@ -588,7 +590,7 @@ const CTA = () => (
                         </Link>
 
                         <a
-                            href="https://wa.me/5493512345678"
+                            href={API_CONFIG.WHATSAPP_LINK}
                             target="_blank"
                             rel="noopener noreferrer"
                             style={{

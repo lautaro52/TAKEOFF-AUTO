@@ -45,6 +45,37 @@ const fixEncoding = (obj) => {
     return obj;
 };
 
+// Utility to normalize car data (encoding + prices)
+const processCarData = (obj) => {
+    if (!obj) return obj;
+
+    // Fix encoding first
+    const fixed = fixEncoding(obj);
+
+    // Helper to process a single car
+    const processSingle = (car) => {
+        if (!car || typeof car !== 'object') return car;
+
+        const rawPrice = Number(car.price);
+        if (!isNaN(rawPrice) && rawPrice > 0) {
+            // Assume prices < 1,000,000 are in USD (less than 7 figures)
+            car.isUSD = rawPrice < 1000000;
+            car.arsPrice = car.isUSD ? rawPrice * 1500 : rawPrice;
+            car.arsDownpayment = car.arsPrice * 0.2;
+        } else {
+            car.arsPrice = 0;
+            car.arsDownpayment = 0;
+            car.isUSD = false;
+        }
+        return car;
+    };
+
+    if (Array.isArray(fixed)) {
+        return fixed.map(item => processSingle(item));
+    }
+    return processSingle(fixed);
+};
+
 /**
  * Get all cars from the API
  */
@@ -55,7 +86,7 @@ export const getCars = async () => {
         const data = await response.json();
 
         if (data.success) {
-            return fixEncoding(data.data);
+            return processCarData(data.data);
         } else {
             throw new Error(data.message || 'Error fetching cars');
         }
@@ -75,7 +106,7 @@ export const getCarById = async (id) => {
         const data = await response.json();
 
         if (data.success) {
-            return fixEncoding(data.data);
+            return processCarData(data.data);
         } else {
             throw new Error(data.message || 'Car not found');
         }

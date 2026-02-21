@@ -20,5 +20,9 @@ export const API_CONFIG = {
     UPLOADS_URL: `${BASE_URL}/uploads/`, // Direct access to uploads in api/uploads
     IMAGE_BASE_URL: `${BASE_URL}/`, // Images are served relative to api/
     ANALYTICS_URL: `${BASE_URL}/analytics.php`,
-    SEND_EMAIL_URL: `${BASE_URL}/send_new_user_email.php`
+    SEND_EMAIL_URL: `${BASE_URL}/send_new_user_email.php`,
+    WHATSAPP_NUMBER: "5493516752879",
+    WHATSAPP_LINK: "https://wa.me/5493516752879",
+    INSTAGRAM_LINK: "https://www.instagram.com/takeoff.auto/",
+    YOUTUBE_LINK: "https://www.youtube.com/@TakeOff-p5x"
 };

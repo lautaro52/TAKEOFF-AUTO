@@ -49,23 +49,6 @@
     color: var(--text-dark);
 }
 
-/*
-  ### ✅ Diseño de Tarjetas Unificado
-Sincronicé el diseño de las tarjetas de los autos en toda la plataforma (@Home, @Catalog y @UserDashboard).
-- **Consistencia Visual**: Ahora la página de inicio muestra los autos con el mismo diseño premium del catálogo.
-- **Detalles Premium**: Se incluyó el distintivo de ubicación, especificaciones detalladas y el cálculo de anticipo en todas las vistas.
-- **Texto Personalizado**: Se actualizó el label de precio a "Entrega inmediata con el 20%" a pedido del usuario.
-- **Código Limpio**: Se reemplazaron múltiples implementaciones manuales por un único componente reutilizable (`ProductCard`).
-
----
-
-### ✅ Redirección Post-Login
-Corregí el error de navegación que enviaba al usuario a una ruta inexistente.
-- **Ruta Corregida**: Cambié la redirección de `/dashboard` a `/panel`.
-- **Estabilidad**: El usuario ahora accede directamente a su panel de control tras loguearse sin pantallas en blanco.
-- **Jerarquía HTML**: Corregí errores de anidamiento de etiquetas en el formulario de login para evitar fallos visuales.
-*/
-
 .filters-container {
     display: flex;
     flex-direction: column;
@@ -127,7 +110,6 @@ Corregí el error de navegación que enviaba al usuario a una ruta inexistente.
     flex-direction: column;
     gap: 4px;
     min-width: 0;
-    /* Allow shrinking */
 }
 
 .price-input-group label {
@@ -139,26 +121,11 @@ Corregí el error de navegación que enviaba al usuario a una ruta inexistente.
 .price-input-group input {
     width: 100%;
     padding: 8px;
-    /* Reduced padding */
     border: 1px solid #e5e8ed;
     border-radius: 6px;
     font-size: 13px;
-    /* Slightly smaller font if needed */
     font-family: 'Inter', sans-serif;
     outline: none;
-}
-
-/* Hide spin buttons for Chrome, Safari, Edge, Opera */
-.price-input-group input::-webkit-outer-spin-button,
-.price-input-group input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-/* Hide spin buttons for Firefox */
-.price-input-group input[type=number] {
-    -moz-appearance: textfield;
-    appearance: none;
 }
 
 .price-input-group input:focus {
@@ -302,45 +269,6 @@ Corregí el error de navegación que enviaba al usuario a una ruta inexistente.
     cursor: pointer;
 }
 
-/* Type Filter */
-.type-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-}
-
-.type-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    padding: 16px 8px;
-    border: 1px solid #e5e8ed;
-    border-radius: 8px;
-    background: white;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.type-card:hover {
-    border-color: #2161f2;
-    box-shadow: 0 2px 8px rgba(33, 97, 242, 0.1);
-}
-
-.type-card.active {
-    border-color: #2161f2;
-    background: #f0f5ff;
-}
-
-.type-icon {
-    font-size: 28px;
-}
-
-.type-name {
-    font-size: 12px;
-    font-weight: 500;
-    text-align: center;
-}
 
 /* Mechanical Filter */
 .filter-content h4 {

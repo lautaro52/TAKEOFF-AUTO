@@ -9,7 +9,7 @@ const Reveal = ({
     children,
     direction = 'up',
     delay = 0.2,
-    duration = 0.8,
+    duration = 0.55,
     width = "100%",
     className = ""
 }) => {

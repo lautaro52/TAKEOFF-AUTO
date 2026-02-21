@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ChevronRight, ChevronDown, CheckCircle, Shield, Clock, TrendingUp, PlayCircle, MapPin, MessageCircle, Pencil } from 'lucide-react';
 import VideoModal from '../components/VideoModal';
 import Reveal from '../components/Reveal';
+import { API_CONFIG } from '../config';
 import './Sell.css';
 
 // Local Assets
@@ -57,7 +58,7 @@ const Sell = () => {
             {/* HERO SECTION WITH VALUATION FORM */}
             <section className="sell-hero">
                 <div className="container sell-hero-container">
-                    <Reveal direction="left" duration={1.2}>
+                    <Reveal direction="left" duration={0.85}>
                         <div className="valuation-card">
                             <h3>Obtén una oferta por tu auto</h3>
                             <p>Al instante y sin salir de casa, es la forma más fácil y rápida.</p>
@@ -98,7 +99,7 @@ const Sell = () => {
             </section>
 
             {/* TAB SELECTOR */}
-            <Reveal direction="down" duration={1} delay={0.2}>
+            <Reveal direction="down" duration={0.7} delay={0.2}>
                 <div className="tabs-container-sell">
                     <div className="tabs-switcher-sell">
                         <button className={`tab-btn-s ${activeTab === 'vende' ? 'active' : ''}`} onClick={() => setActiveTab('vende')}>Vender</button>
@@ -114,14 +115,14 @@ const Sell = () => {
                     <>
                         <section className="section section-staggered">
                             <div className="container">
-                                <Reveal direction="up" duration={1.2}>
+                                <Reveal direction="up" duration={0.85}>
                                     <h2 className="section-title centered">El proceso más rápido y seguro de vender tu auto</h2>
                                     <p className="section-subtitle centered">Sigue estos pasos y obtén tu dinero hoy mismo.</p>
                                 </Reveal>
 
                                 <div className="staggered-visual-section">
                                     <div className="staggered-img-box">
-                                        <Reveal direction="left" duration={1.2} delay={0.2}>
+                                        <Reveal direction="left" duration={0.85} delay={0.2}>
                                             <img src={sellVendeImg} alt="Proceso venta" />
                                             <div className="floating-card-s pos-1">
                                                 <div className="icon-badge-s"><CheckCircle size={20} /></div>
@@ -140,25 +141,25 @@ const Sell = () => {
                                         </Reveal>
                                     </div>
                                     <div className="staggered-text-box">
-                                        <Reveal direction="up" duration={1.2} delay={0.4}>
+                                        <Reveal direction="up" duration={0.85} delay={0.4}>
                                             <h3>Vende tu auto en 3 simples pasos</h3>
                                         </Reveal>
                                         <div className="vertical-steps">
-                                            <Reveal direction="up" duration={1.2} delay={0.6}>
+                                            <Reveal direction="up" duration={0.85} delay={0.6}>
                                                 <div className="v-step">
                                                     <div className="v-badge">1</div>
                                                     <h4>Cotiza online</h4>
                                                     <p>Ingresa los datos de tu auto y recibe una oferta preliminar en segundos.</p>
                                                 </div>
                                             </Reveal>
-                                            <Reveal direction="up" duration={1.2} delay={0.8}>
+                                            <Reveal direction="up" duration={0.85} delay={0.8}>
                                                 <div className="v-step">
                                                     <div className="v-badge">2</div>
                                                     <h4>Agenda tu cita</h4>
                                                     <p>Visítanos para una inspección física y mecánica de 240 puntos.</p>
                                                 </div>
                                             </Reveal>
-                                            <Reveal direction="up" duration={1.2} delay={1.0}>
+                                            <Reveal direction="up" duration={0.85} delay={1.0}>
                                                 <div className="v-step">
                                                     <div className="v-badge">3</div>
                                                     <h4>Recibe tu pago</h4>
@@ -173,25 +174,25 @@ const Sell = () => {
 
                         <section className="section benefits-sell gray-bg">
                             <div className="container">
-                                <Reveal direction="up" duration={1.2}>
+                                <Reveal direction="up" duration={0.85}>
                                     <h2 className="section-title">¿Por qué vender tu auto en TAKEOFF?</h2>
                                 </Reveal>
                                 <div className="benefits-grid-sell">
-                                    <Reveal direction="up" duration={1.2} delay={0.2}>
+                                    <Reveal direction="up" duration={0.85} delay={0.2}>
                                         <div className="benefit-item-s">
                                             <div className="icon-teal"><Shield size={32} /></div>
                                             <h4>Seguridad total</h4>
                                             <p>Evita riesgos al vender a particulares. En TAKEOFF garantizamos transacciones seguras.</p>
                                         </div>
                                     </Reveal>
-                                    <Reveal direction="up" duration={1.2} delay={0.4}>
+                                    <Reveal direction="up" duration={0.85} delay={0.4}>
                                         <div className="benefit-item-s">
                                             <div className="icon-teal"><TrendingUp size={32} /></div>
                                             <h4>Mejor precio del mercado</h4>
                                             <p>Usamos algoritmos avanzados para darte la oferta más justa por tu vehículo.</p>
                                         </div>
                                     </Reveal>
-                                    <Reveal direction="up" duration={1.2} delay={0.6}>
+                                    <Reveal direction="up" duration={0.85} delay={0.6}>
                                         <div className="benefit-item-s">
                                             <div className="icon-teal"><Clock size={32} /></div>
                                             <h4>Proceso en el día</h4>
@@ -286,19 +287,19 @@ const Sell = () => {
             <section className="trust-banners-s">
                 <div className="container">
                     <div className="trust-grid-s">
-                        <Reveal direction="up" duration={1.2} delay={0.1}>
+                        <Reveal direction="up" duration={0.85} delay={0.1}>
                             <div className="trust-item-s">
                                 <CheckCircle size={24} />
                                 <span>Más de 10,000 autos comprados</span>
                             </div>
                         </Reveal>
-                        <Reveal direction="up" duration={1.2} delay={0.3}>
+                        <Reveal direction="up" duration={0.85} delay={0.3}>
                             <div className="trust-item-s">
                                 <Shield size={24} />
                                 <span>Inspección de 240 puntos</span>
                             </div>
                         </Reveal>
-                        <Reveal direction="up" duration={1.2} delay={0.5}>
+                        <Reveal direction="up" duration={0.85} delay={0.5}>
                             <div className="trust-item-s">
                                 <Clock size={24} />
                                 <span>Pago en menos de 24 horas</span>
@@ -360,7 +361,7 @@ const Sell = () => {
                     <div className="whatsapp-help-banner">
                         <div className="whatsapp-content">
                             <MessageCircle size={20} color="#2161f2" />
-                            <p>¿Necesitas ayuda? Te asesoramos y respondemos todas tus dudas. <a href="#">Habla con un asesor por WhatsApp &gt;</a></p>
+                            <p>¿Necesitas ayuda? Te asesoramos y respondemos todas tus dudas. <a href={API_CONFIG.WHATSAPP_LINK} target="_blank" rel="noopener noreferrer">Habla con un asesor por WhatsApp &gt;</a></p>
                         </div>
                     </div>
                 </div>
@@ -369,12 +370,12 @@ const Sell = () => {
             {/* FAQ SECTION */}
             <section className="section faq-section-s">
                 <div className="container">
-                    <Reveal direction="up" duration={1.2}>
+                    <Reveal direction="up" duration={0.85}>
                         <h2 className="section-title centered">Preguntas frecuentes</h2>
                     </Reveal>
                     <div className="faq-wrapper-s">
                         {faqs.map((faq, index) => (
-                            <Reveal key={index} direction="up" duration={1.2} delay={index * 0.1}>
+                            <Reveal key={index} direction="up" duration={0.85} delay={index * 0.1}>
                                 <div className={`faq-item-s ${openFaq === index ? 'open' : ''}`} onClick={() => toggleFaq(index)}>
                                     <div className="faq-question-s">
                                         <span>{faq.q}</span>
