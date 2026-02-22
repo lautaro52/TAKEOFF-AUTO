@@ -9,7 +9,8 @@ const ROOT_URL = isLocal
     ? `http://${hostname}`
     : 'https://takeoffauto.online';
 
-const BASE_URL = `${ROOT_URL}/takeoffauto-api/api`;
+const API_ROOT = `${ROOT_URL}/takeoffauto-api`;
+const BASE_URL = `${API_ROOT}/api`;
 
 export const USD_QUOTATION = 1500;
 
@@ -17,8 +18,8 @@ export const API_CONFIG = {
     BASE_URL,
     API_URL: `${BASE_URL}/cars.php`,
     UPLOAD_URL: `${BASE_URL}/upload.php`,
-    UPLOADS_URL: `${BASE_URL}/uploads/`, // Direct access to uploads in api/uploads
-    IMAGE_BASE_URL: `${BASE_URL}/`, // Images are served relative to api/
+    UPLOADS_URL: `${API_ROOT}/uploads/`,
+    IMAGE_BASE_URL: `${API_ROOT}/`,
     ANALYTICS_URL: `${BASE_URL}/analytics.php`,
     SEND_EMAIL_URL: `${BASE_URL}/send_new_user_email.php`,
     WHATSAPP_NUMBER: "5493516752879",

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { X, ChevronDown, ChevronUp, Upload, Image as ImageIcon, Loader2 } from 'lucide-react';
+import { API_CONFIG } from '../config';
 import { userService } from '../services/userService';
 import './QuoteModal.css';
 
@@ -106,7 +107,7 @@ const QuoteModal = ({ isOpen, onClose }) => {
                 data.append('photos[]', photo);
             });
 
-            const response = await fetch('http://localhost:8000/api/submit_quote.php', {
+            const response = await fetch(`${API_CONFIG.BASE_URL}/submit_quote.php`, {
                 method: 'POST',
                 body: data
             });

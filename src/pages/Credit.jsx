@@ -7,17 +7,11 @@ import DeliveryCarousel from '../components/DeliveryCarousel';
 import ZeroKmShowcase from '../components/ZeroKmShowcase';
 import PromiseCarousel from '../components/PromiseCarousel';
 import './Credit.css';
+import loanVisual from '../assets/loan-visual.png';
 import creditHero from '../assets/credit-hero.jpg';
 import videoCredit from '../assets/video-credit.mp4';
 import creditPoster from '../assets/credit-poster.jpg';
 import Reveal from '../components/Reveal';
-
-// Para evitar que la página falle si las fotos aún no existen, 
-// usaremos las rutas como texto. Una vez subas las fotos, aparecerán solas.
-const car1 = "/src/assets/car-meses-1.png";
-const car2 = "/src/assets/car-meses-2.png";
-const car3 = "/src/assets/car-meses-3.png";
-const loanVisual = "/src/assets/loan-visual.png";
 
 const Credit = () => {
     const navigate = useNavigate();
@@ -270,7 +264,7 @@ const Credit = () => {
                                     <div className="financing-staggered-card">
                                         <div className="car-top-label">Usado Certificado</div>
                                         <div className="staggered-img-container">
-                                            <img src={car1} alt="Fiat Cronos Drive 2021" />
+                                            <img src="/images/site/car-meses-1.png" alt="Fiat Cronos Drive 2021" />
                                         </div>
                                         <div className="staggered-info">
                                             <div className="staggered-title">Fiat Cronos Drive 2021 • $21.560.000</div>
@@ -288,7 +282,7 @@ const Credit = () => {
                                     <div className="financing-staggered-card featured">
                                         <div className="car-top-label">Usado Certificado</div>
                                         <div className="staggered-img-container">
-                                            <img src={car2} alt="Fiat Toro Freedom 2021" />
+                                            <img src="/images/site/car-meses-2.png" alt="Fiat Toro Freedom 2021" />
                                         </div>
                                         <div className="staggered-info">
                                             <div className="staggered-title">Fiat Toro Freedom 2021 • $32.340.000</div>
@@ -306,7 +300,7 @@ const Credit = () => {
                                     <div className="financing-staggered-card">
                                         <div className="car-top-label">Usado Certificado</div>
                                         <div className="staggered-img-container">
-                                            <img src={car3} alt="Volkswagen Gol Power 2013" />
+                                            <img src="/images/site/car-meses-3.png" alt="Volkswagen Gol Power 2013" />
                                         </div>
                                         <div className="staggered-info">
                                             <div className="staggered-title">Volkswagen Gol Power 2013 • $11.760.000</div>
@@ -324,7 +318,7 @@ const Credit = () => {
                                 <div className="financing-staggered-card financing-carousel-dup" aria-hidden="true">
                                     <div className="car-top-label">Usado Certificado</div>
                                     <div className="staggered-img-container">
-                                        <img src={car1} alt="" />
+                                        <img src="/images/site/car-meses-1.png" alt="" />
                                     </div>
                                     <div className="staggered-info">
                                         <div className="staggered-title">Fiat Cronos Drive 2021 • $21.560.000</div>
@@ -340,7 +334,7 @@ const Credit = () => {
                                 <div className="financing-staggered-card featured financing-carousel-dup" aria-hidden="true">
                                     <div className="car-top-label">Usado Certificado</div>
                                     <div className="staggered-img-container">
-                                        <img src={car2} alt="" />
+                                        <img src="/images/site/car-meses-2.png" alt="" />
                                     </div>
                                     <div className="staggered-info">
                                         <div className="staggered-title">Fiat Toro Freedom 2021 • $32.340.000</div>
@@ -356,7 +350,7 @@ const Credit = () => {
                                 <div className="financing-staggered-card financing-carousel-dup" aria-hidden="true">
                                     <div className="car-top-label">Usado Certificado</div>
                                     <div className="staggered-img-container">
-                                        <img src={car3} alt="" />
+                                        <img src="/images/site/car-meses-3.png" alt="" />
                                     </div>
                                     <div className="staggered-info">
                                         <div className="staggered-title">Volkswagen Gol Power 2013 • $11.760.000</div>

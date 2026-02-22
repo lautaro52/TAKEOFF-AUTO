@@ -388,24 +388,209 @@ const Admin = () => {
                 {successMessage && <div className="success-banner">{successMessage}</div>}
                 {error && <div className="error-banner">{error}</div>}
 
-                {/* Tabs - Disabled */}
-                <div className="admin-tabs" style={{ opacity: 0.5, pointerEvents: 'none' }}>
-                    <button className="admin-tab">📝 Carga Manual (Bloqueado)</button>
-                    <button className="admin-tab">📁 Carga Masiva (Bloqueado)</button>
+                {/* Tabs */}
+                <div className="admin-tabs">
+                    <button className={`admin-tab ${activeTab === 'manual' ? 'active' : ''}`} onClick={() => setActiveTab('manual')}>📝 Carga Manual</button>
+                    <button className={`admin-tab ${activeTab === 'bulk' ? 'active' : ''}`} onClick={() => setActiveTab('bulk')}>📁 Carga Masiva</button>
                 </div>
 
-                <div className="locked-notice" style={{
-                    background: '#fff3e0',
-                    border: '1px solid #ffe0b2',
-                    padding: '20px',
-                    borderRadius: '8px',
-                    marginBottom: '30px',
-                    textAlign: 'center',
-                    color: '#e65100'
-                }}>
-                    <h3>⚠️ Catálogo Bloqueado</h3>
-                    <p>El catálogo se ha restringido a las 90 unidades actuales. Las funciones de carga, edición y eliminación han sido desactivadas temporalmente para mantener la integridad del inventario seleccionado.</p>
-                </div>
+                {/* Manual Form */}
+                {activeTab === 'manual' && (
+                    <form onSubmit={handleSubmit} className="car-form">
+                        <h3>{editingId ? '✏️ Editar Auto' : '➕ Agregar Auto'}</h3>
+                        <div className="form-grid">
+                            <div className="form-group">
+                                <label>Marca</label>
+                                <input type="text" value={brand} onChange={(e) => setBrand(e.target.value)} required placeholder="Ej: Fiat" />
+                            </div>
+                            <div className="form-group">
+                                <label>Modelo</label>
+                                <input type="text" value={model} onChange={(e) => setModel(e.target.value)} required placeholder="Ej: Cronos" />
+                            </div>
+                            <div className="form-group">
+                                <label>Año</label>
+                                <input type="number" value={year} onChange={(e) => setYear(e.target.value)} required placeholder="Ej: 2023" />
+                            </div>
+                            <div className="form-group">
+                                <label>Precio</label>
+                                <input type="number" value={price} onChange={(e) => setPrice(e.target.value)} required placeholder="Ej: 15000000" />
+                            </div>
+                            <div className="form-group">
+                                <label>Km</label>
+                                <input type="number" value={km} onChange={(e) => setKm(e.target.value)} placeholder="Ej: 45000" />
+                            </div>
+                            <div className="form-group">
+                                <label>Especificaciones</label>
+                                <input type="text" value={specs} onChange={(e) => setSpecs(e.target.value)} placeholder="Ej: 1.3 Firefly • CVT" />
+                            </div>
+                            <div className="form-group">
+                                <label>Transmisión</label>
+                                <select value={transmission} onChange={(e) => setTransmission(e.target.value)}>
+                                    <option value="automatico">Automático</option>
+                                    <option value="manual">Manual</option>
+                                </select>
+                            </div>
+                            <div className="form-group">
+                                <label>Combustible</label>
+                                <select value={fuel} onChange={(e) => setFuel(e.target.value)}>
+                                    <option value="gasolina">Gasolina</option>
+                                    <option value="diesel">Diésel</option>
+                                    <option value="hibrido">Híbrido</option>
+                                    <option value="electrico">Eléctrico</option>
+                                </select>
+                            </div>
+                            <div className="form-group">
+                                <label>Tipo</label>
+                                <select value={type} onChange={(e) => setType(e.target.value)}>
+                                    <option value="sedan">Sedán</option>
+                                    <option value="suv">SUV</option>
+                                    <option value="hatchback">Hatchback</option>
+                                    <option value="pickup">Pickup</option>
+                                    <option value="coupe">Coupé</option>
+                                    <option value="convertible">Convertible</option>
+                                    <option value="van">Van</option>
+                                    <option value="wagon">Wagon</option>
+                                </select>
+                            </div>
+                            <div className="form-group">
+                                <label>Color</label>
+                                <input type="text" value={color} onChange={(e) => setColor(e.target.value)} placeholder="Ej: blanco" />
+                            </div>
+                            <div className="form-group">
+                                <label>Ciudad</label>
+                                <input type="text" value={city} onChange={(e) => setCity(e.target.value)} placeholder="Ej: Córdoba Capital" />
+                            </div>
+                            <div className="form-group">
+                                <label>Estado</label>
+                                <select value={status} onChange={(e) => setStatus(e.target.value)}>
+                                    <option value="disponible">Disponible</option>
+                                    <option value="apartado">Apartado</option>
+                                    <option value="vendido">Vendido</option>
+                                </select>
+                            </div>
+                            <div className="form-group">
+                                <label>Sección Home</label>
+                                <select value={homeSection} onChange={(e) => setHomeSection(e.target.value)}>
+                                    <option value="">Ninguna</option>
+                                    <option value="destacados">Destacados</option>
+                                    <option value="vendidos">Más Vendidos</option>
+                                </select>
+                            </div>
+                            <div className="form-group checkbox-group">
+                                <label>
+                                    <input type="checkbox" checked={featured} onChange={(e) => setFeatured(e.target.checked)} />
+                                    Destacado
+                                </label>
+                            </div>
+                        </div>
+
+                        {/* Image Upload */}
+                        <div className="image-upload-section">
+                            <label className="upload-label">
+                                <Upload size={20} /> Seleccionar Imágenes (máx. 15)
+                                <input type="file" multiple accept="image/*" onChange={handleImageSelect} style={{ display: 'none' }} />
+                            </label>
+                            {imagePreviews.length > 0 && (
+                                <div className="image-preview-grid">
+                                    {imagePreviews.map((preview, index) => (
+                                        <div key={index} className="image-preview-item">
+                                            <img src={preview} alt={`Preview ${index + 1}`} />
+                                            <button type="button" className="remove-image-btn" onClick={() => removeImage(index)}>
+                                                <X size={14} />
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="form-actions">
+                            <button type="submit" className="btn-submit" disabled={loading}>
+                                {loading ? <Loader size={18} className="spinner" /> : (editingId ? 'Actualizar Auto' : 'Agregar Auto')}
+                            </button>
+                            {editingId && (
+                                <button type="button" className="btn-cancel" onClick={resetForm}>Cancelar Edición</button>
+                            )}
+                        </div>
+                    </form>
+                )}
+
+                {/* Bulk Upload */}
+                {activeTab === 'bulk' && (
+                    <div className="bulk-upload-section">
+                        <h3>📁 Carga Masiva de Autos</h3>
+                        <p className="bulk-instructions">Selecciona carpetas que contengan <strong>ficha_tecnica.txt</strong> e imágenes del vehículo. El sistema parseará las fichas automáticamente.</p>
+                        <label className="upload-label bulk-label">
+                            <Upload size={20} /> Seleccionar Carpetas
+                            <input
+                                type="file"
+                                webkitdirectory="true"
+                                directory="true"
+                                multiple
+                                onChange={(e) => {
+                                    const files = Array.from(e.target.files);
+                                    const folders = {};
+                                    files.forEach(file => {
+                                        const parts = file.webkitRelativePath.split('/');
+                                        const folderName = parts[1] || parts[0];
+                                        if (!folders[folderName]) folders[folderName] = { name: folderName, files: [], specs: null, images: [] };
+                                        if (file.name === 'ficha_tecnica.txt') {
+                                            const reader = new FileReader();
+                                            reader.onload = (ev) => {
+                                                folders[folderName].specs = parseFichaTecnica(ev.target.result);
+                                                setBulkFolders(Object.values(folders));
+                                            };
+                                            reader.readAsText(file);
+                                        } else if (file.type.startsWith('image/')) {
+                                            folders[folderName].images.push(file);
+                                        }
+                                        folders[folderName].files.push(file);
+                                    });
+                                    setTimeout(() => setBulkFolders(Object.values(folders)), 500);
+                                }}
+                                style={{ display: 'none' }}
+                            />
+                        </label>
+
+                        {bulkFolders.length > 0 && (
+                            <div className="bulk-preview">
+                                <h4>{bulkFolders.length} carpetas detectadas</h4>
+                                {bulkFolders.map((folder, idx) => (
+                                    <div key={idx} className="bulk-folder-item">
+                                        <strong>📂 {folder.name}</strong>
+                                        <span>{folder.images.length} imágenes</span>
+                                        <span>{folder.specs ? '✅ Ficha técnica' : '❌ Sin ficha'}</span>
+                                    </div>
+                                ))}
+                                <button
+                                    className="btn-submit"
+                                    disabled={loading}
+                                    onClick={async () => {
+                                        setLoading(true);
+                                        setBulkProgress({ current: 0, total: bulkFolders.length, status: 'Iniciando...' });
+                                        for (let i = 0; i < bulkFolders.length; i++) {
+                                            const folder = bulkFolders[i];
+                                            setBulkProgress({ current: i + 1, total: bulkFolders.length, status: `Subiendo ${folder.name}...` });
+                                            if (folder.specs && folder.images.length > 0) {
+                                                try {
+                                                    await addCar(folder.specs, folder.images);
+                                                } catch (err) {
+                                                    console.error(`Error uploading ${folder.name}:`, err);
+                                                }
+                                            }
+                                        }
+                                        setBulkProgress({ current: bulkFolders.length, total: bulkFolders.length, status: '¡Completado!' });
+                                        setLoading(false);
+                                        setSuccessMessage(`${bulkFolders.length} autos subidos exitosamente`);
+                                        setBulkFolders([]);
+                                    }}
+                                >
+                                    {loading ? <><Loader size={18} className="spinner" /> {bulkProgress.status}</> : `Subir ${bulkFolders.length} Autos`}
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                )}
 
                 {/* Car List */}
                 <div className="car-list-section">
@@ -462,7 +647,8 @@ const Admin = () => {
                                         )}
                                     </div>
                                     <div className="admin-action-buttons">
-                                        <p style={{ fontSize: '0.85rem', color: '#666', fontStyle: 'italic' }}>Información de lectura</p>
+                                        <button className="btn-edit" onClick={() => handleEdit(car)}>✏️ Editar</button>
+                                        <button className="btn-delete" onClick={() => handleDelete(car.id, `${car.brand} ${car.model}`)}>🗑️ Eliminar</button>
                                     </div>
                                 </div>
                             ))}

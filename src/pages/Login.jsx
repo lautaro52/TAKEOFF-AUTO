@@ -206,7 +206,7 @@ const Login = () => {
                     </h1>
                     <p className="login-subtitle">
                         {isLoginMode
-                            ? 'Ingresa tu email y DNI para acceder a tu panel.'
+                            ? 'Ingresa tu email para acceder a tu panel.'
                             : 'Ingresa tus datos para acceder a tu panel personalizado y ver tus favoritos.'}
                     </p>
                     <form className="login-form" onSubmit={handleStep1Submit}>
@@ -226,7 +226,7 @@ const Login = () => {
                             </div>
                         </div>
 
-                        {!isLoginMode ? (
+                        {!isLoginMode && (
                             <div className="input-group-premium">
                                 <label className="input-label">Nombre Completo</label>
                                 <div className="input-with-icon">
@@ -242,9 +242,11 @@ const Login = () => {
                                     />
                                 </div>
                             </div>
-                        ) : (
+                        )}
+
+                        {isLoginMode && (
                             <div className="input-group-premium">
-                                <label className="input-label">DNI (como contraseña)</label>
+                                <label className="input-label">DNI</label>
                                 <div className="input-with-icon">
                                     <Fingerprint size={18} className="input-icon" />
                                     <input

@@ -21,11 +21,18 @@ if ($method === 'POST') {
     $mode = $data->mode ?? 'register';
 
     if ($mode === 'login') {
-        if (!empty($data->email) && !empty($data->dni)) {
+        if (!empty($data->email)) {
             try {
-                $query = "SELECT id, email, whatsapp, dni, full_name FROM users WHERE email = ? AND dni = ? LIMIT 1";
-                $stmt = $db->prepare($query);
-                $stmt->execute([$data->email, $data->dni]);
+                // If DNI is provided, use both for verification. If not, just email.
+                if (!empty($data->dni)) {
+                    $query = "SELECT id, email, whatsapp, dni, full_name FROM users WHERE email = ? AND dni = ? LIMIT 1";
+                    $stmt = $db->prepare($query);
+                    $stmt->execute([$data->email, $data->dni]);
+                } else {
+                    $query = "SELECT id, email, whatsapp, dni, full_name FROM users WHERE email = ? LIMIT 1";
+                    $stmt = $db->prepare($query);
+                    $stmt->execute([$data->email]);
+                }
 
                 if ($stmt->rowCount() > 0) {
                     $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -35,13 +42,14 @@ if ($method === 'POST') {
                         "user" => $user
                     ]);
                 } else {
-                    echo json_encode(["success" => false, "message" => "Credenciales inválidas. Verifique su Email y DNI."]);
+                    $message = !empty($data->dni) ? "Credenciales inválidas. Verifique su Email y DNI." : "Email no encontrado. Si eres nuevo, por favor regístrate.";
+                    echo json_encode(["success" => false, "message" => $message]);
                 }
             } catch (PDOException $e) {
                 echo json_encode(["success" => false, "message" => "Database error: " . $e->getMessage()]);
             }
         } else {
-            echo json_encode(["success" => false, "message" => "Email y DNI son requeridos para iniciar sesión."]);
+            echo json_encode(["success" => false, "message" => "El email es requerido para iniciar sesión."]);
         }
     } else {
         // Registration mode
