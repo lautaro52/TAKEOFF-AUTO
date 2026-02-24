@@ -165,10 +165,37 @@ const Navbar = () => {
                             <li><Link to="/nosotros" onClick={closeMobileMenu}>Nosotros</Link></li>
                             <li className="mobile-divider"></li>
                             <li>
-                                <button className="mobile-location-btn">
-                                    <MapPin size={16} />
-                                    <span>Ubicación</span>
+                                <button
+                                    className={`mobile-location-btn ${showLocation ? 'active' : ''}`}
+                                    onClick={() => setShowLocation(!showLocation)}
+                                >
+                                    <div className="mobile-location-btn-content">
+                                        <MapPin size={18} />
+                                        <span>Ubicación</span>
+                                    </div>
+                                    <ChevronDown
+                                        size={16}
+                                        style={{
+                                            transform: showLocation ? 'rotate(180deg)' : 'rotate(0deg)',
+                                            transition: 'transform 0.3s ease',
+                                            marginLeft: 'auto'
+                                        }}
+                                    />
                                 </button>
+                                {showLocation && (
+                                    <div className="mobile-location-details">
+                                        <p className="mobile-location-address">Av. Fuerza Aérea Argentina 3808</p>
+                                        <p className="mobile-location-city">Córdoba, Argentina</p>
+                                        <a
+                                            href="https://www.google.com/maps/search/?api=1&query=Turin+Usados+Av.+Fuerza+Aérea+Argentina+3808+Córdoba"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="mobile-btn-map"
+                                        >
+                                            Ver en Google Maps
+                                        </a>
+                                    </div>
+                                )}
                             </li>
                             <li>
                                 {user ? (
