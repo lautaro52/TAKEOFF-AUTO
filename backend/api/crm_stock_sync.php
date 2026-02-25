@@ -1,0 +1,344 @@
+<?php
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
+header('Content-Type: application/json; charset=UTF-8');
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(200); exit(); }
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') { http_response_code(405); echo json_encode(["success" => false]); exit(); }
+
+set_time_limit(300); // Allow up to 5 minutes for sync
+
+include_once __DIR__ . '/../config/database.php';
+
+$database = new Database();
+$db = $database->getConnection();
+
+function verifyToken($t) {
+    if (!$t) return null;
+    $d = json_decode(base64_decode($t), true);
+    return ($d && isset($d['exp']) && $d['exp'] > time()) ? $d : null;
+}
+
+$input = json_decode(file_get_contents("php://input"), true);
+$admin = verifyToken($input['token'] ?? '');
+if (!$admin) { http_response_code(401); echo json_encode(["success" => false, "message" => "No autorizado"]); exit(); }
+
+// Config (same as frontend config.js)
+$GOOGLE_API_KEY = $input['google_api_key'] ?? '';
+$SHEET_ID = $input['sheet_id'] ?? '';
+$DRIVE_FOLDER_ID = $input['drive_folder_id'] ?? '';
+$OPENAI_API_KEY = $input['openai_api_key'] ?? '';
+$SHEET_RANGES = $input['sheet_ranges'] ?? ['Stock!A:Z', 'Hoja1!A:Z', 'Sheet1!A:Z'];
+
+if (!$GOOGLE_API_KEY || !$SHEET_ID) {
+    echo json_encode(["success" => false, "message" => "Google API Key y Sheet ID requeridos"]);
+    exit();
+}
+
+$log = [];
+$stats = ['added' => 0, 'updated' => 0, 'removed' => 0, 'no_photos' => 0, 'ai_generated' => 0, 'errors' => 0];
+
+// ─── STEP 1: Fetch Google Sheet ───
+$log[] = "Leyendo Google Sheets...";
+$sheetData = null;
+
+foreach ($SHEET_RANGES as $range) {
+    $url = "https://sheets.googleapis.com/v4/spreadsheets/$SHEET_ID/values/" . urlencode($range) . "?key=$GOOGLE_API_KEY";
+    $response = @file_get_contents($url);
+    if ($response) {
+        $data = json_decode($response, true);
+        if (!empty($data['values']) && count($data['values']) > 1) {
+            $sheetData = $data['values'];
+            $log[] = "Hoja encontrada: $range (" . (count($sheetData) - 1) . " filas)";
+            break;
+        }
+    }
+}
+
+if (!$sheetData) {
+    echo json_encode(["success" => false, "message" => "No se pudo leer el Google Sheet", "log" => $log]);
+    exit();
+}
+
+// Parse headers
+$headers = array_map(function($h) {
+    return strtolower(preg_replace('/[^a-z0-9]/', '', iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', strtolower(trim($h)))));
+}, $sheetData[0]);
+
+$DOMAIN_KEYS = ['dominio', 'domain', 'patente', 'placa', 'matricula'];
+$PRICE_KEYS = ['precio', 'price', 'valor'];
+$BRAND_KEYS = ['marca', 'brand'];
+$MODEL_KEYS = ['modelo', 'model'];
+$YEAR_KEYS = ['ano', 'year', 'anio'];
+$KM_KEYS = ['km', 'kilometros', 'kilometraje'];
+$TRANS_KEYS = ['transmision', 'transmission'];
+$COLOR_KEYS = ['color', 'colour'];
+$FUEL_KEYS = ['combustible', 'fuel'];
+$TYPE_KEYS = ['tipo', 'type', 'carroceria'];
+
+function findCol($headers, $keys) {
+    foreach ($keys as $k) {
+        $idx = array_search($k, $headers);
+        if ($idx !== false) return $idx;
+    }
+    return -1;
+}
+
+$domainCol = findCol($headers, $DOMAIN_KEYS);
+$priceCol = findCol($headers, $PRICE_KEYS);
+$brandCol = findCol($headers, $BRAND_KEYS);
+$modelCol = findCol($headers, $MODEL_KEYS);
+$yearCol = findCol($headers, $YEAR_KEYS);
+$kmCol = findCol($headers, $KM_KEYS);
+$transCol = findCol($headers, $TRANS_KEYS);
+$colorCol = findCol($headers, $COLOR_KEYS);
+$fuelCol = findCol($headers, $FUEL_KEYS);
+$typeCol = findCol($headers, $TYPE_KEYS);
+
+if ($domainCol === -1) {
+    $domainCol = 0; // fallback to first column
+    $log[] = "⚠ Columna dominio no encontrada, usando columna 1";
+}
+
+// Parse sheet rows
+$sheetCars = [];
+for ($i = 1; $i < count($sheetData); $i++) {
+    $row = $sheetData[$i];
+    $rawDomain = $row[$domainCol] ?? '';
+    $domain = strtolower(preg_replace('/[^a-z0-9]/', '', strtolower($rawDomain)));
+    if (!$domain) continue;
+
+    $price = 0;
+    if ($priceCol >= 0 && isset($row[$priceCol])) {
+        $price = (int) preg_replace('/[^0-9]/', '', str_replace('.', '', $row[$priceCol]));
+    }
+
+    $sheetCars[$domain] = [
+        'domain' => $domain,
+        'raw_domain' => $rawDomain,
+        'brand' => ($brandCol >= 0 && isset($row[$brandCol])) ? trim($row[$brandCol]) : '',
+        'model' => ($modelCol >= 0 && isset($row[$modelCol])) ? trim($row[$modelCol]) : '',
+        'year' => ($yearCol >= 0 && isset($row[$yearCol])) ? (int)$row[$yearCol] : 0,
+        'price' => $price,
+        'km' => ($kmCol >= 0 && isset($row[$kmCol])) ? (int) preg_replace('/[^0-9]/', '', $row[$kmCol]) : 0,
+        'transmission' => ($transCol >= 0 && isset($row[$transCol])) ? (stripos($row[$transCol], 'auto') !== false ? 'automatico' : 'manual') : 'manual',
+        'color' => ($colorCol >= 0 && isset($row[$colorCol])) ? strtolower(trim($row[$colorCol])) : 'blanco',
+        'fuel' => ($fuelCol >= 0 && isset($row[$fuelCol])) ? strtolower(trim($row[$fuelCol])) : 'gasolina',
+        'type' => ($typeCol >= 0 && isset($row[$typeCol])) ? strtolower(trim($row[$typeCol])) : 'sedan',
+    ];
+}
+
+$log[] = count($sheetCars) . " autos encontrados en el Sheet";
+
+// ─── STEP 2: Fetch Drive images per domain ───
+$driveImages = [];
+if ($DRIVE_FOLDER_ID) {
+    $log[] = "Buscando carpetas en Google Drive...";
+    $foldersUrl = "https://www.googleapis.com/drive/v3/files?key=$GOOGLE_API_KEY&q='" . urlencode($DRIVE_FOLDER_ID) . "'+in+parents+and+mimeType='application/vnd.google-apps.folder'+and+trashed=false&fields=files(id,name)&pageSize=500&supportsAllDrives=true&includeItemsFromAllDrives=true";
+    $foldersResp = @file_get_contents($foldersUrl);
+    $folders = $foldersResp ? (json_decode($foldersResp, true)['files'] ?? []) : [];
+    $log[] = count($folders) . " carpetas encontradas en Drive";
+
+    foreach ($folders as $folder) {
+        $folderDomain = strtolower(preg_replace('/[^a-z0-9]/', '', strtolower($folder['name'])));
+        if (!$folderDomain) continue;
+
+        $imagesUrl = "https://www.googleapis.com/drive/v3/files?key=$GOOGLE_API_KEY&q='" . urlencode($folder['id']) . "'+in+parents+and+mimeType+contains+'image/'+and+trashed=false&fields=files(id,name)&pageSize=50&orderBy=name&supportsAllDrives=true&includeItemsFromAllDrives=true";
+        $imagesResp = @file_get_contents($imagesUrl);
+        $images = $imagesResp ? (json_decode($imagesResp, true)['files'] ?? []) : [];
+
+        if (count($images) > 0) {
+            $driveImages[$folderDomain] = array_map(function($img) {
+                return "https://drive.google.com/uc?export=view&id=" . $img['id'];
+            }, $images);
+        }
+    }
+    $log[] = count($driveImages) . " dominios con fotos en Drive";
+}
+
+// ─── STEP 3: Get existing cars from DB ───
+$existingStmt = $db->query("SELECT id, domain FROM cars WHERE domain IS NOT NULL AND domain != ''");
+$existingByDomain = [];
+while ($row = $existingStmt->fetch(PDO::FETCH_ASSOC)) {
+    $existingByDomain[strtolower($row['domain'])] = (int)$row['id'];
+}
+
+// ─── STEP 4: Process each sheet car ───
+$uploadDir = __DIR__ . '/uploads/';
+if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+
+foreach ($sheetCars as $domain => $carInfo) {
+    $hasPhotos = isset($driveImages[$domain]) && count($driveImages[$domain]) > 0;
+    $existsInDb = isset($existingByDomain[$domain]);
+
+    if ($existsInDb) {
+        // UPDATE existing
+        try {
+            $updateFields = ["price = ?", "has_photos = ?", "updated_at = NOW()"];
+            $updateParams = [$carInfo['price'], $hasPhotos ? 1 : 0];
+
+            if ($carInfo['km'] > 0) { $updateFields[] = "km = ?"; $updateParams[] = $carInfo['km']; }
+
+            $updateParams[] = $existingByDomain[$domain];
+            $db->prepare("UPDATE cars SET " . implode(', ', $updateFields) . " WHERE id = ?")->execute($updateParams);
+
+            // Update images if available
+            if ($hasPhotos) {
+                $carId = $existingByDomain[$domain];
+                // Download and save new images
+                $savedImages = downloadDriveImages($driveImages[$domain], $carId, $uploadDir);
+                if (!empty($savedImages)) {
+                    // Remove old images
+                    $db->prepare("DELETE FROM car_images WHERE car_id = ?")->execute([$carId]);
+                    foreach ($savedImages as $idx => $imgPath) {
+                        $db->prepare("INSERT INTO car_images (car_id, image_url, sort_order) VALUES (?, ?, ?)")
+                           ->execute([$carId, $imgPath, $idx]);
+                    }
+                }
+            }
+
+            $stats['updated']++;
+        } catch (Exception $e) {
+            $stats['errors']++;
+            $log[] = "⚠ Error actualizando $domain: " . $e->getMessage();
+        }
+    } else {
+        // INSERT new car
+        try {
+            if (empty($carInfo['brand']) || empty($carInfo['model'])) {
+                $log[] = "⚠ Saltando $domain: sin marca/modelo";
+                continue;
+            }
+
+            // Generate specs with OpenAI if available
+            $specs = $carInfo['brand'] . ' ' . $carInfo['model'];
+            if ($OPENAI_API_KEY) {
+                $aiSpecs = generateAISpecs($carInfo, $OPENAI_API_KEY);
+                if ($aiSpecs) {
+                    $specs = $aiSpecs;
+                    $stats['ai_generated']++;
+                }
+            }
+
+            $stmt = $db->prepare("INSERT INTO cars (brand, model, year, price, specs, km, transmission, fuel, type, color, city, status, featured, has_photos, domain, home_section) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'disponible', 0, ?, ?, NULL)");
+            $stmt->execute([
+                $carInfo['brand'],
+                $carInfo['model'],
+                $carInfo['year'],
+                $carInfo['price'],
+                $specs,
+                $carInfo['km'],
+                $carInfo['transmission'],
+                $carInfo['fuel'],
+                $carInfo['type'],
+                $carInfo['color'],
+                'Córdoba Capital',
+                $hasPhotos ? 1 : 0,
+                $domain
+            ]);
+            $newCarId = $db->lastInsertId();
+
+            // Download and save images
+            if ($hasPhotos) {
+                $savedImages = downloadDriveImages($driveImages[$domain], $newCarId, $uploadDir);
+                foreach ($savedImages as $idx => $imgPath) {
+                    $db->prepare("INSERT INTO car_images (car_id, image_url, sort_order) VALUES (?, ?, ?)")
+                       ->execute([$newCarId, $imgPath, $idx]);
+                }
+            } else {
+                $stats['no_photos']++;
+            }
+
+            $stats['added']++;
+            $log[] = "✅ Agregado: {$carInfo['brand']} {$carInfo['model']} ($domain)" . (!$hasPhotos ? " [SIN FOTOS]" : "");
+        } catch (Exception $e) {
+            $stats['errors']++;
+            $log[] = "⚠ Error insertando $domain: " . $e->getMessage();
+        }
+    }
+
+    // Remove from existing list (remaining will be deleted)
+    unset($existingByDomain[$domain]);
+}
+
+// ─── STEP 5: Remove cars no longer in sheet ───
+foreach ($existingByDomain as $domain => $carId) {
+    try {
+        // Only remove cars that were synced (have domain), not manually added
+        $db->prepare("UPDATE cars SET status = 'vendido' WHERE id = ? AND domain IS NOT NULL")->execute([$carId]);
+        $stats['removed']++;
+        $log[] = "🗑 Removido del catálogo: $domain (ID: $carId)";
+    } catch (Exception $e) {
+        $log[] = "⚠ Error removiendo $domain: " . $e->getMessage();
+    }
+}
+
+$log[] = "───────────────────────────";
+$log[] = "Sync completado: +{$stats['added']} nuevos, ~{$stats['updated']} actualizados, -{$stats['removed']} removidos";
+if ($stats['no_photos'] > 0) $log[] = "📷 {$stats['no_photos']} autos sin fotos (no aparecerán en Home)";
+if ($stats['ai_generated'] > 0) $log[] = "🤖 {$stats['ai_generated']} fichas técnicas generadas con IA";
+
+echo json_encode(["success" => true, "stats" => $stats, "log" => $log]);
+
+// ─── HELPER: Download Drive images to local server ───
+function downloadDriveImages($urls, $carId, $uploadDir) {
+    $carDir = $uploadDir . "car_$carId/";
+    if (!is_dir($carDir)) mkdir($carDir, 0755, true);
+
+    $saved = [];
+    foreach ($urls as $idx => $url) {
+        $ext = 'jpg';
+        $filename = "img_" . ($idx + 1) . ".$ext";
+        $localPath = $carDir . $filename;
+
+        $ctx = stream_context_create(['http' => ['timeout' => 15, 'follow_location' => true]]);
+        $imageData = @file_get_contents($url, false, $ctx);
+        if ($imageData && strlen($imageData) > 1000) {
+            file_put_contents($localPath, $imageData);
+            $saved[] = "uploads/car_$carId/$filename";
+        }
+    }
+    return $saved;
+}
+
+// ─── HELPER: Generate AI specs ───
+function generateAISpecs($carInfo, $apiKey) {
+    $prompt = "Genera una ficha técnica resumida (máximo 80 palabras) para este vehículo usado en Argentina:\n";
+    $prompt .= "Marca: {$carInfo['brand']}\nModelo: {$carInfo['model']}\n";
+    if ($carInfo['year']) $prompt .= "Año: {$carInfo['year']}\n";
+    if ($carInfo['km']) $prompt .= "Km: {$carInfo['km']}\n";
+    if ($carInfo['transmission']) $prompt .= "Transmisión: {$carInfo['transmission']}\n";
+    $prompt .= "Incluye: motor, potencia estimada, seguridad, confort. Formato: breve y profesional.";
+
+    $body = json_encode([
+        'model' => 'gpt-4.1-mini',
+        'messages' => [
+            ['role' => 'system', 'content' => 'Eres un experto automotriz argentino. Genera fichas técnicas concisas y precisas.'],
+            ['role' => 'user', 'content' => $prompt]
+        ],
+        'temperature' => 0.5,
+        'max_tokens' => 200
+    ]);
+
+    $ch = curl_init('https://api.openai.com/v1/chat/completions');
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS => $body,
+        CURLOPT_HTTPHEADER => [
+            'Content-Type: application/json',
+            "Authorization: Bearer $apiKey"
+        ],
+        CURLOPT_TIMEOUT => 30
+    ]);
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    if ($response) {
+        $data = json_decode($response, true);
+        return $data['choices'][0]['message']['content'] ?? null;
+    }
+    return null;
+}
+?>
