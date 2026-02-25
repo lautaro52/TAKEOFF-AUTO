@@ -1,0 +1,72 @@
+name: 🚀 Deploy to Hostinger
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+    
+    steps:
+      # 1. Checkout code
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Setup Node.js
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # 3. Install dependencies
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      # 4. Create .env for build
+      - name: 🔑 Create .env
+        run: |
+          echo "VITE_OPENAI_API_KEY=${{ secrets.VITE_OPENAI_API_KEY }}" > .env
+
+      # 5. Build frontend
+      - name: 🔨 Build frontend
+        run: npm run build
+
+      # 6. Prepare deployment folder
+      - name: 📁 Prepare deployment structure
+        run: |
+          mkdir -p deploy
+          # Frontend: dist/ → deploy/
+          cp -r dist/* deploy/
+          
+          # Backend: backend/ → deploy/takeoffauto-api/
+          mkdir -p deploy/takeoffauto-api
+          cp -r backend/* deploy/takeoffauto-api/
+          
+          # Create .htaccess for SPA routing
+          cat > deploy/.htaccess << 'EOF'
+          <IfModule mod_rewrite.c>
+            RewriteEngine On
+            RewriteBase /
+            RewriteCond %{REQUEST_FILENAME} !-f
+            RewriteCond %{REQUEST_FILENAME} !-d
+            RewriteCond %{REQUEST_URI} !^/takeoffauto-api/
+            RewriteRule ^ index.html [QSA,L]
+          </IfModule>
+          EOF
+          
+          # Create .env on server for PHP to read
+          echo "VITE_OPENAI_API_KEY=${{ secrets.VITE_OPENAI_API_KEY }}" > deploy/.env
+
+      # 7. Deploy via FTP
+      - name: 🚀 Deploy to Hostinger via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./deploy/
+          server-dir: /public_html/
+          dangerous-clean-slate: false
