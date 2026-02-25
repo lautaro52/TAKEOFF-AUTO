@@ -63,23 +63,53 @@ try {
     $db->prepare("INSERT INTO crm_notes (client_id, content, created_by, created_at) VALUES (?, ?, 1, NOW())")
        ->execute([$clientId, $noteContent]);
 
-    // 3. Build WhatsApp message
-    $waMessage = "🚗 *Nueva consulta de precio*\n\n";
-    $waMessage .= "👤 *Cliente:* $name\n";
-    $waMessage .= "📱 *Teléfono:* $phone\n";
-    if ($email) $waMessage .= "📧 *Email:* $email\n";
-    $waMessage .= "🚙 *Vehículo:* $vehicleLabel\n";
-    $waMessage .= "📌 *Tipo:* " . ($is_zero_km ? "0km" : "Usado") . "\n";
-    if ($message) $waMessage .= "💬 *Mensaje:* $message\n";
-    $waMessage .= "\n_Generado desde la web TakeOff Auto_";
+    // 3. Generate Consultation ID
+    $consultationId = 'TK-' . strtoupper(substr(md5(uniqid(rand(), true)), 0, 6));
+    $formData = json_encode([
+        'car_id' => $car_id,
+        'car_brand' => $car_brand,
+        'car_model' => $car_model,
+        'car_year' => $car_year,
+        'is_zero_km' => $is_zero_km,
+        'message' => $message,
+        'email' => $email,
+    ], JSON_UNESCAPED_UNICODE);
 
-    $waLink = "https://wa.me/5493516752879?text=" . urlencode($waMessage);
+    $db->prepare("INSERT INTO crm_consultations (id, client_id, form_type, form_data, car_id) VALUES (?, ?, 'precio', ?, ?)")
+       ->execute([$consultationId, $clientId, $formData, $car_id ?: null]);
+
+    // 4. Send proactive message via Chatwoot (bot reaches out first)
+    $waResult = null;
+    try {
+        include_once __DIR__ . '/chatwoot_api.php';
+        $waConfig = include __DIR__ . '/../config/whatsapp_config.php';
+        $chatwoot = new ChatwootAPI($waConfig['chatwoot']);
+        
+        $firstName = explode(' ', trim($name))[0];
+        $waMsg = "¡Hola {$firstName}! 🚗 Soy Daniel de *TAKEOFF AUTO*.\n\nRecibí tu consulta sobre el *{$vehicleLabel}* (Ref: *{$consultationId}*).\n\n";
+        
+        if ($is_zero_km) {
+            $waMsg .= "Excelente elección en 0km. Te paso la mejor cotización y las opciones de financiación disponibles.\n\n¿Cuándo podrías acercarte a verlo? 📍 Estamos en Av. Fuerza Aérea 3850";
+        } else {
+            $waMsg .= "¡Muy buen vehículo! Te cuento todo sobre precio, financiación y la posibilidad de entregar tu usado.\n\n¿Tenés alguna duda puntual?";
+        }
+        
+        $waResult = $chatwoot->sendProactiveMessage($phone, $name, $waMsg, $email);
+    } catch (Exception $waErr) {
+        error_log("WhatsApp proactive message failed: " . $waErr->getMessage());
+    }
+
+    // Legacy WhatsApp link (fallback if Chatwoot is not configured)
+    $legacyWaMessage = "🚗 *Consulta de precio - {$vehicleLabel}*\n\n👤 $name\n(Ref: $consultationId)";
+    $waLink = "https://wa.me/5493516752879?text=" . urlencode($legacyWaMessage);
 
     echo json_encode([
         'success' => true,
         'message' => 'Consulta registrada exitosamente',
         'client_id' => $clientId,
-        'whatsapp_link' => $waLink
+        'consultation_id' => $consultationId,
+        'whatsapp_link' => $waLink,
+        'bot_sent' => !empty($waResult['success'])
     ]);
 
 } catch (Exception $e) {

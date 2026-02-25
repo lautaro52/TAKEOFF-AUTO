@@ -138,57 +138,37 @@ const FinancingModal = ({ isOpen, onClose, car, initialDownPayment }) => {
 
         const currentInstallment = Math.round(calculateInstallment(term));
 
-        // 1. Prepare WhatsApp Message
-        const whatsappNumber = API_CONFIG.WHATSAPP_NUMBER;
-        const message = `Hola, mi nombre es ${leadData.name}. Estoy interesado en financiar un ${carName}.
-        
-*Detalles de mi solicitud:*
-- DNI: ${leadData.dni}
-- Email: ${leadData.email}
-- WhatsApp: ${leadData.whatsapp}
-
-*Plan de Financiación:*
-- Banco: ${selectedBank.toUpperCase()}
-- Entrega Inicial: $${downPayment.toLocaleString('es-AR')}
-- Plazo: ${term} meses
-- Cuota Aprox: $${currentInstallment.toLocaleString('es-AR')}
-
-Precio del auto: $${price.toLocaleString('es-AR')}`;
-
-        const encodedMessage = encodeURIComponent(message);
-
-        // 2. Try sending Email (Silent failure to allow WhatsApp to proceed)
         try {
-            // CRM Integration
+            // 1. Create lead via centralized endpoint (handles CRM + Chatwoot proactive message)
             await userService.createLead({
                 client_name: leadData.name,
                 client_whatsapp: leadData.whatsapp,
                 car_id: car.id,
-                partner_id: car.partner_id || null, // If car has a partner, associate it
+                partner_id: car.partner_id || null,
                 note: `Interés en financiación: ${selectedBank.toUpperCase()}, Plazo: ${term} meses, Cuota: $${currentInstallment.toLocaleString('es-AR')}. Email: ${leadData.email}. DNI: ${leadData.dni}`
             });
 
-            // Email Notification
-            await fetch(`${API_CONFIG.BASE_URL}/send_financing_lead.php`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    ...leadData,
-                    carName,
-                    carPrice: price,
-                    bank: selectedBank,
-                    downPayment,
-                    term,
-                    installment: currentInstallment
-                })
-            });
+            // 2. Email Notification (separate, silent failure)
+            try {
+                await fetch(`${API_CONFIG.BASE_URL}/send_financing_lead.php`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        ...leadData,
+                        carName,
+                        carPrice: price,
+                        bank: selectedBank,
+                        downPayment,
+                        term,
+                        installment: currentInstallment
+                    })
+                });
+            } catch (emailErr) {
+                console.error('Email notification failed:', emailErr);
+            }
         } catch (error) {
-            console.error('Lead ingestion or Email notification failed:', error);
-            // We proceed to WhatsApp anyway as requested by the user
+            console.error('Lead creation failed:', error);
         }
-
-        // 3. Open WhatsApp Message (Always triggered)
-        window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, '_blank');
 
         setIsSuccess(true);
         setIsSubmitting(false);
@@ -665,10 +645,11 @@ Precio del auto: $${price.toLocaleString('es-AR')}`;
 
                 {isSuccess ? (
                     <div className="lead-success">
-                        <div className="success-icon">✅</div>
+                        <div className="success-icon">🚀</div>
                         <h2>¡Solicitud Enviada!</h2>
-                        <p>Hemos recibido tus datos y se ha abierto tu WhatsApp para contactar con un asesor.</p>
-                        <button className="btn-primary-calc" onClick={onClose} style={{ marginTop: '20px' }}>ACEPTAR</button>
+                        <p>Nuestro asesor <strong>Daniel</strong> te va a contactar por WhatsApp en segundos con tu plan de financiación personalizado.</p>
+                        <p style={{ fontSize: '14px', color: '#666', marginTop: '8px' }}>📱 Revisá tu WhatsApp, te va a llegar un mensaje en breve.</p>
+                        <button className="btn-primary-calc" onClick={onClose} style={{ marginTop: '20px' }}>ENTENDIDO</button>
                     </div>
                 ) : showLeadForm ? (
                     <div className="lead-form-container">

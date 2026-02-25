@@ -12,7 +12,7 @@ const PriceInquiryModal = ({ isOpen, onClose, car }) => {
     });
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
-    const [waLink, setWaLink] = useState('');
+    const [consultationId, setConsultationId] = useState('');
 
     if (!isOpen) return null;
 
@@ -23,14 +23,6 @@ const PriceInquiryModal = ({ isOpen, onClose, car }) => {
         e.preventDefault();
         setLoading(true);
         try {
-            // CRM Integration
-            await import('../services/userService').then(m => m.userService.createLead({
-                client_name: formData.name,
-                client_whatsapp: formData.phone,
-                car_id: car?.id,
-                note: `Consulta de precio: ${vehicleLabel}. Email: ${formData.email}. Mensaje: ${formData.message}`
-            }));
-
             const res = await fetch(`${API_CONFIG.BASE_URL}/api/price_inquiry.php`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -46,7 +38,7 @@ const PriceInquiryModal = ({ isOpen, onClose, car }) => {
             const data = await res.json();
             if (data.success) {
                 setSuccess(true);
-                setWaLink(data.whatsapp_link);
+                setConsultationId(data.consultation_id || '');
             } else {
                 alert(data.message || 'Error al enviar la consulta');
             }
@@ -57,12 +49,7 @@ const PriceInquiryModal = ({ isOpen, onClose, car }) => {
         setLoading(false);
     };
 
-    const handleWhatsApp = () => {
-        window.open(waLink, '_blank');
-        onClose();
-        setSuccess(false);
-        setFormData({ name: '', phone: '', email: '', message: '' });
-    };
+
 
     const handleClose = () => {
         onClose();
@@ -140,16 +127,20 @@ const PriceInquiryModal = ({ isOpen, onClose, car }) => {
                     </>
                 ) : (
                     <div className="price-inquiry-success">
-                        <div className="price-inquiry-success-icon">✅</div>
-                        <h2>¡Consulta registrada!</h2>
-                        <p>Un asesor se pondrá en contacto contigo a la brevedad.</p>
+                        <div className="price-inquiry-success-icon">🚀</div>
+                        <h2>¡Consulta enviada!</h2>
+                        <p>Nuestro asesor <strong>Daniel</strong> te contactará por WhatsApp en segundos.</p>
                         <p className="price-inquiry-vehicle">{vehicleLabel}</p>
-                        <button className="price-inquiry-wa-btn" onClick={handleWhatsApp}>
-                            <MessageCircle size={18} />
-                            Enviar por WhatsApp ahora
-                        </button>
+                        {consultationId && (
+                            <p style={{ fontSize: '13px', color: '#999', marginTop: '8px' }}>
+                                Referencia: <strong>{consultationId}</strong>
+                            </p>
+                        )}
+                        <p style={{ fontSize: '14px', color: '#666', marginTop: '12px' }}>
+                            📱 Revisá tu WhatsApp, te va a llegar un mensaje en breve.
+                        </p>
                         <button className="price-inquiry-close-btn" onClick={handleClose}>
-                            Cerrar
+                            Entendido
                         </button>
                     </div>
                 )}

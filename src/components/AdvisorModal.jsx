@@ -27,14 +27,12 @@ const AdvisorModal = ({ isOpen, onClose }) => {
 
             if (res.success) {
                 setSuccess(true);
-                // After 2 seconds, redirect to WhatsApp or close
+                // Auto-close after 4 seconds
                 setTimeout(() => {
-                    const message = encodeURIComponent(`Hola, soy ${formData.name}. Quisiera hablar con un asesor sobre: ${formData.reason.replace('_', ' ')}.`);
-                    window.open(`https://wa.me/5493516752879?text=${message}`, '_blank');
                     onClose();
                     setSuccess(false);
                     setFormData({ name: '', phone: '', email: '', reason: 'consulta_general' });
-                }, 1500);
+                }, 4000);
             } else {
                 alert('Error al registrar contacto');
             }
@@ -109,9 +107,10 @@ const AdvisorModal = ({ isOpen, onClose }) => {
                     </div>
                 ) : (
                     <div className="advisor-success">
-                        <div className="success-icon">✅</div>
+                        <div className="success-icon">🚀</div>
                         <h3>¡Datos recibidos!</h3>
-                        <p>Te estamos redirigiendo a WhatsApp para hablar con nuestro equipo.</p>
+                        <p>Nuestro asesor <strong>Daniel</strong> te va a contactar por WhatsApp en segundos.</p>
+                        <p style={{ fontSize: '13px', color: '#888', marginTop: '6px' }}>📱 Revisá tu WhatsApp</p>
                     </div>
                 )}
             </div>

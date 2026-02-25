@@ -225,6 +225,7 @@ La página de crédito es una de las más importantes del sitio. Aquí están lo
 - crm_dashboard.php
 - crm_stock_sync.php
 - crm_reorder_photos.php (NUEVO)
+- migrate_tasks.php (NUEVO)
 
 ### APIs de Usuario
 - users.php
@@ -319,6 +320,7 @@ La página de crédito es una de las más importantes del sitio. Aquí están lo
 | AdvisorModal | ✅ Completado |
 | Página /credito | ✅ Completado |
 | crm_reorder_photos | ✅ Completado |
+| migrate_tasks | ✅ Completado |
 | debug_clio, debug_preview | ✅ Completado |
 | fix_analytics_table | ✅ Completado |
 | Scripts de Import | ✅ Completado |
@@ -354,4 +356,4 @@ Si el agente se rompe, leer en orden:
 ---
 
 ## Fecha de Actualización
-2026-02-25 (actualizado con crm_reorder_photos.php, debug_preview.php, debug_clio.php, fix_analytics_table.php)
+2026-02-25 (actualizado con crm_reorder_photos.php, debug_preview.php, debug_clio.php, fix_analytics_table.php, migrate_tasks.php)
