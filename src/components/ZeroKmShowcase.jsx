@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import PriceInquiryModal from './PriceInquiryModal';
+import ProductCard from './ProductCard';
 import './ZeroKmShowcase.css';
 
 const CarouselSection = ({ title, cars, brandLogo, onCarClick }) => {
@@ -60,14 +61,13 @@ const CarouselSection = ({ title, cars, brandLogo, onCarClick }) => {
                         {cars.map((car, index) => (
                             <div
                                 key={index}
-                                className="carousel-card clickable"
-                                style={{ minWidth: `${100 / carsPerView}%` }}
-                                onClick={() => onCarClick(car)}
+                                className="carousel-product-wrapper"
+                                style={{ minWidth: `${100 / carsPerView}%`, padding: '0 10px' }}
                             >
-                                <div className="carousel-image-wrapper">
-                                    <img src={car.image} alt={car.name} className="carousel-image" />
-                                </div>
-                                <div className="carousel-name">{car.name}</div>
+                                <ProductCard
+                                    car={car}
+                                    onClick={!car.id ? () => onCarClick(car) : undefined}
+                                />
                             </div>
                         ))}
                     </div>
@@ -85,60 +85,95 @@ const CarouselSection = ({ title, cars, brandLogo, onCarClick }) => {
     );
 };
 
-const ZeroKmShowcase = () => {
+const ZeroKmShowcase = ({ catalogCars = [] }) => {
     const [selectedCar, setSelectedCar] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleCarClick = (car) => {
-        setSelectedCar({
-            brand: car.name.split(' ')[0],
-            model: car.name.split(' ').slice(1).join(' '),
-            year: 2024,
-            home_section: '0km'
-        });
+        // If it's a real catalog car object
+        if (car.id) {
+            setSelectedCar(car);
+        } else {
+            // Fallback for hardcoded cars
+            setSelectedCar({
+                brand: car.name.split(' ')[0],
+                model: car.name.split(' ').slice(1).join(' '),
+                year: 2024,
+                home_section: '0km'
+            });
+        }
         setIsModalOpen(true);
     };
 
-    const fiatCars = [
-        { name: 'FIAT 600', image: '/images/0km/fiat-600.jpg' },
-        { name: 'TITANO', image: '/images/0km/fiat-titano.jpg' },
-        { name: 'TORO', image: '/images/0km/fiat-toro.jpg' },
-        { name: 'STRADA', image: '/images/0km/fiat-strada.jpg' },
-        { name: 'MOBI', image: '/images/0km/fiat-mobi.jpg' },
-        { name: 'ARGO', image: '/images/0km/fiat-argo.jpg' },
-        { name: 'CRONOS', image: '/images/0km/fiat-cronos.jpg' },
-        { name: 'PULSE', image: '/images/0km/fiat-pulse.jpg' },
-        { name: 'PULSE ABARTH', image: '/images/0km/fiat-pulse-abarth.jpg' },
-        { name: 'PULSE ABARTH STRANGER THINGS', image: '/images/0km/fiat-pulse-abarth-stranger-things.jpg' },
-        { name: 'FASTBACK', image: '/images/0km/fiat-fastback.jpg' },
-        { name: 'FASTBACK ABARTH', image: '/images/0km/fiat-fastback-abarth.jpg' },
-        { name: 'FIORINO', image: '/images/0km/fiat-fiorino.jpg' }
+    // Helper to format catalog cars for the carousel
+    const formatCatalogCar = (car) => {
+        let image = car.images && car.images.length > 0 ? car.images[0] : '/placeholder.jpg';
+        // If the path doesn't start with http or images/, it might need the base URL
+        if (image && !image.startsWith('http') && !image.startsWith('images/') && !image.startsWith('/')) {
+            image = `${API_CONFIG.IMAGE_BASE_URL}${image}`;
+        }
+
+        return {
+            ...car,
+            name: `${car.brand} ${car.model}`,
+            image: image
+        };
+    };
+
+    // Filter real catalog cars by brand
+    const getCarsByBrand = (brandName, hardcodedList) => {
+        const fromCatalog = catalogCars
+            .filter(c => c.brand && c.brand.toUpperCase() === brandName.toUpperCase());
+
+        // Use catalog data if available, otherwise fallback to hardcoded list
+        return fromCatalog.length > 0 ? fromCatalog : hardcodedList;
+    };
+
+    const fiatHardcoded = [
+        { brand: 'FIAT', model: '600', images: ['images/0km/fiat-600.jpg'], year: 2024, km: 0, status: 'disponible', home_section: '0km' },
+        { brand: 'FIAT', model: 'TITANO', images: ['images/0km/fiat-titano.jpg'], year: 2024, km: 0, status: 'disponible', home_section: '0km' },
+        { brand: 'FIAT', model: 'TORO', images: ['images/0km/fiat-toro.jpg'], year: 2024, km: 0, status: 'disponible', home_section: '0km' },
+        { brand: 'FIAT', model: 'STRADA', images: ['images/0km/fiat-strada.jpg'], year: 2024, km: 0, status: 'disponible', home_section: '0km' },
+        { brand: 'FIAT', model: 'MOBI', images: ['images/0km/fiat-mobi.jpg'], year: 2024, km: 0, status: 'disponible', home_section: '0km' },
+        { brand: 'FIAT', model: 'ARGO', images: ['images/0km/fiat-argo.jpg'], year: 2024, km: 0, status: 'disponible', home_section: '0km' },
+        { brand: 'FIAT', model: 'CRONOS', images: ['images/0km/fiat-cronos.jpg'], year: 2024, km: 0, status: 'disponible', home_section: '0km' },
+        { brand: 'FIAT', model: 'PULSE', images: ['images/0km/fiat-pulse.jpg'], year: 2024, km: 0, status: 'disponible', home_section: '0km' },
+        { brand: 'FIAT', model: 'PULSE ABARTH', images: ['images/0km/fiat-pulse-abarth.jpg'], year: 2024, km: 0, status: 'disponible', home_section: '0km' },
+        { brand: 'FIAT', model: 'PULSE ABARTH STRANGER THINGS', images: ['images/0km/fiat-pulse-abarth-stranger-things.jpg'], year: 2024, km: 0, status: 'disponible', home_section: '0km' },
+        { brand: 'FIAT', model: 'FASTBACK', images: ['images/0km/fiat-fastback.jpg'], year: 2024, km: 0, status: 'disponible', home_section: '0km' },
+        { brand: 'FIAT', model: 'FASTBACK ABARTH', images: ['images/0km/fiat-fastback-abarth.jpg'], year: 2024, km: 0, status: 'disponible', home_section: '0km' },
+        { brand: 'FIAT', model: 'FIORINO', images: ['images/0km/fiat-fiorino.jpg'], year: 2024, km: 0, status: 'disponible', home_section: '0km' }
     ];
 
-    const jeepCars = [
-        { name: 'JEEP COMMANDER', image: '/images/0km/jeep-commander.jpg' },
-        { name: 'JEEP COMPASS', image: '/images/0km/jeep-compass.jpg' },
-        { name: 'JEEP GLADIATOR', image: '/images/0km/jeep-gladiator.jpg' },
-        { name: 'JEEP GRAND CHEROKEE', image: '/images/0km/jeep-grand-cherokee.jpg' },
-        { name: 'JEEP RENEGADE', image: '/images/0km/jeep-renegade.jpg' },
-        { name: 'JEEP WRANGLER', image: '/images/0km/jeep-wrangler.jpg' }
+    const jeepHardcoded = [
+        { brand: 'JEEP', model: 'COMMANDER', images: ['images/0km/jeep-commander.jpg'], year: 2024, km: 0, status: 'disponible', home_section: '0km' },
+        { brand: 'JEEP', model: 'COMPASS', images: ['images/0km/jeep-compass.jpg'], year: 2024, km: 0, status: 'disponible', home_section: '0km' },
+        { brand: 'JEEP', model: 'GLADIATOR', images: ['images/0km/jeep-gladiator.jpg'], year: 2024, km: 0, status: 'disponible', home_section: '0km' },
+        { brand: 'JEEP', model: 'GRAND CHEROKEE', images: ['images/0km/jeep-grand-cherokee.jpg'], year: 2024, km: 0, status: 'disponible', home_section: '0km' },
+        { brand: 'JEEP', model: 'RENEGADE', images: ['images/0km/jeep-renegade.jpg'], year: 2024, km: 0, status: 'disponible', home_section: '0km' },
+        { brand: 'JEEP', model: 'WRANGLER', images: ['images/0km/jeep-wrangler.jpg'], year: 2024, km: 0, status: 'disponible', home_section: '0km' }
     ];
 
-    const ramCars = [
-        { name: 'RAM DAKOTA', image: '/images/0km/ram-dakota.jpg' },
-        { name: 'RAM RAMPAGE', image: '/images/0km/ram-rampage.jpg' },
-        { name: 'RAM 2500', image: '/images/0km/ram-2500.jpg' },
-        { name: 'RAM 1500', image: '/images/0km/ram-1500.jpg' }
+    const ramHardcoded = [
+        { brand: 'RAM', model: 'DAKOTA', images: ['images/0km/ram-dakota.jpg'], year: 2024, km: 0, status: 'disponible', home_section: '0km' },
+        { brand: 'RAM', model: 'RAMPAGE', images: ['images/0km/ram-rampage.jpg'], year: 2024, km: 0, status: 'disponible', home_section: '0km' },
+        { brand: 'RAM', model: '2500', images: ['images/0km/ram-2500.jpg'], year: 2024, km: 0, status: 'disponible', home_section: '0km' },
+        { brand: 'RAM', model: '1500', images: ['images/0km/ram-1500.jpg'], year: 2024, km: 0, status: 'disponible', home_section: '0km' }
     ];
 
-    const kiaCars = [
-        { name: 'ALL-NEW K3 SEDÁN', image: '/images/0km/kia-k3-sedan.jpg' },
-        { name: 'ALL-NEW K3 CROSS', image: '/images/0km/kia-k3-cross.jpg' },
-        { name: 'SELTOS', image: '/images/0km/kia-seltos.jpg' },
-        { name: 'SPORTAGE', image: '/images/0km/kia-sportage.jpg' },
-        { name: 'CARNIVAL', image: '/images/0km/kia-carnival.jpg' },
-        { name: 'K2500', image: '/images/0km/kia-k2500.jpg' }
+    const kiaHardcoded = [
+        { brand: 'KIA', model: 'ALL-NEW K3 SEDÁN', images: ['images/0km/kia-k3-sedan.jpg'], year: 2024, km: 0, status: 'disponible', home_section: '0km' },
+        { brand: 'KIA', model: 'ALL-NEW K3 CROSS', images: ['images/0km/kia-k3-cross.jpg'], year: 2024, km: 0, status: 'disponible', home_section: '0km' },
+        { brand: 'KIA', model: 'SELTOS', images: ['images/0km/kia-seltos.jpg'], year: 2024, km: 0, status: 'disponible', home_section: '0km' },
+        { brand: 'KIA', model: 'SPORTAGE', images: ['images/0km/kia-sportage.jpg'], year: 2024, km: 0, status: 'disponible', home_section: '0km' },
+        { brand: 'KIA', model: 'CARNIVAL', images: ['images/0km/kia-carnival.jpg'], year: 2024, km: 0, status: 'disponible', home_section: '0km' },
+        { brand: 'KIA', model: 'K2500', images: ['images/0km/kia-k2500.jpg'], year: 2024, km: 0, status: 'disponible', home_section: '0km' }
     ];
+
+    const fiatCars = getCarsByBrand('FIAT', fiatHardcoded);
+    const jeepCars = getCarsByBrand('JEEP', jeepHardcoded);
+    const ramCars = getCarsByBrand('RAM', ramHardcoded);
+    const kiaCars = getCarsByBrand('KIA', kiaHardcoded);
 
     return (
         <div className="zerokm-showcase">

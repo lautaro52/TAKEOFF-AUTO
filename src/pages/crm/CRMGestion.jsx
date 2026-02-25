@@ -1,394 +1,355 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { crmClients, crmNotes, crmTasks } from '../../services/crmService';
-import { Plus, Search, X, Phone, MessageCircle, Mail, FileText, Clock, CheckCircle, Loader2, Users } from 'lucide-react';
+import { Plus, Search, Mail, Phone, MessageSquare, Clock, CheckCircle2, X, Loader2, UserPlus, Calendar, Trash2 } from 'lucide-react';
+import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
 import './CRM.css';
 
-const STAGES = [
-    { key: 'sin_gestionar', label: 'Sin Gestionar', emoji: '📋' },
-    { key: 'primer_contacto', label: 'Primer Contacto', emoji: '📞' },
-    { key: 'negociacion', label: 'Negociación', emoji: '🤝' },
-    { key: 'venta_realizada', label: 'Venta Realizada', emoji: '✅' },
+const stages = [
+    { id: 'sin_gestionar', label: 'Sin Gestionar', color: '#64748b' },
+    { id: 'primer_contacto', label: 'Primer Contacto', color: '#3b82f6' },
+    { id: 'negociacion', label: 'Negociación', color: '#f59e0b' },
+    { id: 'venta_realizada', label: 'Venta Realizada', color: '#10b981' }
 ];
 
 const CRMGestion = () => {
     const [clients, setClients] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [search, setSearch] = useState('');
     const [selectedClient, setSelectedClient] = useState(null);
-    const [showNewModal, setShowNewModal] = useState(false);
-    const [drawerNotes, setDrawerNotes] = useState([]);
-    const [drawerTasks, setDrawerTasks] = useState([]);
+    const [showAddModal, setShowAddModal] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
+
+    // Detail view state
+    const [notes, setNotes] = useState([]);
+    const [tasks, setTasks] = useState([]);
     const [newNote, setNewNote] = useState('');
-    const [newTask, setNewTask] = useState({ description: '', due_date: '' });
     const [saving, setSaving] = useState(false);
 
-    // New client form
-    const [newClient, setNewClient] = useState({ full_name: '', phone: '', email: '', dni: '', source: 'manual' });
-
-    const fetchClients = useCallback(async () => {
+    const fetchData = useCallback(async () => {
         setLoading(true);
         try {
-            const res = await crmClients.list(null, search || null);
+            const res = await crmClients.list();
             if (res.success) setClients(res.data || []);
-        } catch (e) { console.error(e); }
+        } catch (e) {
+            console.error('Error fetching clients:', e);
+        }
         setLoading(false);
-    }, [search]);
+    }, []);
 
     useEffect(() => {
-        fetchClients();
-    }, [fetchClients]);
+        fetchData();
+    }, [fetchData]);
 
-    // Debounced search
-    useEffect(() => {
-        const timeout = setTimeout(fetchClients, 400);
-        return () => clearTimeout(timeout);
-    }, [search]);
-
-    const getClientsByStage = (stage) => {
-        return clients.filter(c => c.stage === stage);
-    };
-
-    const handleStageChange = async (clientId, newStage) => {
-        await crmClients.update({ id: clientId, stage: newStage });
-        fetchClients();
-        if (selectedClient?.id === clientId) {
-            setSelectedClient(prev => ({ ...prev, stage: newStage }));
-        }
-    };
-
-    const handleCreateClient = async (e) => {
-        e.preventDefault();
-        setSaving(true);
-        const res = await crmClients.create(newClient);
-        if (res.success) {
-            setShowNewModal(false);
-            setNewClient({ full_name: '', phone: '', email: '', dni: '', source: 'manual' });
-            fetchClients();
-        }
-        setSaving(false);
-    };
-
-    const openDrawer = async (client) => {
+    const fetchClientDetails = async (client) => {
         setSelectedClient(client);
-        const [notesRes, tasksRes] = await Promise.all([
-            crmNotes.list(client.id),
-            crmTasks.list(client.id)
-        ]);
-        setDrawerNotes(notesRes.data || []);
-        setDrawerTasks(tasksRes.data || []);
+        try {
+            const [nRes, tRes] = await Promise.all([
+                crmNotes.list(client.id),
+                crmTasks.list(client.id)
+            ]);
+            if (nRes.success) setNotes(nRes.data || []);
+            if (tRes.success) setTasks(tRes.data || []);
+        } catch (e) {
+            console.error('Error fetching details:', e);
+        }
     };
 
-    const closeDrawer = () => {
-        setSelectedClient(null);
-        setDrawerNotes([]);
-        setDrawerTasks([]);
-        setNewNote('');
+    const handleUpdateStage = async (clientId, newStage) => {
+        try {
+            const res = await crmClients.updateStage(clientId, newStage);
+            if (res.success) {
+                setClients(prev => prev.map(c => c.id === clientId ? { ...c, stage: newStage } : c));
+                if (selectedClient?.id === clientId) {
+                    setSelectedClient(prev => ({ ...prev, stage: newStage }));
+                }
+            }
+        } catch (e) {
+            console.error('Update stage error:', e);
+        }
     };
 
-    const handleAddNote = async () => {
+    const handleAddNote = async (e) => {
+        e.preventDefault();
         if (!newNote.trim()) return;
         setSaving(true);
-        await crmNotes.create(selectedClient.id, newNote);
-        setNewNote('');
-        const res = await crmNotes.list(selectedClient.id);
-        setDrawerNotes(res.data || []);
-        fetchClients();
+        try {
+            const res = await crmNotes.create({ client_id: selectedClient.id, content: newNote });
+            if (res.success) {
+                setNotes(prev => [res.data, ...prev]);
+                setNewNote('');
+            }
+        } catch (e) {
+            console.error('Add note error:', e);
+        }
         setSaving(false);
     };
 
-    const handleAddTask = async () => {
-        if (!newTask.description.trim()) return;
-        setSaving(true);
-        await crmTasks.create(selectedClient.id, newTask.description, newTask.due_date || null);
-        setNewTask({ description: '', due_date: '' });
-        const res = await crmTasks.list(selectedClient.id);
-        setDrawerTasks(res.data || []);
-        setSaving(false);
+    const handleDeleteClient = async () => {
+        if (!window.confirm('¿Seguro que desea eliminar este cliente?')) return;
+        try {
+            const res = await crmClients.remove(selectedClient.id);
+            if (res.success) {
+                setClients(prev => prev.filter(c => c.id !== selectedClient.id));
+                setSelectedClient(null);
+            }
+        } catch (e) {
+            console.error('Delete client error:', e);
+        }
     };
 
-    const handleCompleteTask = async (taskId) => {
-        await crmTasks.complete(taskId);
-        const res = await crmTasks.list(selectedClient.id);
-        setDrawerTasks(res.data || []);
-    };
+    const filteredClients = clients.filter(c =>
+        `${c.full_name} ${c.whatsapp} ${c.car_model || ''}`.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     const formatDate = (dateStr) => {
         if (!dateStr) return '';
-        const d = new Date(dateStr);
-        return d.toLocaleDateString('es-AR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+        return new Date(dateStr).toLocaleDateString('es-AR', {
+            day: '2-digit',
+            month: 'short',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
     };
+
+    if (loading && clients.length === 0) {
+        return (
+            <div className="crm-loading">
+                <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}>
+                    <Loader2 size={32} />
+                </motion.div>
+                Cargando gestión...
+            </div>
+        );
+    }
 
     return (
         <div className="crm-gestion">
-            {/* Header */}
             <div className="crm-page-header">
                 <div>
-                    <h1>Gestión de Clientes</h1>
-                    <p>{clients.length} clientes en pipeline</p>
+                    <h1>Pipeline de Ventas</h1>
+                    <p>Gestiona tus prospectos y ventas activas</p>
                 </div>
-                <div className="crm-header-actions">
+                <div style={{ display: 'flex', gap: 12 }}>
                     <div className="crm-search">
-                        <Search size={16} color="#8a96a8" />
+                        <Search size={18} color="#94a3b8" />
                         <input
                             type="text"
-                            placeholder="Buscar cliente..."
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
+                            placeholder="Buscar por nombre, auto o contacto..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
-                    <button className="crm-btn crm-btn-primary" onClick={() => setShowNewModal(true)}>
-                        <Plus size={16} /> Nuevo Cliente
+                    <button className="crm-btn crm-btn-primary" onClick={() => setShowAddModal(true)}>
+                        <UserPlus size={18} />
+                        Nuevo Lead
                     </button>
                 </div>
             </div>
 
-            {/* Pipeline */}
-            {loading ? (
-                <div className="crm-loading"><Loader2 size={20} className="crm-spinner" /> Cargando...</div>
-            ) : (
-                <div className="crm-pipeline">
-                    {STAGES.map(stage => {
-                        const stageClients = getClientsByStage(stage.key);
-                        return (
-                            <div key={stage.key} className="crm-pipeline-col">
-                                <div className="crm-pipeline-col-header">
-                                    <h3>{stage.emoji} {stage.label}</h3>
-                                    <span className="crm-pipeline-count">{stageClients.length}</span>
-                                </div>
-                                {stageClients.map(client => (
-                                    <div key={client.id} className="crm-client-card" onClick={() => openDrawer(client)}>
-                                        <h4>{client.full_name}</h4>
-                                        {client.phone && (
-                                            <div className="client-phone">
-                                                <Phone size={12} /> {client.phone}
-                                            </div>
-                                        )}
-                                        {client.car_name && (
-                                            <div className="client-car">🚗 {client.car_name}</div>
-                                        )}
-                                        {client.last_note && (
-                                            <div className="client-note-preview">"{client.last_note}"</div>
-                                        )}
-                                        <div className="client-meta">
-                                            {client.notes_count > 0 && <span><FileText size={10} /> {client.notes_count}</span>}
-                                            {client.pending_tasks > 0 && <span><Clock size={10} /> {client.pending_tasks}</span>}
-                                        </div>
-                                    </div>
-                                ))}
-                                {stageClients.length === 0 && (
-                                    <div className="crm-empty" style={{ padding: '20px' }}>
-                                        <Users size={24} />
-                                        <p style={{ fontSize: '0.78rem' }}>Sin clientes</p>
-                                    </div>
-                                )}
+            <div className="crm-pipeline">
+                <LayoutGroup>
+                    {stages.map(stage => (
+                        <div key={stage.id} className="crm-pipeline-col">
+                            <div className="crm-pipeline-col-header">
+                                <h3>{stage.label}</h3>
+                                <span className="crm-pipeline-count">
+                                    {filteredClients.filter(c => c.stage === stage.id).length}
+                                </span>
                             </div>
-                        );
-                    })}
-                </div>
-            )}
+
+                            <div className="crm-pipeline-items" style={{ minHeight: '100px' }}>
+                                <AnimatePresence mode="popLayout">
+                                    {filteredClients
+                                        .filter(c => c.stage === stage.id)
+                                        .map((client) => (
+                                            <motion.div
+                                                layout
+                                                key={client.id}
+                                                initial={{ opacity: 0, scale: 0.95 }}
+                                                animate={{ opacity: 1, scale: 1 }}
+                                                exit={{ opacity: 0, scale: 0.9 }}
+                                                className="crm-client-card"
+                                                onClick={() => fetchClientDetails(client)}
+                                            >
+                                                <h4>{client.full_name}</h4>
+                                                <div className="client-phone">
+                                                    <MessageSquare size={14} /> {client.whatsapp}
+                                                </div>
+                                                {client.car_model && (
+                                                    <div className="client-car">
+                                                        🚗 {client.car_brand} {client.car_model}
+                                                    </div>
+                                                )}
+                                                {client.last_note && (
+                                                    <p className="client-note-preview">{client.last_note}</p>
+                                                )}
+                                                <div className="client-meta">
+                                                    <span><Clock size={12} /> {new Date(client.created_at).toLocaleDateString()}</span>
+                                                    {client.tasks_pending > 0 && (
+                                                        <span style={{ color: '#f59e0b' }}><CheckCircle2 size={12} /> {client.tasks_pending}</span>
+                                                    )}
+                                                </div>
+                                            </motion.div>
+                                        ))}
+                                </AnimatePresence>
+                            </div>
+                        </div>
+                    ))}
+                </LayoutGroup>
+            </div>
 
             {/* Client Detail Drawer */}
-            {selectedClient && (
-                <>
-                    <div className="crm-drawer-overlay" onClick={closeDrawer} />
-                    <div className="crm-drawer">
-                        <div className="crm-drawer-header">
-                            <h2>{selectedClient.full_name}</h2>
-                            <button className="crm-drawer-close" onClick={closeDrawer}><X size={16} /></button>
-                        </div>
-                        <div className="crm-drawer-body">
-                            {/* Contact actions */}
-                            <div className="crm-contact-actions">
-                                {selectedClient.phone && (
-                                    <a href={`https://wa.me/${selectedClient.phone.replace(/\D/g, '')}`} target="_blank" rel="noreferrer" className="crm-contact-btn whatsapp">
-                                        <MessageCircle size={14} /> WhatsApp
-                                    </a>
-                                )}
-                                {selectedClient.phone && (
-                                    <a href={`tel:${selectedClient.phone}`} className="crm-contact-btn phone">
-                                        <Phone size={14} /> Llamar
-                                    </a>
-                                )}
-                                {selectedClient.email && (
-                                    <a href={`mailto:${selectedClient.email}`} className="crm-contact-btn email">
-                                        <Mail size={14} /> Email
-                                    </a>
-                                )}
-                            </div>
-
-                            {/* Stage selector */}
-                            <div className="crm-drawer-section">
-                                <h3>Estado</h3>
-                                <div className="crm-stage-selector">
-                                    {STAGES.map(s => (
-                                        <button
-                                            key={s.key}
-                                            className={`crm-stage-btn ${selectedClient.stage === s.key ? 'active' : ''} ${s.key === 'venta_realizada' ? 'venta' : ''}`}
-                                            onClick={() => handleStageChange(selectedClient.id, s.key)}
-                                        >
-                                            {s.emoji} {s.label}
-                                        </button>
-                                    ))}
+            <AnimatePresence>
+                {selectedClient && (
+                    <>
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="crm-drawer-overlay"
+                            onClick={() => setSelectedClient(null)}
+                        />
+                        <motion.div
+                            initial={{ x: '100%' }}
+                            animate={{ x: 0 }}
+                            exit={{ x: '100%' }}
+                            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                            className="crm-drawer"
+                        >
+                            <div className="crm-drawer-header">
+                                <div>
+                                    <h2>{selectedClient.full_name}</h2>
+                                    <p style={{ color: '#64748b' }}>{selectedClient.email || 'Sin correo electrónico'}</p>
                                 </div>
-                            </div>
-
-                            {/* Car info */}
-                            {selectedClient.car_name && (
-                                <div className="crm-drawer-section">
-                                    <h3>Vehículo de interés</h3>
-                                    <p style={{ fontSize: '0.9rem', color: '#2161f2', fontWeight: 600 }}>
-                                        🚗 {selectedClient.car_name}
-                                    </p>
-                                </div>
-                            )}
-
-                            {/* Add note */}
-                            <div className="crm-drawer-section">
-                                <h3>Nueva Nota</h3>
-                                <div className="crm-note-input">
-                                    <textarea
-                                        value={newNote}
-                                        onChange={(e) => setNewNote(e.target.value)}
-                                        placeholder="Escribir nota..."
-                                    />
-                                    <button className="crm-btn crm-btn-primary" onClick={handleAddNote} disabled={saving} style={{ alignSelf: 'flex-end' }}>
-                                        {saving ? <Loader2 size={14} className="crm-spinner" /> : 'Guardar'}
+                                <div style={{ display: 'flex', gap: 8 }}>
+                                    <button className="crm-btn crm-btn-secondary" onClick={handleDeleteClient} style={{ padding: 10, borderRadius: 12 }}>
+                                        <Trash2 size={20} color="#ef4444" />
+                                    </button>
+                                    <button className="crm-drawer-close" onClick={() => setSelectedClient(null)}>
+                                        <X size={20} />
                                     </button>
                                 </div>
                             </div>
 
-                            {/* Add task */}
-                            <div className="crm-drawer-section">
-                                <h3>Programar Tarea</h3>
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                                    <input
-                                        type="text"
-                                        placeholder="Descripción de la tarea..."
-                                        value={newTask.description}
-                                        onChange={(e) => setNewTask(p => ({ ...p, description: e.target.value }))}
-                                        style={{ border: '1px solid #e5e8ed', borderRadius: 10, padding: '10px 14px', fontSize: '0.85rem', fontFamily: 'inherit', outline: 'none' }}
-                                    />
-                                    <div style={{ display: 'flex', gap: 8 }}>
-                                        <input
-                                            type="datetime-local"
-                                            value={newTask.due_date}
-                                            onChange={(e) => setNewTask(p => ({ ...p, due_date: e.target.value }))}
-                                            style={{ border: '1px solid #e5e8ed', borderRadius: 10, padding: '10px 14px', fontSize: '0.85rem', fontFamily: 'inherit', flex: 1, outline: 'none' }}
-                                        />
-                                        <button className="crm-btn crm-btn-primary" onClick={handleAddTask} disabled={saving}>
-                                            {saving ? <Loader2 size={14} className="crm-spinner" /> : 'Crear'}
+                            <div className="crm-drawer-body">
+                                <div className="crm-contact-actions">
+                                    <a href={`https://wa.me/${selectedClient.whatsapp?.replace(/\D/g, '')}`} target="_blank" rel="noreferrer" className="crm-contact-btn whatsapp">
+                                        <MessageSquare size={16} /> WhatsApp
+                                    </a>
+                                    <a href={`tel:${selectedClient.whatsapp}`} className="crm-contact-btn phone">
+                                        <Phone size={16} /> Llamar
+                                    </a>
+                                    {selectedClient.email && (
+                                        <a href={`mailto:${selectedClient.email}`} className="crm-contact-btn email">
+                                            <Mail size={16} /> Email
+                                        </a>
+                                    )}
+                                </div>
+
+                                <div className="crm-drawer-section">
+                                    <h3>Estado del Prospecto</h3>
+                                    <div className="crm-stage-selector">
+                                        {stages.map(s => (
+                                            <button
+                                                key={s.id}
+                                                className={`crm-stage-btn ${selectedClient.stage === s.id ? 'active' : ''} ${s.id === 'venta_realizada' ? 'venta' : ''}`}
+                                                onClick={() => handleUpdateStage(selectedClient.id, s.id)}
+                                            >
+                                                {s.label}
+                                            </button>
+                                        ))}
+                                        <button
+                                            className={`crm-stage-btn ${selectedClient.stage === 'dado_de_baja' ? 'active' : ''}`}
+                                            onClick={() => handleUpdateStage(selectedClient.id, 'dado_de_baja')}
+                                            style={{ color: '#ef4444', borderColor: '#ef4444' }}
+                                        >
+                                            Baja
                                         </button>
                                     </div>
                                 </div>
-                            </div>
 
-                            {/* Tasks */}
-                            {drawerTasks.length > 0 && (
                                 <div className="crm-drawer-section">
-                                    <h3>Tareas</h3>
-                                    <div className="crm-timeline">
-                                        {drawerTasks.map(task => (
-                                            <div key={task.id} className={`crm-timeline-item task ${task.completed ? 'completed' : ''}`}>
-                                                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-                                                    <div>
-                                                        <p style={{ textDecoration: task.completed ? 'line-through' : 'none' }}>
-                                                            {task.description}
-                                                        </p>
-                                                        <span className="timeline-meta">
-                                                            {task.due_date ? `📅 ${formatDate(task.due_date)}` : 'Sin fecha'} • {task.admin_name || 'Admin'}
-                                                        </span>
-                                                    </div>
-                                                    {!task.completed && (
-                                                        <button onClick={() => handleCompleteTask(task.id)} style={{ color: '#10b981', background: 'none', border: 'none', cursor: 'pointer', padding: 4 }}>
-                                                            <CheckCircle size={16} />
-                                                        </button>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
+                                    <h3>Seguimiento y Notas</h3>
+                                    <form onSubmit={handleAddNote} className="crm-note-input" style={{ marginBottom: 24 }}>
+                                        <textarea
+                                            placeholder="Escribe una actualización..."
+                                            value={newNote}
+                                            onChange={(e) => setNewNote(e.target.value)}
+                                            required
+                                        />
+                                        <button type="submit" disabled={saving} className="crm-btn crm-btn-primary">
+                                            {saving ? <Loader2 size={20} className="crm-spinner" /> : <Plus size={20} />}
+                                        </button>
+                                    </form>
 
-                            {/* Notes history */}
-                            {drawerNotes.length > 0 && (
-                                <div className="crm-drawer-section">
-                                    <h3>Historial de Notas</h3>
                                     <div className="crm-timeline">
-                                        {drawerNotes.map(note => (
+                                        {notes.map(note => (
                                             <div key={note.id} className="crm-timeline-item">
                                                 <p>{note.content}</p>
-                                                <span className="timeline-meta">
-                                                    {formatDate(note.created_at)} • {note.admin_name || 'Admin'}
-                                                </span>
+                                                <span className="timeline-meta">{formatDate(note.created_at)} • {note.admin_name || 'Admin'}</span>
                                             </div>
                                         ))}
+                                        {notes.length === 0 && <p style={{ textAlign: 'center', color: '#94a3b8', fontSize: '0.9rem' }}>No hay notas aún.</p>}
                                     </div>
                                 </div>
-                            )}
+                            </div>
+                        </motion.div>
+                    </>
+                )}
+            </AnimatePresence>
 
-                            {/* Delete client */}
-                            <div className="crm-drawer-section" style={{ marginTop: 32, paddingTop: 16, borderTop: '1px solid #e5e8ed' }}>
-                                <button
-                                    className="crm-btn crm-btn-danger"
-                                    onClick={async () => {
-                                        if (window.confirm('¿Dar de baja a este cliente?')) {
-                                            await crmClients.remove(selectedClient.id);
-                                            closeDrawer();
-                                            fetchClients();
-                                        }
-                                    }}
-                                >
-                                    Dar de baja
-                                </button>
-                            </div>
-                        </div>
+            {/* Add Client Modal */}
+            <AnimatePresence>
+                {showAddModal && (
+                    <div className="crm-modal-overlay">
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            className="crm-modal"
+                        >
+                            <h2>Crear Nuevo Lead</h2>
+                            <form onSubmit={async (e) => {
+                                e.preventDefault();
+                                setSaving(true);
+                                const formData = new FormData(e.target);
+                                try {
+                                    const res = await crmClients.create(Object.fromEntries(formData));
+                                    if (res.success) {
+                                        setClients(prev => [res.data, ...prev]);
+                                        setShowAddModal(false);
+                                    }
+                                } catch (e) {
+                                    console.error('Create error:', e);
+                                }
+                                setSaving(false);
+                            }}>
+                                <div className="crm-form-group">
+                                    <label>Nombre Completo *</label>
+                                    <input name="full_name" required placeholder="Ej: Roberto Sánchez" />
+                                </div>
+                                <div className="crm-form-group">
+                                    <label>WhatsApp / Teléfono *</label>
+                                    <input name="whatsapp" required placeholder="Ej: 3512345678" />
+                                </div>
+                                <div className="crm-form-group">
+                                    <label>Email (Opcional)</label>
+                                    <input name="email" type="email" placeholder="roberto@correo.com" />
+                                </div>
+                                <div className="crm-form-group">
+                                    <label>Auto de Interés</label>
+                                    <input name="car_id" placeholder="ID o modelo" />
+                                </div>
+                                <div className="crm-form-actions">
+                                    <button type="button" className="crm-btn crm-btn-secondary" onClick={() => setShowAddModal(false)}>Cancelar</button>
+                                    <button type="submit" disabled={saving} className="crm-btn crm-btn-primary">
+                                        {saving ? <Loader2 size={16} className="crm-spinner" /> : 'Guardar Lead'}
+                                    </button>
+                                </div>
+                            </form>
+                        </motion.div>
                     </div>
-                </>
-            )}
-
-            {/* New Client Modal */}
-            {showNewModal && (
-                <div className="crm-modal-overlay" onClick={() => setShowNewModal(false)}>
-                    <div className="crm-modal" onClick={(e) => e.stopPropagation()}>
-                        <h2>Nuevo Cliente</h2>
-                        <form onSubmit={handleCreateClient}>
-                            <div className="crm-form-group">
-                                <label>Nombre completo *</label>
-                                <input type="text" value={newClient.full_name} onChange={(e) => setNewClient(p => ({ ...p, full_name: e.target.value }))} required autoFocus />
-                            </div>
-                            <div className="crm-form-group">
-                                <label>Teléfono</label>
-                                <input type="tel" value={newClient.phone} onChange={(e) => setNewClient(p => ({ ...p, phone: e.target.value }))} placeholder="+54 9 351..." />
-                            </div>
-                            <div className="crm-form-group">
-                                <label>Email</label>
-                                <input type="email" value={newClient.email} onChange={(e) => setNewClient(p => ({ ...p, email: e.target.value }))} />
-                            </div>
-                            <div className="crm-form-group">
-                                <label>DNI</label>
-                                <input type="text" value={newClient.dni} onChange={(e) => setNewClient(p => ({ ...p, dni: e.target.value }))} />
-                            </div>
-                            <div className="crm-form-group">
-                                <label>Origen</label>
-                                <select value={newClient.source} onChange={(e) => setNewClient(p => ({ ...p, source: e.target.value }))}>
-                                    <option value="manual">Manual</option>
-                                    <option value="web">Sitio Web</option>
-                                    <option value="whatsapp">WhatsApp</option>
-                                    <option value="instagram">Instagram</option>
-                                    <option value="referido">Referido</option>
-                                </select>
-                            </div>
-                            <div className="crm-form-actions">
-                                <button type="button" className="crm-btn crm-btn-secondary" onClick={() => setShowNewModal(false)}>Cancelar</button>
-                                <button type="submit" className="crm-btn crm-btn-primary" disabled={saving}>
-                                    {saving ? <Loader2 size={14} className="crm-spinner" /> : 'Crear Cliente'}
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
+                )}
+            </AnimatePresence>
         </div>
     );
 };

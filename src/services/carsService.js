@@ -57,6 +57,13 @@ const processCarData = (obj) => {
     const processSingle = (car) => {
         if (!car || typeof car !== 'object') return car;
 
+        // Robust check for photos
+        car.hasPhotos = car.images &&
+            car.images.length > 0 &&
+            car.images[0] &&
+            car.images[0].trim() !== "" &&
+            !car.images[0].includes('placeholder');
+
         const rawPrice = Number(car.price);
         if (!isNaN(rawPrice) && rawPrice > 0) {
             // Assume prices < 1,000,000 are in USD (less than 7 figures)

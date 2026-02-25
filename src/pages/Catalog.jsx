@@ -252,22 +252,24 @@ const Catalog = () => {
         const sorted = [...filteredCars];
 
         const compareFn = (a, b) => {
-            // Group sorting (Desired order: Used w/ photo > 0km w/ photo > No photo)
-            const hasPhotoA = a.images && a.images.length > 0;
-            const hasPhotoB = b.images && b.images.length > 0;
+            // Priority score:
+            // 4: Featured/BestSellers with photo
+            // 3: Used with photo
+            // 2: 0km with photo
+            // 1: Anything without photo (Send to end)
+            const getPriority = (car) => {
+                if (!car.hasPhotos) return 1;
 
-            const isZeroKmA = Number(a.km) === 0 || a.home_section === '0km';
-            const isZeroKmB = Number(b.km) === 0 || b.home_section === '0km';
+                const isZero = Number(car.km) === 0 || car.home_section === '0km';
+                const isFeatured = car.featured || car.home_section === 'destacados';
 
-            // Priority score: 3 for Used with photo, 2 for 0km with photo, 1 for Any without photo
-            const getPriority = (car, hasPhoto, isZero) => {
-                if (!hasPhoto) return 1;
-                if (isZero) return 2;
-                return 3;
+                if (isFeatured) return 4;
+                if (!isZero) return 3;
+                return 2;
             };
 
-            const priorityA = getPriority(a, hasPhotoA, isZeroKmA);
-            const priorityB = getPriority(b, hasPhotoB, isZeroKmB);
+            const priorityA = getPriority(a);
+            const priorityB = getPriority(b);
 
             if (priorityA !== priorityB) {
                 return priorityB - priorityA; // Higher priority first

@@ -71,6 +71,8 @@ switch ($method) {
                     "status" => $car->status,
                     "featured" => $car->featured == 1,
                     "home_section" => $car->home_section,
+                    "domain" => $car->domain,
+                    "photos_sorted" => ($car->photos_sorted ?? 0) == 1,
                     "images" => $result['images'] ? explode('||', $result['images']) : []
                 );
 
@@ -133,6 +135,8 @@ switch ($method) {
                         "status" => $status,
                         "featured" => $featured == 1,
                         "home_section" => $home_section ?? null,
+                        "domain" => $domain ?? null,
+                        "photos_sorted" => ($photos_sorted ?? 0) == 1,
                         "images" => $images ? explode('||', $images) : []
                     );
 

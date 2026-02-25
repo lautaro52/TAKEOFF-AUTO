@@ -10,6 +10,8 @@ const QuoteModal = ({ isOpen, onClose }) => {
     const [loading, setLoading] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     const [formData, setFormData] = useState({
+        name: '',
+        whatsapp: '',
         marca: '',
         año: '',
         modelo: '',
@@ -31,6 +33,8 @@ const QuoteModal = ({ isOpen, onClose }) => {
             if (currentUser) {
                 setFormData(prev => ({
                     ...prev,
+                    name: currentUser.full_name || '',
+                    whatsapp: currentUser.whatsapp || '',
                     email: currentUser.email || ''
                 }));
             }
@@ -109,9 +113,9 @@ const QuoteModal = ({ isOpen, onClose }) => {
 
             // CRM Integration
             await userService.createLead({
-                client_name: formData.email, // Using email as name if name not present, or better, we should have a name field
-                client_whatsapp: '', // QuoteModal seems to lack a phone field? I should check if I should add it
-                note: `COTIZACIÓN USADO: ${formData.marca} ${formData.modelo} ${formData.año}. KM: ${formData.kilometraje}. Condición: ${formData.condicion}. Extras: ${formData.caracteristicas.join(', ')}`
+                client_name: formData.name,
+                client_whatsapp: formData.whatsapp,
+                note: `COTIZACIÓN USADO: ${formData.marca} ${formData.modelo} ${formData.año}. KM: ${formData.kilometraje}. Condición: ${formData.condicion}. Extras: ${formData.caracteristicas.join(', ')}. Email: ${formData.email}`
             });
 
             const response = await fetch(`${API_CONFIG.BASE_URL}/submit_quote.php`, {
@@ -177,6 +181,22 @@ const QuoteModal = ({ isOpen, onClose }) => {
                             {formExpanded && (
                                 <div className="quote-form-body">
                                     <div className="quote-form-grid">
+                                        <input
+                                            type="text"
+                                            name="name"
+                                            placeholder="*Nombre Completo"
+                                            value={formData.name}
+                                            onChange={handleInputChange}
+                                            required
+                                        />
+                                        <input
+                                            type="tel"
+                                            name="whatsapp"
+                                            placeholder="*WhatsApp"
+                                            value={formData.whatsapp}
+                                            onChange={handleInputChange}
+                                            required
+                                        />
                                         <input
                                             type="text"
                                             name="marca"

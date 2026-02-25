@@ -30,6 +30,16 @@ define('DRIVE_FOLDER_ID', '1KvtUvHXLbJofbZKKSwZxSsy0PayoLOTY');
 define('OPENAI_PROXY_URL', 'http://localhost/api/openai-proxy.php');
 
 /**
+ * Normalize a domain (patente) for reliable matching.
+ * Removes all non-alphanumeric characters and converts to uppercase.
+ * Examples: 'AE 883 EC' => 'AE883EC', 'ae-883-ec' => 'AE883EC', 'Ae883Ec' => 'AE883EC'
+ */
+function normalizeDomain($value) {
+    if ($value === null || $value === '') return '';
+    return strtoupper(preg_replace('/[^a-zA-Z0-9]/', '', trim($value)));
+}
+
+/**
  * Generate AI specs for a car
  */
 function generateAISpecs($brand, $model, $year, $km, $color) {
@@ -163,7 +173,7 @@ function parseCSV($csvData) {
             'location' => trim($row[1]),
             'year' => trim($row[2]),
             'color' => trim($row[3]),
-            'domain' => strtoupper(trim($row[4])),
+            'domain' => normalizeDomain($row[4]),
             'km' => preg_replace('/[^\d]/', '', trim($row[5])),
             'price' => trim($row[6] ?? '')
         ];
@@ -176,7 +186,11 @@ function parseCSV($csvData) {
  * Search image in Google Drive
  */
 function searchDriveImage($domain) {
-    $searchUrl = "https://www.googleapis.com/drive/v3/files?q='" . DRIVE_FOLDER_ID . "'+in+parents+and+name+contains+'" . urlencode($domain) . "'&key=" . DRIVE_API_KEY . "&fields=files(id,name,webContentLink)";
+    // Normalize the domain for searching
+    $normalizedDomain = normalizeDomain($domain);
+    if (empty($normalizedDomain)) return null;
+    
+    $searchUrl = "https://www.googleapis.com/drive/v3/files?q='" . DRIVE_FOLDER_ID . "'+in+parents+and+name+contains+'" . urlencode($normalizedDomain) . "'&key=" . DRIVE_API_KEY . "&fields=files(id,name,webContentLink)";
     
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $searchUrl);
@@ -279,10 +293,13 @@ try {
                 // Search for image in Drive
                 $imageData = searchDriveImage($carData['domain']);
                 
-                // Check if car exists by domain
-                $checkQuery = "SELECT id FROM cars WHERE domain = :domain OR license_plate = :domain";
+                // Check if car exists by domain (normalized comparison to handle format variations)
+                $checkQuery = "SELECT id FROM cars WHERE 
+                    UPPER(REPLACE(REPLACE(REPLACE(REPLACE(domain, ' ', ''), '-', ''), '.', ''), '_', '')) = :domain 
+                    OR UPPER(REPLACE(REPLACE(REPLACE(REPLACE(license_plate, ' ', ''), '-', ''), '.', ''), '_', '')) = :domain";
                 $checkStmt = $db->prepare($checkQuery);
-                $checkStmt->bindValue(':domain', $carData['domain']);
+                $normalizedDomain = normalizeDomain($carData['domain']);
+                $checkStmt->bindValue(':domain', $normalizedDomain);
                 $checkStmt->execute();
                 
                 $price = parsePrice($carData['price']);
@@ -341,13 +358,17 @@ try {
                 }
             }
             
-            // Mark cars not in sheets as vendido
-            $domains = array_column($cars, 'domain');
+            // Mark cars not in sheets as vendido (using normalized domain comparison)
+            $domains = array_map('normalizeDomain', array_column($cars, 'domain'));
+            $domains = array_filter($domains); // Remove empty domains
             if (!empty($domains)) {
                 $placeholders = implode(',', array_fill(0, count($domains), '?'));
-                $updateSoldQuery = "UPDATE cars SET status = 'vendido' WHERE domain NOT IN ($placeholders) AND status = 'disponible'";
+                $updateSoldQuery = "UPDATE cars SET status = 'vendido' WHERE 
+                    UPPER(REPLACE(REPLACE(REPLACE(REPLACE(domain, ' ', ''), '-', ''), '.', ''), '_', '')) NOT IN ($placeholders) 
+                    AND status = 'disponible' 
+                    AND domain IS NOT NULL AND domain != ''";
                 $updateSoldStmt = $db->prepare($updateSoldQuery);
-                $updateSoldStmt->execute($domains);
+                $updateSoldStmt->execute(array_values($domains));
             }
             
             echo json_encode([
@@ -360,7 +381,7 @@ try {
             
         case 'search_image':
             // Search for image by domain
-            $domain = isset($_GET['domain']) ? strtoupper($_GET['domain']) : '';
+            $domain = isset($_GET['domain']) ? normalizeDomain($_GET['domain']) : '';
             
             if (empty($domain)) {
                 throw new Exception("Dominio no proporcionado");

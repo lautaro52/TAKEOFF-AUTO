@@ -42,6 +42,8 @@ class Car
     public $status;
     public $featured;
     public $home_section;
+    public $domain;
+    public $photos_sorted;
 
     public function __construct($db)
     {
@@ -118,6 +120,8 @@ class Car
             $this->status = $row['status'];
             $this->featured = $row['featured'];
             $this->home_section = $row['home_section'];
+            $this->domain = $row['domain'];
+            $this->photos_sorted = $row['photos_sorted'] ?? 0;
 
             return $row;
         }
@@ -141,7 +145,7 @@ class Car
                       traction_control=:traction_control, am_fm_radio=:am_fm_radio, 
                       bluetooth=:bluetooth, mp3_player=:mp3_player,
                       type=:type, color=:color, doors=:doors, passengers=:passengers, 
-                      city=:city, status=:status, featured=:featured, home_section=:home_section";
+                      city=:city, status=:status, featured=:featured, home_section=:home_section, domain=:domain, photos_sorted=:photos_sorted";
 
         $stmt = $this->conn->prepare($query);
 
@@ -157,6 +161,7 @@ class Car
         $this->airbags = htmlspecialchars(strip_tags($this->airbags));
         $this->steering_type = htmlspecialchars(strip_tags($this->steering_type));
         $this->traction_control = htmlspecialchars(strip_tags($this->traction_control));
+        $this->domain = htmlspecialchars(strip_tags($this->domain));
 
         // Bind
         $stmt->bindParam(":brand", $this->brand);
@@ -195,6 +200,8 @@ class Car
         $stmt->bindParam(":status", $this->status);
         $stmt->bindParam(":featured", $this->featured);
         $stmt->bindParam(":home_section", $this->home_section);
+        $stmt->bindParam(":domain", $this->domain);
+        $stmt->bindParam(":photos_sorted", $this->photos_sorted);
 
         if ($stmt->execute()) {
             return $this->conn->lastInsertId();
@@ -219,7 +226,7 @@ class Car
                       traction_control=:traction_control, am_fm_radio=:am_fm_radio, 
                       bluetooth=:bluetooth, mp3_player=:mp3_player,
                       type=:type, color=:color, doors=:doors, passengers=:passengers, 
-                      city=:city, status=:status, featured=:featured, home_section=:home_section
+                      city=:city, status=:status, featured=:featured, home_section=:home_section, domain=:domain, photos_sorted=:photos_sorted
                   WHERE id=:id";
 
         $stmt = $this->conn->prepare($query);
@@ -237,6 +244,7 @@ class Car
         $this->steering_type = htmlspecialchars(strip_tags($this->steering_type));
         $this->traction_control = htmlspecialchars(strip_tags($this->traction_control));
         $this->id = htmlspecialchars(strip_tags($this->id));
+        $this->domain = htmlspecialchars(strip_tags($this->domain));
 
         // Bind
         $stmt->bindParam(":brand", $this->brand);
@@ -275,6 +283,8 @@ class Car
         $stmt->bindParam(":status", $this->status);
         $stmt->bindParam(":featured", $this->featured);
         $stmt->bindParam(":home_section", $this->home_section);
+        $stmt->bindParam(":domain", $this->domain);
+        $stmt->bindParam(":photos_sorted", $this->photos_sorted);
         $stmt->bindParam(":id", $this->id);
 
         if ($stmt->execute()) {

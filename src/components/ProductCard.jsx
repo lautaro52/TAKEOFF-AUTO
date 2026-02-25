@@ -5,7 +5,7 @@ import { userService } from '../services/userService';
 import { API_CONFIG } from '../config';
 import './ProductCard.css';
 
-const ProductCard = ({ car }) => {
+const ProductCard = ({ car, onClick }) => {
     const [isFavorite, setIsFavorite] = useState(false);
     const navigate = useNavigate();
 
@@ -47,7 +47,13 @@ const ProductCard = ({ car }) => {
         }
     };
 
-    const handleCardClick = async () => {
+    const handleCardClick = async (e) => {
+        if (onClick) {
+            e.preventDefault();
+            onClick(car);
+            return;
+        }
+
         try {
             const { trackCarView } = await import('../services/analyticsService');
             trackCarView(car.id, { brand: car.brand, model: car.model, type: car.type });

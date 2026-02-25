@@ -141,7 +141,16 @@ for ($i = 1; $i < count($sheetData); $i++) {
     $row = $sheetData[$i];
     $rawDomain = $row[$domainCol] ?? '';
     $domain = strtolower(preg_replace('/[^a-z0-9]/', '', strtolower($rawDomain)));
-    if (!$domain) continue;
+    
+    // If no domain (0km), generate a virtual domain based on brand/model/year
+    if (!$domain) {
+        $brand = $brandCol >= 0 ? trim($row[$brandCol] ?? '') : '';
+        $model = $modelCol >= 0 ? trim($row[$modelCol] ?? '') : '';
+        $year = $yearCol >= 0 ? trim($row[$yearCol] ?? '') : '0km';
+        $domain = "virtual_" . strtolower(preg_replace('/[^a-z0-9]/', '', $brand . $model . $year));
+    }
+    
+    if (!$domain || $domain === 'virtual_') continue;
 
     $price = 0;
     if ($priceCol >= 0 && isset($row[$priceCol])) {
@@ -198,20 +207,29 @@ if ($DRIVE_FOLDER_ID && $DOWNLOAD_IMAGES) {
     $log[] = count($folders) . " carpetas encontradas en Drive";
 
     foreach ($folders as $folder) {
-        $folderDomain = strtolower(preg_replace('/[^a-z0-9]/', '', strtolower($folder['name'])));
+        $folderName = strtolower(trim($folder['name']));
+        $folderDomain = strtolower(preg_replace('/[^a-z0-9]/', '', $folderName));
         if (!$folderDomain) continue;
 
+        // Fetch images for this folder
         $imagesUrl = "https://www.googleapis.com/drive/v3/files?key=$GOOGLE_API_KEY&q='" . urlencode($folder['id']) . "'+in+parents+and+mimeType+contains+'image/'+and+trashed=false&fields=files(id,name)&pageSize=50&orderBy=name&supportsAllDrives=true&includeItemsFromAllDrives=true";
         $imagesResp = curlGet($imagesUrl);
         $images = (isset($imagesResp['body']) && $imagesResp['code'] === 200) ? (json_decode($imagesResp['body'], true)['files'] ?? []) : [];
 
         if (count($images) > 0) {
-            $driveImages[$folderDomain] = array_map(function($img) {
+            $imgUrls = array_map(function($img) {
                 return "https://drive.google.com/uc?export=view&id=" . $img['id'];
             }, $images);
+
+            // Exact domain match
+            $driveImages[$folderDomain] = $imgUrls;
+            
+            // Also try to help 0km matching by name if it looks like a brand/model
+            // We store these as global keys so cars with virtual domains can find them
+            $driveImages["name_" . $folderDomain] = $imgUrls;
         }
     }
-    $log[] = count($driveImages) . " dominios con fotos en Drive";
+    $log[] = count($driveImages) . " carpetas con fotos procesadas en Drive";
 } else if (!$DOWNLOAD_IMAGES) {
     $log[] = "ℹ Descarga de imágenes desactivada (sync rápido)";
 }
@@ -232,12 +250,30 @@ $totalCars = count($sheetCars);
 
 foreach ($sheetCars as $domain => $carInfo) {
     $carNum++;
-    $hasPhotos = isset($driveImages[$domain]) && count($driveImages[$domain]) > 0;
+    
+    // Photo matching: try domain direct, then try matching folder name to brand+model
+    $hasPhotos = false;
+    $photoSource = null;
+    
+    if (isset($driveImages[$domain])) {
+        $hasPhotos = true;
+        $photoSource = $domain;
+    } else if (strpos($domain, 'virtual_') === 0) {
+        $searchKey = "name_" . strtolower(preg_replace('/[^a-z0-9]/', '', $carInfo['brand'] . $carInfo['model']));
+        if (isset($driveImages[$searchKey])) {
+            $hasPhotos = true;
+            $photoSource = $searchKey;
+        }
+    }
+
     $existsInDb = isset($existingByDomain[$domain]);
     $label = "{$carInfo['brand']} {$carInfo['model']}";
+    $displayDomain = strpos($domain, 'virtual_') === 0 ? "0KM/SIN PATENTE" : $domain;
     $priceFormatted = '$' . number_format($carInfo['price'], 0, ',', '.');
 
     if ($existsInDb) {
+        // ... update logic
+    }
         // UPDATE existing
         try {
             $updateFields = ["price = ?", "has_photos = ?", "updated_at = NOW()"];
@@ -258,20 +294,22 @@ foreach ($sheetCars as $domain => $carInfo) {
             $db->prepare("UPDATE cars SET " . implode(', ', $updateFields) . " WHERE id = ?")->execute($updateParams);
 
             // Update images if available
-            if ($hasPhotos) {
+            if ($hasPhotos && $photoSource) {
                 $carId = $existingByDomain[$domain];
-                $savedImages = downloadDriveImages($driveImages[$domain], $carId, $uploadDir);
+                $savedImages = downloadDriveImages($driveImages[$photoSource], $carId, $uploadDir);
                 if (!empty($savedImages)) {
                     $db->prepare("DELETE FROM car_images WHERE car_id = ?")->execute([$carId]);
                     foreach ($savedImages as $idx => $imgPath) {
                         $db->prepare("INSERT INTO car_images (car_id, image_path, display_order) VALUES (?, ?, ?)")
                            ->execute([$carId, $imgPath, $idx]);
                     }
+                    // Reset sorted state as photos changed
+                    $db->prepare("UPDATE cars SET photos_sorted = 0 WHERE id = ?")->execute([$carId]);
                 }
             }
 
             $stats['updated']++;
-            $log[] = "🔄 [$carNum/$totalCars] Actualizado: $label ($domain) | {$carInfo['year']} | $priceFormatted | {$carInfo['km']}km";
+            $log[] = "🔄 [$carNum/$totalCars] Actualizado: $label ($displayDomain) | {$carInfo['year']} | $priceFormatted | {$carInfo['km']}km";
         } catch (Exception $e) {
             $stats['errors']++;
             $log[] = "❌ [$carNum/$totalCars] Error actualizando $label ($domain): " . $e->getMessage();
@@ -280,7 +318,7 @@ foreach ($sheetCars as $domain => $carInfo) {
         // INSERT new car
         try {
             if (empty($carInfo['brand']) || empty($carInfo['model'])) {
-                $log[] = "⚠ [$carNum/$totalCars] Saltando $domain: sin marca/modelo";
+                $log[] = "⚠ [$carNum/$totalCars] Saltando $displayDomain: sin marca/modelo";
                 continue;
             }
 
@@ -317,8 +355,8 @@ foreach ($sheetCars as $domain => $carInfo) {
             $newCarId = $db->lastInsertId();
 
             // Download and save images
-            if ($hasPhotos) {
-                $savedImages = downloadDriveImages($driveImages[$domain], $newCarId, $uploadDir);
+            if ($hasPhotos && $photoSource) {
+                $savedImages = downloadDriveImages($driveImages[$photoSource], $newCarId, $uploadDir);
                 foreach ($savedImages as $idx => $imgPath) {
                     $db->prepare("INSERT INTO car_images (car_id, image_path, display_order) VALUES (?, ?, ?)")
                        ->execute([$newCarId, $imgPath, $idx]);
@@ -330,7 +368,7 @@ foreach ($sheetCars as $domain => $carInfo) {
             }
 
             $stats['added']++;
-            $log[] = "✅ [$carNum/$totalCars] Nuevo: $label ($domain) | {$carInfo['year']} | $priceFormatted | {$carInfo['km']}km | {$carInfo['color']} | $photoLabel";
+            $log[] = "✅ [$carNum/$totalCars] Nuevo: $label ($displayDomain) | {$carInfo['year']} | $priceFormatted | {$carInfo['km']}km | {$carInfo['color']} | $photoLabel";
         } catch (Exception $e) {
             $stats['errors']++;
             $log[] = "⚠ Error insertando $domain: " . $e->getMessage();

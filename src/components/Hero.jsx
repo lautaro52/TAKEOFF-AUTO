@@ -34,6 +34,9 @@ const Hero = () => {
             return;
         }
         const filtered = allCars.filter(c => {
+            const hasPhoto = c.hasPhotos;
+            if (!hasPhoto) return false;
+
             const searchString = `${c.brand || ''} ${c.model || ''} ${c.version || ''}`.toLowerCase();
             return searchString.includes(searchValue.toLowerCase());
         }).slice(0, 5);

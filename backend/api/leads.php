@@ -22,15 +22,39 @@ switch ($method) {
     case 'POST':
         $data = json_decode(file_get_contents("php://input"));
         if (!empty($data->client_name) && !empty($data->client_whatsapp)) {
+            // 1. Create legacy lead (for partners)
             $lead->partner_id = $data->partner_id ?? null;
             $lead->car_id = $data->car_id ?? null;
             $lead->client_name = $data->client_name;
             $lead->client_whatsapp = $data->client_whatsapp;
             $lead->note = $data->note ?? '';
-
             $id = $lead->create();
+
+            // 2. Mirror to CRM (crm_clients)
+            $crmClientId = null;
+            try {
+                $stmtCrm = $db->prepare("INSERT INTO crm_clients (full_name, phone, car_id, source) VALUES (?, ?, ?, ?)");
+                $source = isset($data->partner_id) ? 'partner' : 'web';
+                $stmtCrm->execute([
+                    $data->client_name,
+                    $data->client_whatsapp,
+                    $data->car_id ?? null,
+                    $source
+                ]);
+                $crmClientId = $db->lastInsertId();
+
+                // If there's a note, add it to crm_notes
+                if (!empty($data->note)) {
+                    $stmtNote = $db->prepare("INSERT INTO crm_notes (client_id, content) VALUES (?, ?)");
+                    $stmtNote->execute([$crmClientId, $data->note]);
+                }
+            } catch (Exception $e) {
+                // Log mirroring error but don't fail the primary lead creation
+                error_log("CRM Mirroring failed: " . $e->getMessage());
+            }
+
             if ($id) {
-                echo json_encode(["success" => true, "id" => $id]);
+                echo json_encode(["success" => true, "id" => $id, "crm_id" => $crmClientId ?? null]);
             } else {
                 echo json_encode(["success" => false, "message" => "Failed to create lead"]);
             }

@@ -129,5 +129,14 @@ export const crmStockSync = {
                 download_images: downloadImages
             }
         });
+    },
+    reorderPhotos(carId) {
+        return crmFetch('crm_reorder_photos.php', {
+            method: 'POST',
+            body: {
+                car_id: carId,
+                openai_api_key: OPENAI_CONFIG.API_KEY
+            }
+        });
     }
 };

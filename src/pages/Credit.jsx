@@ -6,6 +6,8 @@ import { API_CONFIG } from '../config';
 import DeliveryCarousel from '../components/DeliveryCarousel';
 import ZeroKmShowcase from '../components/ZeroKmShowcase';
 import PromiseCarousel from '../components/PromiseCarousel';
+import Reveal from '../components/Reveal';
+import ProductCard from '../components/ProductCard';
 import './Credit.css';
 import loanVisual from '../assets/loan-visual.png';
 import creditHero from '../assets/credit-hero.jpg';
@@ -21,6 +23,7 @@ const Credit = () => {
     const [openFaq, setOpenFaq] = useState(null);
     const [carouselIndex, setCarouselIndex] = useState(0);
     const [financingCars, setFinancingCars] = useState([]);
+    const [zeroKmCars, setZeroKmCars] = useState([]);
     const [isAdvisorModalOpen, setIsAdvisorModalOpen] = useState(false);
     const [isPriceModalOpen, setIsPriceModalOpen] = useState(false);
 
@@ -28,12 +31,17 @@ const Credit = () => {
     useEffect(() => {
         const loadCars = async () => {
             const all = await getCars();
-            // Get 3 cheap cars with photos
-            const cheapWithPhotos = all
-                .filter(c => c.images && c.images.length > 0 && c.status === 'disponible')
+
+            // 1. Used Cars for Financing Preview (KM > 0, available, with photos, with price)
+            const usedForPreview = all
+                .filter(c => Number(c.km) > 0 && c.arsPrice > 0 && c.hasPhotos && c.status === 'disponible')
                 .sort((a, b) => a.arsPrice - b.arsPrice)
-                .slice(0, 3);
-            setFinancingCars(cheapWithPhotos);
+                .slice(0, 4);
+            setFinancingCars(usedForPreview);
+
+            // 2. 0km Cars for Showcase (KM === 0 or marked as 0km, available, with photos)
+            const zkm = all.filter(c => (Number(c.km) === 0 || c.home_section === '0km') && c.hasPhotos && c.status === 'disponible');
+            setZeroKmCars(zkm);
         };
         loadCars();
     }, []);
@@ -277,53 +285,16 @@ const Credit = () => {
                                 <p className="section-subtitle">Sin entrega inicial. Hasta 72 cuotas. Llevate tu auto hoy.</p>
                             </Reveal>
 
-                            <div className="financing-staggered-grid">
-                                {financingCars.map((car, idx) => (
-                                    <Reveal key={car.id} direction={idx === 0 ? "left" : (idx === 1 ? "up" : "right")} duration={0.85} delay={0.5 + (idx * 0.2)}>
-                                        <div className={`financing-staggered-card ${idx === 1 ? 'featured' : ''}`} onClick={() => navigate(`/car/${car.id}`)} style={{ cursor: 'pointer' }}>
-                                            <div className="car-top-label">Usado Certificado</div>
-                                            <div className="staggered-img-container">
-                                                <img src={car.images[0].startsWith('http') ? car.images[0] : `${API_CONFIG.IMAGE_BASE_URL}${car.images[0]}`} alt={`${car.brand} ${car.model}`} />
-                                            </div>
-                                            <div className="staggered-info">
-                                                <div className="staggered-title">{car.brand} {car.model} {car.year} • ${Number(car.price).toLocaleString('es-AR')}</div>
-                                                <div className="staggered-monthly">
-                                                    <span className="monthly-val">$ {(car.arsPrice / 48).toLocaleString('es-AR')}/mes</span>
-                                                </div>
-                                                <div className="staggered-footer">
-                                                    Págalo en <span className="blue-link-text">48 meses</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </Reveal>
-                                ))}
-
-                                {/* === CLONES FOR INFINITE LOOP (mobile only) === */}
-                                {financingCars.map((car) => (
-                                    <div key={`dup-${car.id}`} className="financing-staggered-card financing-carousel-dup" aria-hidden="true">
-                                        <div className="car-top-label">Usado Certificado</div>
-                                        <div className="staggered-img-container">
-                                            <img src={car.images[0].startsWith('http') ? car.images[0] : `${API_CONFIG.IMAGE_BASE_URL}${car.images[0]}`} alt="" />
-                                        </div>
-                                        <div className="staggered-info">
-                                            <div className="staggered-title">{car.brand} {car.model} {car.year} • ${Number(car.price).toLocaleString('es-AR')}</div>
-                                            <div className="staggered-monthly">
-                                                <span className="monthly-val">$ {(car.arsPrice / 48).toLocaleString('es-AR')}/mes</span>
-                                            </div>
-                                            <div className="staggered-footer">
-                                                Págalo en <span className="blue-link-text">48 meses</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
+                            <div className="product-grid-window">
+                                <div className="product-grid credit-used-grid">
+                                    {financingCars.map((car, idx) => (
+                                        <Reveal key={car.id} direction="up" duration={0.85} delay={0.2 + (idx * 0.1)}>
+                                            <ProductCard car={car} />
+                                        </Reveal>
+                                    ))}
+                                </div>
                             </div>
 
-                            {/* Carousel Indicators (Mobile Only) */}
-                            <div className="carousel-indicators">
-                                <div className={`indicator-dot ${carouselIndex === 0 ? 'active' : ''}`}></div>
-                                <div className={`indicator-dot ${carouselIndex === 1 ? 'active' : ''}`}></div>
-                                <div className={`indicator-dot ${carouselIndex === 2 ? 'active' : ''}`}></div>
-                            </div>
                             <div className="center-btn" style={{ marginTop: '30px' }}>
                                 <button className="btn-primary-k big-blue" onClick={() => navigate('/catalogo')}>Ver catálogo de Usados</button>
                             </div>
@@ -331,7 +302,7 @@ const Credit = () => {
                     </section>
 
                     {/* STEPS SECTION */}
-                    <section className="section steps-section-staggered">
+                    <section className="section steps-section-staggered" >
                         <div className="container">
                             <div className="steps-split-layout">
                                 <Reveal direction="left" duration={0.85} className="steps-left-col">
@@ -395,7 +366,7 @@ const Credit = () => {
                                 </Reveal>
                             </div>
                         </div>
-                    </section>
+                    </section >
                 </>
             ) : (
                 <>
@@ -410,7 +381,7 @@ const Credit = () => {
                             </Reveal>
 
                             <Reveal direction="scale" duration={0.85} delay={0.5}>
-                                <ZeroKmShowcase />
+                                <ZeroKmShowcase catalogCars={zeroKmCars} />
                             </Reveal>
 
                             <Reveal direction="up" duration={0.85} delay={0.7}>
@@ -549,14 +520,16 @@ const Credit = () => {
                 isOpen={isAdvisorModalOpen}
                 onClose={() => setIsAdvisorModalOpen(false)}
             />
-            {isPriceModalOpen && (
-                <PriceInquiryModal
-                    isOpen={isPriceModalOpen}
-                    onClose={() => setIsPriceModalOpen(false)}
-                    car={{ brand: 'Consulta', model: 'General 0km', year: 2024, home_section: '0km' }}
-                />
-            )}
-        </div>
+            {
+                isPriceModalOpen && (
+                    <PriceInquiryModal
+                        isOpen={isPriceModalOpen}
+                        onClose={() => setIsPriceModalOpen(false)}
+                        car={{ brand: 'Consulta', model: 'General 0km', year: 2024, home_section: '0km' }}
+                    />
+                )
+            }
+        </div >
     );
 };
 

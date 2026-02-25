@@ -214,96 +214,9 @@
     color: #26ab8d;
 }
 
-/* STAGGERED FINANCING GRID */
-.financing-staggered-grid {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 0;
-    margin-top: 30px;
-    padding: 10px 0;
-}
-
-/* Clone cards for infinite loop: hidden on desktop, shown on mobile inside the carousel */
-.financing-carousel-dup {
-    display: none;
-}
-
-.financing-staggered-card {
-    background: #fff;
-    border-radius: 20px;
-    padding: 25px 20px;
-    width: 280px;
-    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.04);
-    transition: all 0.4s ease;
-    z-index: 1;
-    text-align: left;
-    border: 1px solid #f0f0f0;
-}
-
-.financing-staggered-card.featured {
-    width: 330px;
-    padding: 35px 30px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
-    z-index: 2;
-    transform: scale(1.05);
-}
-
-.car-top-label {
-    font-size: 13px;
-    color: #718096;
-    margin-bottom: 12px;
-}
-
-.staggered-img-container {
-    height: 180px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 25px;
-}
-
-.staggered-img-container img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-}
-
-.staggered-title {
-    font-size: 16px;
-    font-weight: 700;
-    color: #1a202c;
+/* USED CARS GRID */
+.credit-used-grid {
     margin-bottom: 20px;
-}
-
-.staggered-monthly {
-    margin-bottom: 25px;
-}
-
-.monthly-val {
-    font-size: 28px;
-    font-weight: 800;
-    color: #1a202c;
-}
-
-.staggered-footer {
-    font-size: 14px;
-    color: #718096;
-}
-
-.blue-link-text {
-    color: #0052FF;
-    font-weight: 700;
-    background: #eef2f6;
-    padding: 2px 8px;
-    border-radius: 6px;
-}
-
-.btn-primary-k.big-blue {
-    background-color: #0052FF;
-    padding: 20px 100px;
-    font-size: 18px;
-    box-shadow: 0 4px 15px rgba(0, 82, 255, 0.3);
 }
 
 .loading-grid-cars {
@@ -327,6 +240,13 @@
     font-size: 16px;
     cursor: pointer;
     transition: transform 0.2s;
+}
+
+.btn-primary-k.big-blue {
+    background-color: #0052FF;
+    padding: 20px 100px;
+    font-size: 18px;
+    box-shadow: 0 4px 15px rgba(0, 82, 255, 0.3);
 }
 
 .btn-primary-k:hover {
