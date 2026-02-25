@@ -87,11 +87,14 @@ $headers = array_map(function($h) {
     return strtolower(preg_replace('/[^a-z0-9]/', '', iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', strtolower(trim($h)))));
 }, $sheetData[0]);
 
+$log[] = "Columnas detectadas: " . implode(', ', array_filter($sheetData[0]));
+
 $DOMAIN_KEYS = ['dominio', 'domain', 'patente', 'placa', 'matricula'];
-$PRICE_KEYS = ['precio', 'price', 'valor'];
+$PRICE_KEYS = ['precio', 'price', 'valor', 'lista'];
 $BRAND_KEYS = ['marca', 'brand'];
 $MODEL_KEYS = ['modelo', 'model'];
-$YEAR_KEYS = ['ano', 'year', 'anio'];
+$VEHICLE_KEYS = ['unidadescrdoba', 'unidadescordoba', 'unidades', 'vehiculo', 'vehicle', 'unidad', 'descripcion'];
+$YEAR_KEYS = ['ao', 'ano', 'year', 'anio'];
 $KM_KEYS = ['km', 'kilometros', 'kilometraje'];
 $TRANS_KEYS = ['transmision', 'transmission'];
 $COLOR_KEYS = ['color', 'colour'];
@@ -100,8 +103,9 @@ $TYPE_KEYS = ['tipo', 'type', 'carroceria'];
 
 function findCol($headers, $keys) {
     foreach ($keys as $k) {
-        $idx = array_search($k, $headers);
-        if ($idx !== false) return $idx;
+        foreach ($headers as $idx => $h) {
+            if (strpos($h, $k) !== false) return $idx;
+        }
     }
     return -1;
 }
@@ -110,6 +114,7 @@ $domainCol = findCol($headers, $DOMAIN_KEYS);
 $priceCol = findCol($headers, $PRICE_KEYS);
 $brandCol = findCol($headers, $BRAND_KEYS);
 $modelCol = findCol($headers, $MODEL_KEYS);
+$vehicleCol = findCol($headers, $VEHICLE_KEYS); // Combined brand+model column
 $yearCol = findCol($headers, $YEAR_KEYS);
 $kmCol = findCol($headers, $KM_KEYS);
 $transCol = findCol($headers, $TRANS_KEYS);
@@ -118,7 +123,7 @@ $fuelCol = findCol($headers, $FUEL_KEYS);
 $typeCol = findCol($headers, $TYPE_KEYS);
 
 if ($domainCol === -1) {
-    $domainCol = 0; // fallback to first column
+    $domainCol = 0;
     $log[] = "⚠ Columna dominio no encontrada, usando columna 1";
 }
 
@@ -135,11 +140,30 @@ for ($i = 1; $i < count($sheetData); $i++) {
         $price = (int) preg_replace('/[^0-9]/', '', str_replace('.', '', $row[$priceCol]));
     }
 
+    // Parse brand and model
+    $brand = '';
+    $model = '';
+    if ($brandCol >= 0 && isset($row[$brandCol])) {
+        $brand = trim($row[$brandCol]);
+    }
+    if ($modelCol >= 0 && isset($row[$modelCol])) {
+        $model = trim($row[$modelCol]);
+    }
+    // If no separate brand/model, try combined vehicle name column
+    if (empty($brand) && empty($model) && $vehicleCol >= 0 && isset($row[$vehicleCol])) {
+        $vehicleName = trim($row[$vehicleCol]);
+        if ($vehicleName) {
+            $parts = preg_split('/\s+/', $vehicleName, 2);
+            $brand = $parts[0] ?? '';
+            $model = $parts[1] ?? '';
+        }
+    }
+
     $sheetCars[$domain] = [
         'domain' => $domain,
         'raw_domain' => $rawDomain,
-        'brand' => ($brandCol >= 0 && isset($row[$brandCol])) ? trim($row[$brandCol]) : '',
-        'model' => ($modelCol >= 0 && isset($row[$modelCol])) ? trim($row[$modelCol]) : '',
+        'brand' => $brand,
+        'model' => $model,
         'year' => ($yearCol >= 0 && isset($row[$yearCol])) ? (int)$row[$yearCol] : 0,
         'price' => $price,
         'km' => ($kmCol >= 0 && isset($row[$kmCol])) ? (int) preg_replace('/[^0-9]/', '', $row[$kmCol]) : 0,
@@ -191,9 +215,15 @@ while ($row = $existingStmt->fetch(PDO::FETCH_ASSOC)) {
 $uploadDir = __DIR__ . '/uploads/';
 if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
 
+$carNum = 0;
+$totalCars = count($sheetCars);
+
 foreach ($sheetCars as $domain => $carInfo) {
+    $carNum++;
     $hasPhotos = isset($driveImages[$domain]) && count($driveImages[$domain]) > 0;
     $existsInDb = isset($existingByDomain[$domain]);
+    $label = "{$carInfo['brand']} {$carInfo['model']}";
+    $priceFormatted = '$' . number_format($carInfo['price'], 0, ',', '.');
 
     if ($existsInDb) {
         // UPDATE existing
@@ -201,7 +231,12 @@ foreach ($sheetCars as $domain => $carInfo) {
             $updateFields = ["price = ?", "has_photos = ?", "updated_at = NOW()"];
             $updateParams = [$carInfo['price'], $hasPhotos ? 1 : 0];
 
+            // Update brand/model/year if available (fixes missing data)
+            if (!empty($carInfo['brand'])) { $updateFields[] = "brand = ?"; $updateParams[] = $carInfo['brand']; }
+            if (!empty($carInfo['model'])) { $updateFields[] = "model = ?"; $updateParams[] = $carInfo['model']; }
+            if ($carInfo['year'] > 0) { $updateFields[] = "year = ?"; $updateParams[] = $carInfo['year']; }
             if ($carInfo['km'] > 0) { $updateFields[] = "km = ?"; $updateParams[] = $carInfo['km']; }
+            if (!empty($carInfo['color'])) { $updateFields[] = "color = ?"; $updateParams[] = $carInfo['color']; }
 
             $updateParams[] = $existingByDomain[$domain];
             $db->prepare("UPDATE cars SET " . implode(', ', $updateFields) . " WHERE id = ?")->execute($updateParams);
@@ -209,28 +244,27 @@ foreach ($sheetCars as $domain => $carInfo) {
             // Update images if available
             if ($hasPhotos) {
                 $carId = $existingByDomain[$domain];
-                // Download and save new images
                 $savedImages = downloadDriveImages($driveImages[$domain], $carId, $uploadDir);
                 if (!empty($savedImages)) {
-                    // Remove old images
                     $db->prepare("DELETE FROM car_images WHERE car_id = ?")->execute([$carId]);
                     foreach ($savedImages as $idx => $imgPath) {
-                        $db->prepare("INSERT INTO car_images (car_id, image_url, sort_order) VALUES (?, ?, ?)")
+                        $db->prepare("INSERT INTO car_images (car_id, image_path, display_order) VALUES (?, ?, ?)")
                            ->execute([$carId, $imgPath, $idx]);
                     }
                 }
             }
 
             $stats['updated']++;
+            $log[] = "🔄 [$carNum/$totalCars] Actualizado: $label ($domain) | {$carInfo['year']} | $priceFormatted | {$carInfo['km']}km";
         } catch (Exception $e) {
             $stats['errors']++;
-            $log[] = "⚠ Error actualizando $domain: " . $e->getMessage();
+            $log[] = "❌ [$carNum/$totalCars] Error actualizando $label ($domain): " . $e->getMessage();
         }
     } else {
         // INSERT new car
         try {
             if (empty($carInfo['brand']) || empty($carInfo['model'])) {
-                $log[] = "⚠ Saltando $domain: sin marca/modelo";
+                $log[] = "⚠ [$carNum/$totalCars] Saltando $domain: sin marca/modelo";
                 continue;
             }
 
@@ -266,15 +300,17 @@ foreach ($sheetCars as $domain => $carInfo) {
             if ($hasPhotos) {
                 $savedImages = downloadDriveImages($driveImages[$domain], $newCarId, $uploadDir);
                 foreach ($savedImages as $idx => $imgPath) {
-                    $db->prepare("INSERT INTO car_images (car_id, image_url, sort_order) VALUES (?, ?, ?)")
+                    $db->prepare("INSERT INTO car_images (car_id, image_path, display_order) VALUES (?, ?, ?)")
                        ->execute([$newCarId, $imgPath, $idx]);
                 }
+                $photoLabel = "📷 " . count($savedImages) . " fotos";
             } else {
                 $stats['no_photos']++;
+                $photoLabel = "📷 SIN FOTOS";
             }
 
             $stats['added']++;
-            $log[] = "✅ Agregado: {$carInfo['brand']} {$carInfo['model']} ($domain)" . (!$hasPhotos ? " [SIN FOTOS]" : "");
+            $log[] = "✅ [$carNum/$totalCars] Nuevo: $label ($domain) | {$carInfo['year']} | $priceFormatted | {$carInfo['km']}km | {$carInfo['color']} | $photoLabel";
         } catch (Exception $e) {
             $stats['errors']++;
             $log[] = "⚠ Error insertando $domain: " . $e->getMessage();

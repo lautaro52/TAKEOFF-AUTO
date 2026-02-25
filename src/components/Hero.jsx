@@ -53,6 +53,7 @@ const Hero = () => {
     const getImageUrl = (imagePath) => {
         if (!imagePath) return 'https://via.placeholder.com/800x600?text=No+Image';
         if (imagePath.startsWith('http')) return imagePath;
+        if (imagePath.startsWith('images/')) return `/${imagePath}`;
         return `${API_CONFIG.IMAGE_BASE_URL}${imagePath}`;
     };
 

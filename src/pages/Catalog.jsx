@@ -56,6 +56,19 @@ const parseCurrencyInput = (val) => {
 };
 
 const Catalog = () => {
+    // Cars from database
+    const [cars, setCars] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [syncing, setSyncing] = useState(false);
+    const [syncStatus, setSyncStatus] = useState(null);
+
+    // State for user and favorites
+    const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
+    const [user, setUser] = useState(null);
+    const [favorites, setFavorites] = useState([]); // List of car IDs
+    const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+
     const syncStock = useCallback(async () => {
         if (syncing) return;
         setSyncStatus(null);
@@ -84,12 +97,7 @@ const Catalog = () => {
         }
     }, [cars, syncing]);
 
-    // Continuar con el resto del código as usual
-    const [searchParams] = useSearchParams();
-    const navigate = useNavigate();
-    const [user, setUser] = useState(null);
-    const [favorites, setFavorites] = useState([]); // List of car IDs
-    const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+    // Load user and favorites on mount
 
     // Load user and favorites on mount
     useEffect(() => {
@@ -127,11 +135,7 @@ const Catalog = () => {
         }
     };
 
-    // Cars from database
-    const [cars, setCars] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [syncing, setSyncing] = useState(false);
-    const [syncStatus, setSyncStatus] = useState(null);
+    // Price filter states
 
     // Price filter states
     const [priceMin, setPriceMin] = useState('');
@@ -168,12 +172,7 @@ const Catalog = () => {
                     if (normalizedPrices.length > 0) {
                         const min = Math.floor(Math.min(...normalizedPrices));
                         const max = Math.ceil(Math.max(...normalizedPrices));
-                        setAbsMinPrice(min);
                         setAbsMaxPrice(max);
-
-                        // Only pre-fill if they haven't been touched yet
-                        setPriceMin(prev => prev === '' ? min.toString() : prev);
-                        setPriceMax(prev => prev === '' ? max.toString() : prev);
                     }
                 }
             }
@@ -198,6 +197,9 @@ const Catalog = () => {
     };
 
     // Filtered cars
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 12;
+
     const filteredCars = useMemo(() => {
         return cars.filter(car => {
             // Price filter (on normalized values)
@@ -205,7 +207,7 @@ const Catalog = () => {
             const min = priceMin ? parseInt(priceMin) : 0;
             const max = priceMax ? parseInt(priceMax) : Infinity;
 
-            if (min && normalizedCarPrice < min) return false;
+            if (min && normalizedCarPrice < min && normalizedCarPrice !== 0) return false;
             if (max && normalizedCarPrice > max) return false;
 
             // Brand filter
@@ -245,11 +247,33 @@ const Catalog = () => {
         });
     }, [cars, priceMin, priceMax, selectedBrands, selectedTransmission, selectedColors, searchQuery]);
 
-    // Sorted cars based on selected sort option — cars without photos always at bottom
+    // Sorted cars based on selected sort option
     const sortedCars = useMemo(() => {
         const sorted = [...filteredCars];
 
         const compareFn = (a, b) => {
+            // Group sorting (Desired order: Used w/ photo > 0km w/ photo > No photo)
+            const hasPhotoA = a.images && a.images.length > 0;
+            const hasPhotoB = b.images && b.images.length > 0;
+
+            const isZeroKmA = Number(a.km) === 0 || a.home_section === '0km';
+            const isZeroKmB = Number(b.km) === 0 || b.home_section === '0km';
+
+            // Priority score: 3 for Used with photo, 2 for 0km with photo, 1 for Any without photo
+            const getPriority = (car, hasPhoto, isZero) => {
+                if (!hasPhoto) return 1;
+                if (isZero) return 2;
+                return 3;
+            };
+
+            const priorityA = getPriority(a, hasPhotoA, isZeroKmA);
+            const priorityB = getPriority(b, hasPhotoB, isZeroKmB);
+
+            if (priorityA !== priorityB) {
+                return priorityB - priorityA; // Higher priority first
+            }
+
+            // Within same priority group, use selected sort
             switch (sortBy) {
                 case 'price-asc': return a.arsPrice - b.arsPrice;
                 case 'price-desc': return b.arsPrice - a.arsPrice;
@@ -260,13 +284,20 @@ const Catalog = () => {
             }
         };
 
-        return sorted.sort((a, b) => {
-            const aHasPhotos = a.has_photos !== 0 && a.has_photos !== '0';
-            const bHasPhotos = b.has_photos !== 0 && b.has_photos !== '0';
-            if (aHasPhotos && !bHasPhotos) return -1;
-            if (!aHasPhotos && bHasPhotos) return 1;
-            return compareFn(a, b);
-        });
+        return sorted.sort((a, b) => compareFn(a, b));
+
+    }, [filteredCars, sortBy]);
+
+    // Pagination logic
+    const totalPages = Math.ceil(sortedCars.length / itemsPerPage);
+    const paginatedCars = useMemo(() => {
+        const start = (currentPage - 1) * itemsPerPage;
+        return sortedCars.slice(start, start + itemsPerPage);
+    }, [sortedCars, currentPage]);
+
+    // Reset pagination on filter/sort change
+    useEffect(() => {
+        setCurrentPage(1);
     }, [filteredCars, sortBy]);
 
 
@@ -412,32 +443,27 @@ const Catalog = () => {
             <div className="catalog-container">
                 {/* Sidebar Filters */}
                 <aside className="catalog-sidebar">
-                    <div className="sync-stock-panel">
-                        <button
-                            onClick={syncStock}
-                            className="sync-stock-button"
-                            disabled={syncing}
-                        >
-                            {syncing ? (
-                                <>
-                                    <Loader2 size={16} className="spinner" />
-                                    <span>Sincronizando...</span>
-                                </>
-                            ) : (
-                                <span>Sincronizar stock</span>
-                            )}
-                        </button>
-                        {syncStatus && (
-                            <p className={`sync-stock-message ${syncStatus.type}`}>
-                                {syncStatus.message}
-                            </p>
-                        )}
-                    </div>
+
 
                     <div className="sidebar-header">
+                        <div className="filters-top-header">
+                            <h3 className="filters-title">Filtros</h3>
+                            {(priceMin || priceMax || selectedBrands.length > 0 || selectedTransmission.length > 0 || selectedColors.length > 0 || searchQuery) && (
+                                <button className="clear-filters-btn" onClick={() => {
+                                    setPriceMin('');
+                                    setPriceMax('');
+                                    setSelectedBrands([]);
+                                    setSelectedTransmission([]);
+                                    setSelectedColors([]);
+                                    setSearchQuery('');
+                                }}>
+                                    Limpiar
+                                </button>
+                            )}
+                        </div>
                         <input
                             type="text"
-                            placeholder="Busca un auto"
+                            placeholder="Busca marca o modelo..."
                             className="sidebar-search"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
@@ -445,7 +471,7 @@ const Catalog = () => {
                     </div>
 
                     <div className="filters-container">
-                        <h3 className="filters-title">Filtros</h3>
+
 
                         {/* Price Filter */}
                         <div className="filter-section">
@@ -621,33 +647,94 @@ const Catalog = () => {
                     ) : filteredCars.length === 0 ? (
                         <div className="no-results">
                             <p>No se encontraron autos con los filtros seleccionados.</p>
+                            <button className="clear-filters-btn" style={{ marginTop: '16px' }} onClick={() => {
+                                setPriceMin('');
+                                setPriceMax('');
+                                setSelectedBrands([]);
+                                setSelectedTransmission([]);
+                                setSelectedColors([]);
+                                setSearchQuery('');
+                            }}>
+                                Ver todos los vehículos
+                            </button>
                         </div>
                     ) : (
-                        <div className="cars-grid">
-                            {sortedCars.map((car, index) => (
-                                <ProductCard key={car.id} car={car} />
-                            ))}
-                        </div>
-                    )}
+                        <>
+                            <div className="cars-grid">
+                                {paginatedCars.map((car, index) => (
+                                    <ProductCard key={car.id} car={car} />
+                                ))}
+                            </div>
+
+                            {totalPages > 1 && (
+                                <div className="pagination-container">
+                                    <button
+                                        className="pagination-btn"
+                                        disabled={currentPage === 1}
+                                        onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                                    >
+                                        &laquo;
+                                    </button>
+
+                                    {[...Array(totalPages)].map((_, i) => {
+                                        const pageNum = i + 1;
+                                        // Show first, last, current, and pages around current
+                                        if (
+                                            pageNum === 1 ||
+                                            pageNum === totalPages ||
+                                            (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
+                                        ) {
+                                            return (
+                                                <button
+                                                    key={pageNum}
+                                                    className={`pagination-btn ${currentPage === pageNum ? 'active' : ''}`}
+                                                    onClick={() => setCurrentPage(pageNum)}
+                                                >
+                                                    {pageNum}
+                                                </button>
+                                            );
+                                        } else if (
+                                            pageNum === currentPage - 2 ||
+                                            pageNum === currentPage + 2
+                                        ) {
+                                            return <span key={pageNum} className="pagination-ellipsis">...</span>;
+                                        }
+                                        return null;
+                                    })}
+
+                                    <button
+                                        className="pagination-btn"
+                                        disabled={currentPage === totalPages}
+                                        onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                                    >
+                                        &raquo;
+                                    </button>
+                                </div>
+                            )}
+                        </>
+                    )
+                    }
                 </main>
             </div>
 
             {/* Login Suggestion Modal */}
-            {showLoginPrompt && (
-                <div className="login-prompt-overlay" onClick={() => setShowLoginPrompt(false)}>
-                    <div className="login-prompt-modal" onClick={e => e.stopPropagation()}>
-                        <div className="login-prompt-icon">
-                            <Heart size={48} color="#ff4d4f" fill="#ff4d4f" />
-                        </div>
-                        <h3>¡Guarda tus favoritos!</h3>
-                        <p>Inicia sesión o regístrate para que tus autos favoritos se guarden en tu panel y puedas verlos cuando quieras.</p>
-                        <div className="login-prompt-actions">
-                            <button className="btn-secondary" onClick={() => setShowLoginPrompt(false)}>Después</button>
-                            <button className="btn-primary" onClick={() => navigate('/login')}>Ingresar ahora</button>
+            {
+                showLoginPrompt && (
+                    <div className="login-prompt-overlay" onClick={() => setShowLoginPrompt(false)}>
+                        <div className="login-prompt-modal" onClick={e => e.stopPropagation()}>
+                            <div className="login-prompt-icon">
+                                <Heart size={48} color="#ff4d4f" fill="#ff4d4f" />
+                            </div>
+                            <h3>¡Guarda tus favoritos!</h3>
+                            <p>Inicia sesión o regístrate para que tus autos favoritos se guarden en tu panel y puedas verlos cuando quieras.</p>
+                            <div className="login-prompt-actions">
+                                <button className="btn-secondary" onClick={() => setShowLoginPrompt(false)}>Después</button>
+                                <button className="btn-primary" onClick={() => navigate('/login')}>Ingresar ahora</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
+                )
+            }
         </div>
     );
 };

@@ -1,0 +1,311 @@
+.price-inquiry-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 1rem;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.price-inquiry-modal {
+    background: #1a1a2e;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 440px;
+    padding: 2rem;
+    position: relative;
+    animation: slideUp 0.3s ease;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.price-inquiry-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: #aaa;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.price-inquiry-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+.price-inquiry-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.price-inquiry-icon {
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    color: #fff;
+}
+
+.price-inquiry-header h2 {
+    color: #fff;
+    font-size: 1.4rem;
+    margin: 0 0 0.5rem;
+    font-weight: 700;
+}
+
+.price-inquiry-vehicle {
+    color: #3b82f6;
+    font-weight: 600;
+    font-size: 1rem;
+    margin: 0.25rem 0;
+}
+
+.price-inquiry-subtitle {
+    color: #94a3b8;
+    font-size: 0.85rem;
+    margin: 0.5rem 0 0;
+    line-height: 1.4;
+}
+
+.price-inquiry-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.price-inquiry-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.price-inquiry-field .field-icon {
+    position: absolute;
+    left: 14px;
+    color: #64748b;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.price-inquiry-field input,
+.price-inquiry-field textarea {
+    width: 100%;
+    padding: 12px 14px 12px 42px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    color: #fff;
+    font-size: 0.95rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    font-family: inherit;
+}
+
+.price-inquiry-field input:focus,
+.price-inquiry-field textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.price-inquiry-field input::placeholder,
+.price-inquiry-field textarea::placeholder {
+    color: #64748b;
+}
+
+.price-inquiry-field textarea {
+    resize: none;
+}
+
+.price-inquiry-submit {
+    margin-top: 0.5rem;
+    padding: 14px;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+}
+
+.price-inquiry-submit:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+.price-inquiry-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Success State */
+.price-inquiry-success {
+    text-align: center;
+    padding: 1rem 0;
+}
+
+.price-inquiry-success-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.price-inquiry-success h2 {
+    color: #fff;
+    font-size: 1.3rem;
+    margin: 0 0 0.5rem;
+}
+
+.price-inquiry-success p {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    margin: 0.25rem 0;
+}
+
+.price-inquiry-wa-btn {
+    margin-top: 1.5rem;
+    padding: 14px 24px;
+    background: #25D366;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    transition: all 0.2s;
+}
+
+.price-inquiry-wa-btn:hover {
+    background: #1fb855;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+}
+
+.price-inquiry-close-btn {
+    margin-top: 0.75rem;
+    padding: 10px;
+    background: transparent;
+    color: #64748b;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s;
+}
+
+.price-inquiry-close-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #94a3b8;
+}
+
+/* Consultar Precio button for catalog cards */
+.consultar-precio-btn {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+    width: 100%;
+    justify-content: center;
+}
+
+.consultar-precio-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+/* For the detail page - larger CTA version */
+.takeoff-price-box.consultar {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(29, 78, 216, 0.15));
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-radius: 12px;
+    padding: 1.25rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.takeoff-price-box.consultar:hover {
+    border-color: #3b82f6;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(29, 78, 216, 0.2));
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.2);
+}
+
+.takeoff-price-box.consultar .takeoff-price-box-label {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    margin-bottom: 0.5rem;
+}
+
+.takeoff-price-box.consultar .takeoff-price-box-amount {
+    font-size: 1.3rem;
+    color: #3b82f6;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+@media (max-width: 480px) {
+    .price-inquiry-modal {
+        padding: 1.5rem;
+        margin: 0.5rem;
+    }
+
+    .price-inquiry-header h2 {
+        font-size: 1.2rem;
+    }
+}

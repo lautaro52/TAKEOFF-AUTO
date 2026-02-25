@@ -31,7 +31,7 @@ const CRMStock = () => {
         setSyncLog(['⏳ Iniciando sincronización con proveedor...']);
         setSyncStats(null);
         try {
-            const res = await crmStockSync.sync();
+            const res = await crmStockSync.sync(false);
             if (res.success) {
                 setSyncLog(res.log || ['✅ Sync completado']);
                 setSyncStats(res.stats);

@@ -19,7 +19,7 @@ export const API_CONFIG = {
     API_URL: `${BASE_URL}/cars.php`,
     UPLOAD_URL: `${BASE_URL}/upload.php`,
     UPLOADS_URL: `${API_ROOT}/uploads/`,
-    IMAGE_BASE_URL: `${API_ROOT}/`,
+    IMAGE_BASE_URL: `${API_ROOT}/api/`,
     ANALYTICS_URL: `${BASE_URL}/analytics.php`,
     SEND_EMAIL_URL: `${BASE_URL}/send_new_user_email.php`,
     WHATSAPP_NUMBER: "5493516752879",
@@ -32,7 +32,7 @@ export const GOOGLE_CONFIG = {
     API_KEY: import.meta.env.VITE_GOOGLE_API_KEY || '',
     DRIVE_FOLDER_ID: import.meta.env.VITE_GOOGLE_DRIVE_FOLDER_ID || '',
     SHEET_ID: import.meta.env.VITE_GOOGLE_SHEET_ID || '',
-    SHEET_RANGES: ['Hoja 1!A:Z', 'Stock!A:Z', 'Hoja1!A:Z', 'Sheet1!A:Z'],
+    SHEET_RANGES: ['Diferencia de Stock!A:Z', 'Hoja 1!A:Z', 'Stock!A:Z', 'Hoja1!A:Z', 'Sheet1!A:Z'],
     CACHE_TTL_MS: 5 * 60 * 1000
 };
 

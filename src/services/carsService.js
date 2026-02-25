@@ -1,4 +1,5 @@
 import { API_CONFIG } from '../config';
+import { applyDealershipSync } from './syncService';
 
 const API_URL = API_CONFIG.API_URL;
 const UPLOAD_URL = API_CONFIG.UPLOAD_URL;
@@ -216,15 +217,54 @@ export const deleteCar = async (id) => {
 /**
  * Listen to real-time updates (Polling)
  */
-export const listenToCars = (callback, interval = 2000) => {
+export const listenToCars = (callback, interval = 60000) => {
+    let isSubscribed = true;
+    let lastCars = [];
+
     const fetchAndNotify = async () => {
-        const cars = await getCars();
-        callback(cars);
+        try {
+            // 1. Get base data from DB immediately
+            const baseCars = await getCars();
+
+            if (baseCars.length === 0 && lastCars.length > 0) {
+                console.warn('API returned 0 cars, keeping previous state.');
+                return;
+            }
+
+            // Deliver base data instantly to UI
+            if (isSubscribed && baseCars.length > 0) {
+                lastCars = baseCars;
+                callback(baseCars);
+            }
+
+            // 2. Attempt sync in background
+            try {
+                const syncResult = await applyDealershipSync(baseCars, {
+                    forceRefresh: false,
+                    generateDescriptions: false,
+                    includeDescriptions: true
+                });
+
+                if (isSubscribed && syncResult && syncResult.cars && syncResult.cars.length > 0) {
+                    lastCars = syncResult.cars;
+                    callback(syncResult.cars);
+                }
+            } catch (syncError) {
+                console.error('Background sync failed:', syncError);
+                // No need to notify, UI already has baseCars
+            }
+        } catch (error) {
+            console.error('Discovery error in car listener:', error);
+        }
     };
 
     fetchAndNotify();
     const pollInterval = setInterval(fetchAndNotify, interval);
-    return () => clearInterval(pollInterval);
+
+    return () => {
+        isSubscribed = false;
+        clearInterval(pollInterval);
+    };
 };
 
 /**

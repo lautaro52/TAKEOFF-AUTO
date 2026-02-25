@@ -3,13 +3,14 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
     ChevronRight, ChevronLeft, ChevronDown, Share2, Heart,
     Fuel, Settings2, Calendar, Gauge, Users, DoorClosed,
-    Check, MapPin, Shield, Clock, RotateCcw, Search
+    Check, MapPin, Shield, Clock, RotateCcw, Search, PackageCheck, MessageCircle
 } from 'lucide-react';
 import { getCarById, getCars } from '../services/carsService';
 import { API_CONFIG } from '../config';
 import { userService } from '../services/userService';
 import FinancingModal from '../components/FinancingModal';
 import QuoteModal from '../components/QuoteModal';
+import PriceInquiryModal from '../components/PriceInquiryModal';
 import './CarDetail.css';
 
 const CarDetail = () => {
@@ -21,6 +22,7 @@ const CarDetail = () => {
     const [activeImage, setActiveImage] = useState(0);
     const [isFinancingModalOpen, setIsFinancingModalOpen] = useState(false);
     const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
+    const [isPriceInquiryOpen, setIsPriceInquiryOpen] = useState(false);
     const [isFavorite, setIsFavorite] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [showSearchResults, setShowSearchResults] = useState(false);
@@ -105,7 +107,22 @@ const CarDetail = () => {
     const getImageUrl = (imagePath) => {
         if (!imagePath) return 'https://via.placeholder.com/800x600?text=No+Image';
         if (imagePath.startsWith('http')) return imagePath;
-        return `${API_CONFIG.IMAGE_BASE_URL}${imagePath}?t=${Date.now()}`;
+        if (imagePath.startsWith('images/')) return `/${imagePath}`;
+        return `${API_CONFIG.IMAGE_BASE_URL}${imagePath}`;
+    };
+
+    const cleanText = (text) => {
+        if (!text) return '';
+        return text.toString()
+            .replace(/\*\*/g, '')
+            .replace(/#/g, '')
+            .replace(/Ã-/g, 'í')
+            .replace(/Ã¡/g, 'á')
+            .replace(/Ã©/g, 'é')
+            .replace(/Ã³/g, 'ó')
+            .replace(/Ãº/g, 'ú')
+            .replace(/Ã±/g, 'ñ')
+            .trim();
     };
 
     const handleToggleFavorite = async () => {
@@ -366,30 +383,56 @@ const CarDetail = () => {
 
                             {/* Price Boxes Section */}
                             <div className="takeoff-price-section">
-                                <div className="takeoff-price-box regular">
-                                    <div className="takeoff-price-box-label">Precio regular</div>
-                                    <div className="takeoff-price-box-amount">
-                                        ${Number(car.price).toLocaleString('es-AR')}
-                                        {car.isUSD && <span className="usd-label-inline" style={{ marginLeft: '4px', opacity: 0.8 }}>USD</span>}
-                                        <button className="takeoff-info-icon-btn"><Check size={14} /></button>
-                                    </div>
-                                </div>
+                                {Number(car.price) > 0 ? (
+                                    <>
+                                        <div className="takeoff-price-box regular">
+                                            <div className="takeoff-price-box-label">Precio regular</div>
+                                            <div className="takeoff-price-box-amount">
+                                                ${Number(car.price).toLocaleString('es-AR')}
+                                                {car.isUSD && <span className="usd-label-inline" style={{ marginLeft: '4px', opacity: 0.8 }}>USD</span>}
+                                                <button className="takeoff-info-icon-btn"><Check size={14} /></button>
+                                            </div>
+                                        </div>
 
-                                <div className="takeoff-price-box credit">
-                                    <div className="takeoff-price-box-label">Llevatelo hoy por tan solo:</div>
-                                    <div className="takeoff-price-box-amount">
-                                        ${(Number(car.price) * 0.20).toLocaleString('es-AR')}
-                                        {car.isUSD && <span className="usd-label-inline" style={{ marginLeft: '4px', opacity: 0.8 }}>USD</span>}
-                                        <button className="takeoff-info-icon-btn"><Check size={14} /></button>
+                                        <div className="takeoff-price-box credit">
+                                            <div className="takeoff-price-box-label">Llevatelo hoy por tan solo:</div>
+                                            <div className="takeoff-price-box-amount">
+                                                ${(Number(car.price) * 0.20).toLocaleString('es-AR')}
+                                                {car.isUSD && <span className="usd-label-inline" style={{ marginLeft: '4px', opacity: 0.8 }}>USD</span>}
+                                                <button className="takeoff-info-icon-btn"><Check size={14} /></button>
+                                            </div>
+                                            <div className="takeoff-credit-installment-row promo-highlight">
+                                                <span className="takeoff-installment-text">100% FINANCIADO SOLO POR {
+                                                    ["ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO",
+                                                        "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"][new Date().getMonth()]
+                                                }</span>
+                                            </div>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div className="takeoff-price-box consultar" onClick={() => setIsPriceInquiryOpen(true)}>
+                                        <div className="takeoff-price-box-label">
+                                            {car.home_section === '0km' ? 'Vehículo 0km' : 'Precio a consultar'}
+                                        </div>
+                                        <div className="takeoff-price-box-amount">
+                                            <MessageCircle size={20} />
+                                            Consultar Precio
+                                        </div>
                                     </div>
-                                    <div className="takeoff-credit-installment-row promo-highlight">
-                                        <span className="takeoff-installment-text">100% FINANCIADO SOLO POR {
-                                            ["ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO",
-                                                "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"][new Date().getMonth()]
-                                        }</span>
-                                    </div>
-                                </div>
+                                )}
                             </div>
+
+                            {(car.description || car.specs || typeof car.stock === 'number') && (
+                                <div className="takeoff-ai-description">
+                                    {(car.description || car.specs) && <p>{cleanText(car.description || car.specs)}</p>}
+                                    {typeof car.stock === 'number' && (
+                                        <span className={`takeoff-ai-stock ${car.stock > 0 ? 'available' : 'unavailable'}`}>
+                                            <PackageCheck size={16} />
+                                            {car.stock > 0 ? `Stock disponible: ${car.stock}` : 'Sin stock disponible'}
+                                        </span>
+                                    )}
+                                </div>
+                            )}
 
                             {/* Trade-in Box */}
                             <div className="takeoff-tradein-box">
@@ -405,12 +448,21 @@ const CarDetail = () => {
                             </div>
 
                             {/* Main CTA Button */}
-                            <button
-                                className="takeoff-main-cta blue-btn"
-                                onClick={handleSimulationClick}
-                            >
-                                Calcular cuota
-                            </button>
+                            {Number(car.price) > 0 ? (
+                                <button
+                                    className="takeoff-main-cta blue-btn"
+                                    onClick={handleSimulationClick}
+                                >
+                                    Calcular cuota
+                                </button>
+                            ) : (
+                                <button
+                                    className="takeoff-main-cta blue-btn"
+                                    onClick={() => setIsPriceInquiryOpen(true)}
+                                >
+                                    📩 Solicitar Cotización
+                                </button>
+                            )}
 
                             {/* Right Column Specs List */}
                             <div className="takeoff-specs-list">
@@ -518,6 +570,11 @@ const CarDetail = () => {
             <QuoteModal
                 isOpen={isQuoteModalOpen}
                 onClose={() => setIsQuoteModalOpen(false)}
+            />
+            <PriceInquiryModal
+                isOpen={isPriceInquiryOpen}
+                onClose={() => setIsPriceInquiryOpen(false)}
+                car={car}
             />
         </div>
     );

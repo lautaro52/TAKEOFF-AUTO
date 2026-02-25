@@ -399,6 +399,45 @@
     padding: 16px;
 }
 
+.takeoff-ai-description {
+    background: linear-gradient(135deg, #eef4ff, #ffffff);
+    border: 1px solid #dae5ff;
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 18px;
+    box-shadow: 0 10px 24px rgba(27, 76, 224, 0.06);
+}
+
+.takeoff-ai-description p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #1a2750;
+    margin: 0;
+}
+
+.takeoff-ai-stock {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+}
+
+.takeoff-ai-stock.available {
+    background: rgba(16, 112, 40, 0.12);
+    color: #0f7028;
+}
+
+.takeoff-ai-stock.unavailable {
+    background: rgba(198, 40, 40, 0.12);
+    color: #c62828;
+}
+
 .takeoff-price-box-label {
     font-size: 13px;
     color: #666;
