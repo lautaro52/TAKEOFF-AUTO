@@ -15,7 +15,34 @@ return [
 
     // ─── OpenAI ───────────────────────────────────────
     'openai' => [
-        'api_key'     => getenv('OPENAI_API_KEY') ?: '',  // Set in server env or fill here
+        'api_key'     => (function() {
+            // Try server env first
+            $key = getenv('OPENAI_API_KEY');
+            if ($key) return $key;
+            
+            // Try loading from .env file (Vite format)
+            $envFile = __DIR__ . '/../../.env';
+            if (file_exists($envFile)) {
+                $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+                foreach ($lines as $line) {
+                    if (strpos($line, 'VITE_OPENAI_API_KEY=') === 0) {
+                        return trim(substr($line, strlen('VITE_OPENAI_API_KEY=')));
+                    }
+                }
+            }
+            $envLocal = __DIR__ . '/../../.env.local';
+            if (file_exists($envLocal)) {
+                $lines = file($envLocal, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+                foreach ($lines as $line) {
+                    if (strpos($line, 'VITE_OPENAI_API_KEY=') === 0) {
+                        return trim(substr($line, strlen('VITE_OPENAI_API_KEY=')));
+                    }
+                }
+            }
+            
+            // Fallback: hardcode here for server-side use
+            return '';
+        })(),
         'model'       => 'gpt-4o',
         'temperature' => 0.7,
         'max_tokens'  => 800,
