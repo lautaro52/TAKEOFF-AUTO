@@ -77,6 +77,9 @@ export const crmClients = {
     update(data) {
         return crmFetch('crm_clients.php', { method: 'PUT', body: data });
     },
+    updateStage(id, stage) {
+        return crmFetch('crm_clients.php', { method: 'PUT', body: { id, stage } });
+    },
     remove(id, reason = null) {
         return crmFetch('crm_clients.php', { method: 'DELETE', body: { id, reason } });
     }
@@ -87,8 +90,9 @@ export const crmNotes = {
     list(clientId) {
         return crmFetch('crm_notes.php', { params: { client_id: clientId } });
     },
-    create(clientId, content) {
-        return crmFetch('crm_notes.php', { method: 'POST', body: { client_id: clientId, content } });
+    create(data) {
+        // Accepts { client_id, content }
+        return crmFetch('crm_notes.php', { method: 'POST', body: data });
     }
 };
 
@@ -100,8 +104,9 @@ export const crmTasks = {
         if (pending) params.pending = 1;
         return crmFetch('crm_tasks.php', { params });
     },
-    create(clientId, description, dueDate = null) {
-        return crmFetch('crm_tasks.php', { method: 'POST', body: { client_id: clientId, description, due_date: dueDate } });
+    create(data) {
+        // Accepts { client_id, description, due_date }
+        return crmFetch('crm_tasks.php', { method: 'POST', body: data });
     },
     complete(id, resultNote = null) {
         return crmFetch('crm_tasks.php', { method: 'PUT', body: { id, result_note: resultNote } });

@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { crmClients, crmNotes, crmTasks } from '../../services/crmService';
-import { Plus, Search, Mail, Phone, MessageSquare, Clock, CheckCircle2, X, Loader2, UserPlus, Calendar, Trash2 } from 'lucide-react';
+import { Plus, Search, Mail, Phone, MessageSquare, Clock, CheckCircle2, X, Loader2, UserPlus, Calendar, Trash2, User, Activity, Copy, Hash, Zap, ExternalLink, Filter } from 'lucide-react';
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
 import './CRM.css';
 
 const stages = [
     { id: 'sin_gestionar', label: 'Sin Gestionar', color: '#64748b' },
     { id: 'primer_contacto', label: 'Primer Contacto', color: '#3b82f6' },
-    { id: 'negociacion', label: 'Negociación', color: '#f59e0b' },
-    { id: 'venta_realizada', label: 'Venta Realizada', color: '#10b981' }
+    { id: 'negociacion', label: 'En Programación de Cita', color: '#f59e0b' },
+    { id: 'venta_realizada', label: 'Cita Pactada', color: '#10b981' }
 ];
 
 const CRMGestion = () => {
@@ -18,11 +18,13 @@ const CRMGestion = () => {
     const [showAddModal, setShowAddModal] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
 
-    // Detail view state
     const [notes, setNotes] = useState([]);
     const [tasks, setTasks] = useState([]);
     const [newNote, setNewNote] = useState('');
+    const [newTask, setNewTask] = useState({ description: '', due_date: '' });
     const [saving, setSaving] = useState(false);
+    const [activeTab, setActiveTab] = useState('notes'); // 'notes' or 'tasks'
+    const [pendingStage, setPendingStage] = useState('');
 
     const fetchData = useCallback(async () => {
         setLoading(true);
@@ -41,6 +43,7 @@ const CRMGestion = () => {
 
     const fetchClientDetails = async (client) => {
         setSelectedClient(client);
+        setPendingStage(client.stage);
         try {
             const [nRes, tRes] = await Promise.all([
                 crmNotes.list(client.id),
@@ -67,20 +70,72 @@ const CRMGestion = () => {
         }
     };
 
-    const handleAddNote = async (e) => {
+    const handleRegisterManagement = async (e) => {
         e.preventDefault();
-        if (!newNote.trim()) return;
+        if (!newNote.trim() || !newTask.description.trim() || !newTask.due_date) {
+            alert('Por favor, completa la nota y define la próxima tarea (descripción, fecha y hora).');
+            return;
+        }
+
         setSaving(true);
         try {
-            const res = await crmNotes.create({ client_id: selectedClient.id, content: newNote });
-            if (res.success) {
-                setNotes(prev => [res.data, ...prev]);
+            // Save Note
+            const noteRes = await crmNotes.create({
+                client_id: selectedClient.id,
+                content: newNote
+            });
+
+            // Save Task
+            const taskRes = await crmTasks.create({
+                client_id: selectedClient.id,
+                description: newTask.description,
+                due_date: newTask.due_date
+            });
+
+            // Apply the stage change selected in the stepper
+            if (pendingStage !== selectedClient.stage) {
+                await crmClients.updateStage(selectedClient.id, pendingStage);
+            }
+
+            if (noteRes.success && taskRes.success) {
+                // Refresh client list to move card in Kanban
+                await fetchData();
+
+                // Refresh details
+                const [nRes, tRes] = await Promise.all([
+                    crmNotes.list(selectedClient.id),
+                    crmTasks.list(selectedClient.id)
+                ]);
+                if (nRes.success) setNotes(nRes.data || []);
+                if (tRes.success) setTasks(tRes.data || []);
+
+                // Update local selected client stage
+                setSelectedClient(prev => ({ ...prev, stage: pendingStage }));
+
+                // Reset form
                 setNewNote('');
+                setNewTask({ description: '', due_date: '' });
+                alert(`✓ Gestión guardada. El lead ahora está en: ${stages.find(s => s.id === pendingStage)?.label}`);
+            } else {
+                alert('Error: ' + (noteRes.message || taskRes.message || 'No se pudo guardar la gestión.'));
             }
         } catch (e) {
-            console.error('Add note error:', e);
+            console.error('Error registering management:', e);
+            alert('Error crítico de conexión al guardar.');
         }
         setSaving(false);
+    };
+
+    const handleCompleteTask = async (taskId) => {
+        try {
+            const res = await crmTasks.complete(taskId);
+            if (res.success) {
+                setTasks(prev => prev.map(t => t.id === taskId ? { ...t, completed: 1, completed_at: new Date().toISOString() } : t));
+                setClients(prev => prev.map(c => c.id === selectedClient.id ? { ...c, tasks_pending: Math.max(0, (c.tasks_pending || 0) - 1) } : c));
+            }
+        } catch (e) {
+            console.error('Complete task error:', e);
+        }
     };
 
     const handleDeleteClient = async () => {
@@ -97,17 +152,25 @@ const CRMGestion = () => {
     };
 
     const filteredClients = clients.filter(c =>
-        `${c.full_name} ${c.whatsapp} ${c.car_model || ''}`.toLowerCase().includes(searchTerm.toLowerCase())
+        `${c.full_name} ${c.phone || c.whatsapp || ''} ${c.car_model || ''}`.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const formatDate = (dateStr) => {
+    const formatDate = (dateStr, includeTime = false) => {
         if (!dateStr) return '';
-        return new Date(dateStr).toLocaleDateString('es-AR', {
+        const options = {
             day: '2-digit',
             month: 'short',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
+        };
+        if (includeTime) {
+            options.hour = '2-digit';
+            options.minute = '2-digit';
+        }
+        return new Date(dateStr).toLocaleDateString('es-AR', options);
+    };
+
+    const copyToClipboard = (text) => {
+        navigator.clipboard.writeText(text);
+        alert('Copiado al portapapeles');
     };
 
     if (loading && clients.length === 0) {
@@ -172,7 +235,7 @@ const CRMGestion = () => {
                                             >
                                                 <h4>{client.full_name}</h4>
                                                 <div className="client-phone">
-                                                    <MessageSquare size={14} /> {client.whatsapp}
+                                                    <MessageSquare size={14} /> {client.phone || client.whatsapp || 'Sin número'}
                                                 </div>
                                                 {client.car_model && (
                                                     <div className="client-car">
@@ -215,81 +278,241 @@ const CRMGestion = () => {
                             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
                             className="crm-drawer"
                         >
-                            <div className="crm-drawer-header">
-                                <div>
-                                    <h2>{selectedClient.full_name}</h2>
-                                    <p style={{ color: '#64748b' }}>{selectedClient.email || 'Sin correo electrónico'}</p>
-                                </div>
-                                <div style={{ display: 'flex', gap: 8 }}>
-                                    <button className="crm-btn crm-btn-secondary" onClick={handleDeleteClient} style={{ padding: 10, borderRadius: 12 }}>
-                                        <Trash2 size={20} color="#ef4444" />
-                                    </button>
-                                    <button className="crm-drawer-close" onClick={() => setSelectedClient(null)}>
-                                        <X size={20} />
-                                    </button>
-                                </div>
-                            </div>
-
+                            <button className="crm-drawer-close-btn" onClick={() => setSelectedClient(null)}>
+                                <X size={24} />
+                            </button>
                             <div className="crm-drawer-body">
-                                <div className="crm-contact-actions">
-                                    <a href={`https://wa.me/${selectedClient.whatsapp?.replace(/\D/g, '')}`} target="_blank" rel="noreferrer" className="crm-contact-btn whatsapp">
-                                        <MessageSquare size={16} /> WhatsApp
-                                    </a>
-                                    <a href={`tel:${selectedClient.whatsapp}`} className="crm-contact-btn phone">
-                                        <Phone size={16} /> Llamar
-                                    </a>
-                                    {selectedClient.email && (
-                                        <a href={`mailto:${selectedClient.email}`} className="crm-contact-btn email">
-                                            <Mail size={16} /> Email
-                                        </a>
+                                {/* Hero Section */}
+                                <div className="crm-client-hero">
+                                    <div className="crm-client-avatar">
+                                        <User size={32} />
+                                    </div>
+                                    <div className="crm-client-details">
+                                        <div className="crm-hero-name">
+                                            <h2>{selectedClient.full_name}</h2>
+                                            <span className={`crm-status-pill ${pendingStage}`}>
+                                                {stages.find(s => s.id === pendingStage)?.label}
+                                            </span>
+                                        </div>
+                                        <div className="crm-hero-meta">
+                                            <span><Clock size={14} /> Lead desde {new Date(selectedClient.created_at).toLocaleDateString()}</span>
+                                            {selectedClient.email && (
+                                                <span onClick={() => copyToClipboard(selectedClient.email)} title="Copiar email">
+                                                    <Mail size={14} /> {selectedClient.email}
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Quick Stats */}
+                                <div className="crm-client-stats-bar">
+                                    <div className="stat-item">
+                                        <span className="label">Actividad</span>
+                                        <span className="value">{notes.length + tasks.length}</span>
+                                    </div>
+                                    <div className="stat-item">
+                                        <span className="label">Asignado</span>
+                                        <span className="value">Admin</span>
+                                    </div>
+                                    <div className="stat-item">
+                                        <span className="label">Prioridad</span>
+                                        <span className="value high"><Zap size={14} /> Alta</span>
+                                    </div>
+                                </div>
+
+                                <div className="crm-contact-grid">
+                                    {(selectedClient.phone || selectedClient.whatsapp) ? (
+                                        <>
+                                            <a href={`https://wa.me/${(selectedClient.phone || selectedClient.whatsapp).replace(/\D/g, '')}`} target="_blank" rel="noreferrer" className="crm-contact-card whatsapp">
+                                                <div className="icon"><MessageSquare size={18} /></div>
+                                                <div className="info">
+                                                    <strong>WhatsApp</strong>
+                                                    <span>{selectedClient.phone || selectedClient.whatsapp}</span>
+                                                </div>
+                                                <ExternalLink size={14} className="ext" />
+                                            </a>
+                                            <a href={`tel:${selectedClient.phone || selectedClient.whatsapp}`} className="crm-contact-card phone">
+                                                <div className="icon"><Phone size={18} /></div>
+                                                <div className="info">
+                                                    <strong>Llamar</strong>
+                                                    <span>Vía celular</span>
+                                                </div>
+                                                <ExternalLink size={14} className="ext" />
+                                            </a>
+                                        </>
+                                    ) : (
+                                        <div className="crm-contact-card disabled" style={{ gridColumn: 'span 2', opacity: 0.5 }}>
+                                            <div className="icon"><Phone size={18} /></div>
+                                            <div className="info">
+                                                <strong>Sin contacto</strong>
+                                                <span>No hay teléfono registrado</span>
+                                            </div>
+                                        </div>
                                     )}
                                 </div>
 
-                                <div className="crm-drawer-section">
-                                    <h3>Estado del Prospecto</h3>
-                                    <div className="crm-stage-selector">
-                                        {stages.map(s => (
-                                            <button
-                                                key={s.id}
-                                                className={`crm-stage-btn ${selectedClient.stage === s.id ? 'active' : ''} ${s.id === 'venta_realizada' ? 'venta' : ''}`}
-                                                onClick={() => handleUpdateStage(selectedClient.id, s.id)}
-                                            >
-                                                {s.label}
-                                            </button>
-                                        ))}
-                                        <button
-                                            className={`crm-stage-btn ${selectedClient.stage === 'dado_de_baja' ? 'active' : ''}`}
-                                            onClick={() => handleUpdateStage(selectedClient.id, 'dado_de_baja')}
-                                            style={{ color: '#ef4444', borderColor: '#ef4444' }}
-                                        >
-                                            Baja
-                                        </button>
+                                <div className="crm-grid-details">
+                                    {selectedClient.car_model && (
+                                        <div className="crm-detail-tile">
+                                            <div className="tile-header"><Activity size={16} /> Interés de compra</div>
+                                            <div className="tile-body car">
+                                                <div className="car-tag">Oportunidad</div>
+                                                <h4>{selectedClient.car_brand} {selectedClient.car_model}</h4>
+                                                <p>Año {selectedClient.car_year || 'N/A'} • ${Number(selectedClient.car_price || 0).toLocaleString()}</p>
+                                            </div>
+                                        </div>
+                                    )}
+                                    <div className="crm-detail-tile">
+                                        <div className="tile-header"><Hash size={16} /> Datos de contacto</div>
+                                        <div className="tile-body data">
+                                            <div className="data-row">
+                                                <label>ID Lead</label>
+                                                <span>#{selectedClient.id}</span>
+                                            </div>
+                                            <div className="data-row">
+                                                <label>Origen</label>
+                                                <span>Web Oficial</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div className="crm-drawer-section">
-                                    <h3>Seguimiento y Notas</h3>
-                                    <form onSubmit={handleAddNote} className="crm-note-input" style={{ marginBottom: 24 }}>
-                                        <textarea
-                                            placeholder="Escribe una actualización..."
-                                            value={newNote}
-                                            onChange={(e) => setNewNote(e.target.value)}
-                                            required
-                                        />
-                                        <button type="submit" disabled={saving} className="crm-btn crm-btn-primary">
-                                            {saving ? <Loader2 size={20} className="crm-spinner" /> : <Plus size={20} />}
-                                        </button>
-                                    </form>
-
-                                    <div className="crm-timeline">
-                                        {notes.map(note => (
-                                            <div key={note.id} className="crm-timeline-item">
-                                                <p>{note.content}</p>
-                                                <span className="timeline-meta">{formatDate(note.created_at)} • {note.admin_name || 'Admin'}</span>
-                                            </div>
+                                <div className="crm-drawer-section stage-section">
+                                    <h3>Cambiar Etapa del Pipeline</h3>
+                                    <p style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: 12 }}>
+                                        El cambio se confirmará al registrar la gestión.
+                                    </p>
+                                    <div className="crm-stage-stepper">
+                                        {stages.map((s, idx) => (
+                                            <React.Fragment key={s.id}>
+                                                <button
+                                                    className={`crm-stepper-btn ${pendingStage === s.id ? 'active' : ''}`}
+                                                    onClick={() => setPendingStage(s.id)}
+                                                >
+                                                    <div className="dot"></div>
+                                                    <span>{s.label}</span>
+                                                </button>
+                                                {idx < stages.length - 1 && <div className="stepper-line"></div>}
+                                            </React.Fragment>
                                         ))}
-                                        {notes.length === 0 && <p style={{ textAlign: 'center', color: '#94a3b8', fontSize: '0.9rem' }}>No hay notas aún.</p>}
                                     </div>
+                                </div>
+
+                                <div className="crm-drawer-section activities-section">
+                                    <div className="crm-tab-header">
+                                        <button className={`crm-tab-btn ${activeTab === 'notes' ? 'active' : ''}`} onClick={() => setActiveTab('notes')}>
+                                            <Zap size={16} /> Nueva Gestión (Nota + Tarea)
+                                        </button>
+                                        <button className={`crm-tab-btn ${activeTab === 'tasks' ? 'active' : ''}`} onClick={() => setActiveTab('tasks')}>
+                                            <Calendar size={16} /> Historial y Pendientes
+                                        </button>
+                                    </div>
+
+                                    {activeTab === 'notes' ? (
+                                        <>
+                                            <form onSubmit={handleRegisterManagement} className="crm-unified-management-form">
+                                                <div className="form-section">
+                                                    <label><MessageSquare size={14} /> Nota de la Gestión</label>
+                                                    <textarea
+                                                        placeholder="Describe qué hablaste con el cliente..."
+                                                        value={newNote}
+                                                        onChange={(e) => setNewNote(e.target.value)}
+                                                        required
+                                                    />
+                                                </div>
+
+                                                <div className="form-section task-required">
+                                                    <label><Calendar size={14} /> Próxima Tarea Obligatoria</label>
+                                                    <div className="task-inputs">
+                                                        <input
+                                                            type="text"
+                                                            placeholder="¿Qué debe hacer el agente IA a continuación?"
+                                                            value={newTask.description}
+                                                            onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
+                                                            required
+                                                        />
+                                                        <div className="input-with-icon">
+                                                            <Clock size={16} />
+                                                            <input
+                                                                type="datetime-local"
+                                                                value={newTask.due_date}
+                                                                onChange={(e) => setNewTask({ ...newTask, due_date: e.target.value })}
+                                                                required
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <button type="submit" disabled={saving} className="crm-btn crm-btn-primary full-width">
+                                                    {saving ? <Loader2 size={18} className="crm-spinner" /> : <Plus size={18} />}
+                                                    Registrar Gestión y Próxima Tarea
+                                                </button>
+                                            </form>
+
+                                            <div className="crm-feed-timeline">
+                                                <h3>Feed de Actividad Reciente</h3>
+                                                {notes.map(note => (
+                                                    <div key={note.id} className="crm-feed-item">
+                                                        <div className="feed-connector"></div>
+                                                        <div className="feed-icon"><Activity size={14} /></div>
+                                                        <div className="feed-content">
+                                                            <div className="feed-header">
+                                                                <strong>{note.admin_name || 'Admin'}</strong>
+                                                                <span>{formatDate(note.created_at, true)}</span>
+                                                            </div>
+                                                            <p>{note.content}</p>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                                {notes.length === 0 && (
+                                                    <div className="crm-empty-feed">
+                                                        <Activity size={32} />
+                                                        <p>No hay actividad registrada aún.</p>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className="crm-premium-tasks-list">
+                                                <h3>Tareas Agendadas</h3>
+                                                {tasks.map(task => (
+                                                    <div key={task.id} className={`crm-task-card ${Number(task.completed) ? 'completed' : ''}`}>
+                                                        <div className="task-indicator"></div>
+                                                        <div className="task-main">
+                                                            <div className="task-header">
+                                                                <p>{task.description}</p>
+                                                                {!Number(task.completed) && (
+                                                                    <button
+                                                                        className="task-check-btn"
+                                                                        onClick={() => handleCompleteTask(task.id)}
+                                                                        title="Marcar completada"
+                                                                    >
+                                                                        <CheckCircle2 size={18} />
+                                                                    </button>
+                                                                )}
+                                                                {Number(task.completed) && <CheckCircle2 size={18} className="done-icon" />}
+                                                            </div>
+                                                            <div className="task-footer">
+                                                                <span className={`task-deadline ${new Date(task.due_date) < new Date() && !Number(task.completed) ? 'overdue' : ''}`}>
+                                                                    <Clock size={12} />
+                                                                    {task.due_date ? formatDate(task.due_date, true) : 'Sin horario'}
+                                                                </span>
+                                                                {Number(task.completed) && <span className="completed-label">Completada</span>}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                                {tasks.length === 0 && (
+                                                    <div className="crm-empty-feed">
+                                                        <Calendar size={32} />
+                                                        <p>Agenda libre de tareas.</p>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </>
+                                    )}
                                 </div>
                             </div>
                         </motion.div>
@@ -329,7 +552,7 @@ const CRMGestion = () => {
                                 </div>
                                 <div className="crm-form-group">
                                     <label>WhatsApp / Teléfono *</label>
-                                    <input name="whatsapp" required placeholder="Ej: 3512345678" />
+                                    <input name="phone" required placeholder="Ej: 3512345678" />
                                 </div>
                                 <div className="crm-form-group">
                                     <label>Email (Opcional)</label>
