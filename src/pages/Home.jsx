@@ -31,7 +31,7 @@ const Home = () => {
             setLoading(true);
 
             const allCars = await getCars();
-            const availableCars = allCars.filter(car => car.status === 'disponible');
+            const availableCars = allCars.filter(car => car.status === 'disponible' && car.has_photos !== 0 && car.has_photos !== '0');
 
             const calculatedMinArsPrice = availableCars.length > 0
                 ? Math.min(...availableCars.map(car => car.arsPrice).filter(p => p > 0))

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Search, ChevronDown, ChevronUp, MapPin, Heart, ArrowRight, Loader2, Filter, X } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
@@ -6,6 +6,7 @@ import { listenToCars } from '../services/carsService';
 import { userService } from '../services/userService';
 import { carBrands } from '../data/carsData';
 import { API_CONFIG, USD_QUOTATION } from '../config';
+import { syncDealershipInventory } from '../services/syncService';
 import './Catalog.css';
 
 // getNormalizedPrice removed, functionality moved to carsService.js as car.arsPrice
@@ -55,6 +56,35 @@ const parseCurrencyInput = (val) => {
 };
 
 const Catalog = () => {
+    const syncStock = useCallback(async () => {
+        if (syncing) return;
+        setSyncStatus(null);
+        setSyncing(true);
+
+        try {
+            const { cars: syncedCars, meta } = await syncDealershipInventory(cars, {
+                forceRefresh: true,
+                generateDescriptions: true,
+                includeDescriptions: true
+            });
+
+            setCars(syncedCars);
+            setSyncStatus({
+                type: 'success',
+                message: `Stock sincronizado: ${meta.matched} de ${meta.total} unidades actualizadas.`
+            });
+        } catch (error) {
+            console.error('Error during stock sync:', error);
+            setSyncStatus({
+                type: 'error',
+                message: error.message || 'No se pudo sincronizar el stock con la concesionaria.'
+            });
+        } finally {
+            setSyncing(false);
+        }
+    }, [cars, syncing]);
+
+    // Continuar con el resto del código as usual
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
@@ -100,6 +130,8 @@ const Catalog = () => {
     // Cars from database
     const [cars, setCars] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [syncing, setSyncing] = useState(false);
+    const [syncStatus, setSyncStatus] = useState(null);
 
     // Price filter states
     const [priceMin, setPriceMin] = useState('');
@@ -213,24 +245,28 @@ const Catalog = () => {
         });
     }, [cars, priceMin, priceMax, selectedBrands, selectedTransmission, selectedColors, searchQuery]);
 
-    // Sorted cars based on selected sort option
+    // Sorted cars based on selected sort option — cars without photos always at bottom
     const sortedCars = useMemo(() => {
         const sorted = [...filteredCars];
 
-        switch (sortBy) {
-            case 'price-asc':
-                return sorted.sort((a, b) => a.arsPrice - b.arsPrice);
-            case 'price-desc':
-                return sorted.sort((a, b) => b.arsPrice - a.arsPrice);
-            case 'year-desc':
-                return sorted.sort((a, b) => Number(b.year) - Number(a.year));
-            case 'km-asc':
-                return sorted.sort((a, b) => Number(a.km) - Number(b.km));
-            case 'recent':
-            default:
-                // Most recent by ID (assuming higher ID = more recent)
-                return sorted.sort((a, b) => Number(b.id) - Number(a.id));
-        }
+        const compareFn = (a, b) => {
+            switch (sortBy) {
+                case 'price-asc': return a.arsPrice - b.arsPrice;
+                case 'price-desc': return b.arsPrice - a.arsPrice;
+                case 'year-desc': return Number(b.year) - Number(a.year);
+                case 'km-asc': return Number(a.km) - Number(b.km);
+                case 'recent':
+                default: return Number(b.id) - Number(a.id);
+            }
+        };
+
+        return sorted.sort((a, b) => {
+            const aHasPhotos = a.has_photos !== 0 && a.has_photos !== '0';
+            const bHasPhotos = b.has_photos !== 0 && b.has_photos !== '0';
+            if (aHasPhotos && !bHasPhotos) return -1;
+            if (!aHasPhotos && bHasPhotos) return 1;
+            return compareFn(a, b);
+        });
     }, [filteredCars, sortBy]);
 
 
@@ -375,8 +411,29 @@ const Catalog = () => {
         <div className="catalog-page">
             <div className="catalog-container">
                 {/* Sidebar Filters */}
-                {/* Sidebar Filters */}
                 <aside className="catalog-sidebar">
+                    <div className="sync-stock-panel">
+                        <button
+                            onClick={syncStock}
+                            className="sync-stock-button"
+                            disabled={syncing}
+                        >
+                            {syncing ? (
+                                <>
+                                    <Loader2 size={16} className="spinner" />
+                                    <span>Sincronizando...</span>
+                                </>
+                            ) : (
+                                <span>Sincronizar stock</span>
+                            )}
+                        </button>
+                        {syncStatus && (
+                            <p className={`sync-stock-message ${syncStatus.type}`}>
+                                {syncStatus.message}
+                            </p>
+                        )}
+                    </div>
+
                     <div className="sidebar-header">
                         <input
                             type="text"
@@ -424,7 +481,7 @@ const Catalog = () => {
                                             <div
                                                 key={i}
                                                 className={`histogram-bar ${parseInt(priceMin) === bin.min && parseInt(priceMax) === bin.max ? 'active' : ''}`}
-                                                style={{ height: `${Math.max(bin.height, 5)}%` }} // Min 5% height
+                                                style={{ height: `${Math.max(bin.height, 5)}%` }}
                                                 onClick={() => handleHistogramClick(bin)}
                                                 title={`Rango: $${bin.min.toLocaleString()} - $${bin.max.toLocaleString()} (${bin.count} autos)`}
                                             ></div>
@@ -481,7 +538,6 @@ const Catalog = () => {
                                 </div>
                             )}
                         </div>
-
 
                         {/* Mechanical Filter */}
                         <div className="filter-section">
@@ -575,6 +631,7 @@ const Catalog = () => {
                     )}
                 </main>
             </div>
+
             {/* Login Suggestion Modal */}
             {showLoginPrompt && (
                 <div className="login-prompt-overlay" onClick={() => setShowLoginPrompt(false)}>
