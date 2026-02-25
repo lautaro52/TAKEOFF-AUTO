@@ -269,6 +269,20 @@ const isLocal = hostname === 'localhost' ||
 | eslint.config.js | Configuración de ESLint |
 | .gitignore | Archivos ignorados por git |
 | .htaccess | Configuración de Apache |
+| .env.example | Variables de entorno de ejemplo (NUEVO) |
+| .env.local | Variables de entorno local (NUEVO) |
+| index.html | Archivo HTML principal (NUEVO) |
+
+### Scripts de Desarrollo
+| Archivo | Descripción |
+|---------|-------------|
+| import_cars.js | Importar autos a la base de datos (Node.js) |
+| import_all_cars.cjs | Importar todos los autos (CommonJS) |
+| export_local_data.php | Exportar datos locales (PHP) |
+| ingest_cars.cjs | Script de ingestión de autos (NUEVO) |
+| import_db.bat | Script batch de importación de BD (NUEVO) |
+| create_user_tables.cjs | Script de creación de tablas de usuario |
+| copy_backend_to_xampp.ps1 | Script PowerShell para copiar backend |
 
 ### Archivos de Datos
 | Archivo | Descripción |
@@ -278,14 +292,11 @@ const isLocal = hostname === 'localhost' ||
 | dist.zip | Build de producción |
 | dist/ | Archivos estáticos de producción |
 
-### Utilidades PHP
+### Backend
 | Archivo | Descripción |
 |---------|-------------|
-| generate_0km_specs.php | Generar especificaciones 0km con OpenAI |
-| final_db_fix.php | Corrección final de base de datos |
-| fix_encoding_v2.php | Reparar encoding v2 |
-| fix_chars.php | Reparar caracteres |
-| repair_db_encoding.php | Reparar encoding de BD |
+| backend/README.md | Documentación del backend (NUEVO) |
+| backend/test-api.html | Página de test de API (NUEVO) |
 
 ---
 
@@ -549,4 +560,4 @@ Orden de prioridad para leer archivos:
 ---
 
 ## Fecha de Actualización
-2026-02-25 (actualizado: chatbot_agent.php, stock_sync.php, imgkia-k3-cross.jpg)
+2026-02-25 (actualizado: .env.example, .env.local, ingest_cars.cjs, index.html, import_db.bat, create_user_tables.cjs, copy_backend_to_xampp.ps1, backend/README.md, backend/test-api.html)

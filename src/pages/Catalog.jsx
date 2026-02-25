@@ -303,7 +303,12 @@ const Catalog = () => {
 
 
     const availableTransmissions = useMemo(() => {
-        return [...new Set(cars.map(car => car.transmission?.toLowerCase()).filter(Boolean))].sort();
+        // Filter by available stock
+        return [...new Set(cars
+            .filter(car => car.status === 'disponible')
+            .map(car => car.transmission?.toLowerCase())
+            .filter(Boolean)
+        )].sort();
     }, [cars]);
 
     // Track search analytics when filters change (debounced)
@@ -360,7 +365,7 @@ const Catalog = () => {
     const availableColors = useMemo(() => {
         const inStockColorIds = new Set();
         cars.forEach(car => {
-            if (car.color) {
+            if (car.color && car.status === 'disponible') {
                 const raw = car.color.toLowerCase();
                 inStockColorIds.add(COLOR_MAPPING[raw] || raw);
             }
@@ -369,11 +374,11 @@ const Catalog = () => {
         return MASTER_COLORS.filter(color => inStockColorIds.has(color.id));
     }, [cars]);
 
-    // Get unique brands from cars in stock
+    // Get unique brands from cars in stock (available only)
     const availableBrandNames = useMemo(() => {
         const brands = new Set();
         cars.forEach(car => {
-            if (car.brand) brands.add(car.brand);
+            if (car.brand && car.status === 'disponible') brands.add(car.brand);
         });
         return Array.from(brands).sort();
     }, [cars]);
