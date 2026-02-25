@@ -29,7 +29,8 @@ $GOOGLE_API_KEY = $input['google_api_key'] ?? '';
 $SHEET_ID = $input['sheet_id'] ?? '';
 $DRIVE_FOLDER_ID = $input['drive_folder_id'] ?? '';
 $OPENAI_API_KEY = $input['openai_api_key'] ?? '';
-$SHEET_RANGES = $input['sheet_ranges'] ?? ['Stock!A:Z', 'Hoja1!A:Z', 'Sheet1!A:Z'];
+$SHEET_RANGES = $input['sheet_ranges'] ?? ['Hoja 1!A:Z', 'Stock!A:Z', 'Hoja1!A:Z', 'Sheet1!A:Z'];
+$DOWNLOAD_IMAGES = $input['download_images'] ?? false;
 
 if (!$GOOGLE_API_KEY || !$SHEET_ID) {
     echo json_encode(["success" => false, "message" => "Google API Key y Sheet ID requeridos"]);
@@ -39,20 +40,40 @@ if (!$GOOGLE_API_KEY || !$SHEET_ID) {
 $log = [];
 $stats = ['added' => 0, 'updated' => 0, 'removed' => 0, 'no_photos' => 0, 'ai_generated' => 0, 'errors' => 0];
 
+// Helper: fetch URL with curl (more reliable than file_get_contents on XAMPP)
+function curlGet($url) {
+    $ch = curl_init($url);
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT => 15,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_FOLLOWLOCATION => true,
+    ]);
+    $result = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $error = curl_error($ch);
+    curl_close($ch);
+    if ($error) return ['error' => $error, 'code' => 0];
+    return ['body' => $result, 'code' => $httpCode];
+}
+
 // ─── STEP 1: Fetch Google Sheet ───
 $log[] = "Leyendo Google Sheets...";
 $sheetData = null;
 
 foreach ($SHEET_RANGES as $range) {
     $url = "https://sheets.googleapis.com/v4/spreadsheets/$SHEET_ID/values/" . urlencode($range) . "?key=$GOOGLE_API_KEY";
-    $response = @file_get_contents($url);
-    if ($response) {
-        $data = json_decode($response, true);
+    $resp = curlGet($url);
+    if (isset($resp['body']) && $resp['code'] === 200) {
+        $data = json_decode($resp['body'], true);
         if (!empty($data['values']) && count($data['values']) > 1) {
             $sheetData = $data['values'];
             $log[] = "Hoja encontrada: $range (" . (count($sheetData) - 1) . " filas)";
             break;
         }
+    } else {
+        $errMsg = $resp['error'] ?? "HTTP {$resp['code']}";
+        $log[] = "⚠ Rango '$range' no disponible: $errMsg";
     }
 }
 
@@ -131,13 +152,13 @@ for ($i = 1; $i < count($sheetData); $i++) {
 
 $log[] = count($sheetCars) . " autos encontrados en el Sheet";
 
-// ─── STEP 2: Fetch Drive images per domain ───
+// ─── STEP 2: Fetch Drive images per domain (only if download_images is true) ───
 $driveImages = [];
-if ($DRIVE_FOLDER_ID) {
+if ($DRIVE_FOLDER_ID && $DOWNLOAD_IMAGES) {
     $log[] = "Buscando carpetas en Google Drive...";
     $foldersUrl = "https://www.googleapis.com/drive/v3/files?key=$GOOGLE_API_KEY&q='" . urlencode($DRIVE_FOLDER_ID) . "'+in+parents+and+mimeType='application/vnd.google-apps.folder'+and+trashed=false&fields=files(id,name)&pageSize=500&supportsAllDrives=true&includeItemsFromAllDrives=true";
-    $foldersResp = @file_get_contents($foldersUrl);
-    $folders = $foldersResp ? (json_decode($foldersResp, true)['files'] ?? []) : [];
+    $foldersResp = curlGet($foldersUrl);
+    $folders = (isset($foldersResp['body']) && $foldersResp['code'] === 200) ? (json_decode($foldersResp['body'], true)['files'] ?? []) : [];
     $log[] = count($folders) . " carpetas encontradas en Drive";
 
     foreach ($folders as $folder) {
@@ -145,8 +166,8 @@ if ($DRIVE_FOLDER_ID) {
         if (!$folderDomain) continue;
 
         $imagesUrl = "https://www.googleapis.com/drive/v3/files?key=$GOOGLE_API_KEY&q='" . urlencode($folder['id']) . "'+in+parents+and+mimeType+contains+'image/'+and+trashed=false&fields=files(id,name)&pageSize=50&orderBy=name&supportsAllDrives=true&includeItemsFromAllDrives=true";
-        $imagesResp = @file_get_contents($imagesUrl);
-        $images = $imagesResp ? (json_decode($imagesResp, true)['files'] ?? []) : [];
+        $imagesResp = curlGet($imagesUrl);
+        $images = (isset($imagesResp['body']) && $imagesResp['code'] === 200) ? (json_decode($imagesResp['body'], true)['files'] ?? []) : [];
 
         if (count($images) > 0) {
             $driveImages[$folderDomain] = array_map(function($img) {
@@ -155,6 +176,8 @@ if ($DRIVE_FOLDER_ID) {
         }
     }
     $log[] = count($driveImages) . " dominios con fotos en Drive";
+} else if (!$DOWNLOAD_IMAGES) {
+    $log[] = "ℹ Descarga de imágenes desactivada (sync rápido)";
 }
 
 // ─── STEP 3: Get existing cars from DB ───

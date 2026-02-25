@@ -117,7 +117,7 @@ export const crmDashboard = {
 
 // ─── Stock Sync ─────────────────────────────────────
 export const crmStockSync = {
-    sync() {
+    sync(downloadImages = false) {
         return crmFetch('crm_stock_sync.php', {
             method: 'POST',
             body: {
@@ -125,7 +125,8 @@ export const crmStockSync = {
                 sheet_id: GOOGLE_CONFIG.SHEET_ID,
                 drive_folder_id: GOOGLE_CONFIG.DRIVE_FOLDER_ID,
                 openai_api_key: OPENAI_CONFIG.API_KEY,
-                sheet_ranges: GOOGLE_CONFIG.SHEET_RANGES
+                sheet_ranges: GOOGLE_CONFIG.SHEET_RANGES,
+                download_images: downloadImages
             }
         });
     }

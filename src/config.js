@@ -27,3 +27,18 @@ export const API_CONFIG = {
     INSTAGRAM_LINK: "https://www.instagram.com/takeoff.auto/",
     YOUTUBE_LINK: "https://www.youtube.com/@TakeOff-p5x"
 };
+
+export const GOOGLE_CONFIG = {
+    API_KEY: import.meta.env.VITE_GOOGLE_API_KEY || '',
+    DRIVE_FOLDER_ID: import.meta.env.VITE_GOOGLE_DRIVE_FOLDER_ID || '',
+    SHEET_ID: import.meta.env.VITE_GOOGLE_SHEET_ID || '',
+    SHEET_RANGES: ['Hoja 1!A:Z', 'Stock!A:Z', 'Hoja1!A:Z', 'Sheet1!A:Z'],
+    CACHE_TTL_MS: 5 * 60 * 1000
+};
+
+export const OPENAI_CONFIG = {
+    API_KEY: import.meta.env.VITE_OPENAI_API_KEY || '',
+    MODEL: 'gpt-4.1-mini',
+    TEMPERATURE: 0.7,
+    MAX_TOKENS: 320
+};

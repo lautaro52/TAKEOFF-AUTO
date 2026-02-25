@@ -11,6 +11,9 @@ node_modules
 dist
 dist-ssr
 *.local
+.env
+.env.*
+!.env.example
 
 # Backend uploads and temporary files
 backend/api/uploads/quotes/*
