@@ -1,4 +1,4 @@
-name: 🚀 Deploy to Hostinger
+name: Deploy to Hostinger
 
 on:
   push:
@@ -6,47 +6,46 @@ on:
 
 jobs:
   deploy:
-    name: Build & Deploy
+    name: Build and Deploy
     runs-on: ubuntu-latest
     
     steps:
-      # 1. Checkout code
-      - name: 📥 Checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Setup Node.js
-      - name: 📦 Setup Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
 
-      # 3. Install dependencies
-      - name: 📦 Install dependencies
+      - name: Install dependencies
         run: npm ci
 
-      # 4. Create .env for build
-      - name: 🔑 Create .env
+      - name: Create .env for build
         run: |
-          echo "VITE_OPENAI_API_KEY=${{ secrets.VITE_OPENAI_API_KEY }}" > .env
+          echo "VITE_OPENAI_API_KEY=${{ secrets.VITE_OPENAI_API_KEY }}" >> .env
+          echo "VITE_GOOGLE_API_KEY=${{ secrets.VITE_GOOGLE_API_KEY }}" >> .env
+          echo "VITE_GOOGLE_DRIVE_FOLDER_ID=${{ secrets.VITE_GOOGLE_DRIVE_FOLDER_ID }}" >> .env
+          echo "VITE_GOOGLE_SHEET_ID=${{ secrets.VITE_GOOGLE_SHEET_ID }}" >> .env
 
-      # 5. Build frontend
-      - name: 🔨 Build frontend
+      - name: Build frontend
         run: npm run build
 
-      # 6. Prepare deployment folder
-      - name: 📁 Prepare deployment structure
+      - name: Prepare deployment structure
         run: |
           mkdir -p deploy
-          # Frontend: dist/ → deploy/
+          
+          # Frontend: dist/ -> deploy/
           cp -r dist/* deploy/
           
-          # Backend: backend/ → deploy/takeoffauto-api/
+          # Backend: backend/ -> deploy/takeoffauto-api/
+          # Exclude uploads folder (managed separately via CRM)
           mkdir -p deploy/takeoffauto-api
-          cp -r backend/* deploy/takeoffauto-api/
+          rsync -av --exclude='api/uploads/' backend/ deploy/takeoffauto-api/
           
-          # Create .htaccess for SPA routing
-          cat > deploy/.htaccess << 'EOF'
+          # .htaccess for SPA routing
+          cat > deploy/.htaccess << 'HTEOF'
           <IfModule mod_rewrite.c>
             RewriteEngine On
             RewriteBase /
@@ -55,18 +54,21 @@ jobs:
             RewriteCond %{REQUEST_URI} !^/takeoffauto-api/
             RewriteRule ^ index.html [QSA,L]
           </IfModule>
-          EOF
+          HTEOF
           
-          # Create .env on server for PHP to read
-          echo "VITE_OPENAI_API_KEY=${{ secrets.VITE_OPENAI_API_KEY }}" > deploy/.env
+          # .env for PHP backend to read
+          cp .env deploy/.env
 
-      # 7. Deploy via FTP
-      - name: 🚀 Deploy to Hostinger via FTP
+      - name: Deploy to Hostinger via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./deploy/
-          server-dir: /public_html/
+          server-dir: /
           dangerous-clean-slate: false
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
