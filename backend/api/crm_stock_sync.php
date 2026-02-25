@@ -100,6 +100,10 @@ $TRANS_KEYS = ['transmision', 'transmission'];
 $COLOR_KEYS = ['color', 'colour'];
 $FUEL_KEYS = ['combustible', 'fuel'];
 $TYPE_KEYS = ['tipo', 'type', 'carroceria'];
+$ENGINE_KEYS = ['motor', 'engine', 'cilindrada', 'litros', 'desplazamiento', 'cilindros'];
+$HP_KEYS = ['potencia', 'horsepower', 'hp', 'cv', 'watts', 'kw'];
+$DOORS_KEYS = ['puertas', 'doors', 'cant. puertas', 'cantidad de puertas'];
+$PASSENGERS_KEYS = ['pasajeros', 'passengers', 'asientos', 'capacidad', 'butacas', 'plazas'];
 
 function findCol($headers, $keys) {
     foreach ($keys as $k) {
@@ -121,6 +125,10 @@ $transCol = findCol($headers, $TRANS_KEYS);
 $colorCol = findCol($headers, $COLOR_KEYS);
 $fuelCol = findCol($headers, $FUEL_KEYS);
 $typeCol = findCol($headers, $TYPE_KEYS);
+$engineCol = findCol($headers, $ENGINE_KEYS);
+$hpCol = findCol($headers, $HP_KEYS);
+$doorsCol = findCol($headers, $DOORS_KEYS);
+$passengersCol = findCol($headers, $PASSENGERS_KEYS);
 
 if ($domainCol === -1) {
     $domainCol = 0;
@@ -171,6 +179,10 @@ for ($i = 1; $i < count($sheetData); $i++) {
         'color' => ($colorCol >= 0 && isset($row[$colorCol])) ? strtolower(trim($row[$colorCol])) : 'blanco',
         'fuel' => ($fuelCol >= 0 && isset($row[$fuelCol])) ? strtolower(trim($row[$fuelCol])) : 'gasolina',
         'type' => ($typeCol >= 0 && isset($row[$typeCol])) ? strtolower(trim($row[$typeCol])) : 'sedan',
+        'engine_size' => ($engineCol >= 0 && isset($row[$engineCol])) ? trim($row[$engineCol]) : null,
+        'horsepower' => ($hpCol >= 0 && isset($row[$hpCol])) ? trim($row[$hpCol]) : null,
+        'doors' => ($doorsCol >= 0 && isset($row[$doorsCol])) ? (int) preg_replace('/[^0-9]/', '', $row[$doorsCol]) : null,
+        'passengers' => ($passengersCol >= 0 && isset($row[$passengersCol])) ? (int) preg_replace('/[^0-9]/', '', $row[$passengersCol]) : null,
     ];
 }
 
@@ -212,7 +224,7 @@ while ($row = $existingStmt->fetch(PDO::FETCH_ASSOC)) {
 }
 
 // ─── STEP 4: Process each sheet car ───
-$uploadDir = __DIR__ . '/uploads/';
+$uploadDir = __DIR__ . '/uploads/cars/';
 if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
 
 $carNum = 0;
@@ -237,6 +249,10 @@ foreach ($sheetCars as $domain => $carInfo) {
             if ($carInfo['year'] > 0) { $updateFields[] = "year = ?"; $updateParams[] = $carInfo['year']; }
             if ($carInfo['km'] > 0) { $updateFields[] = "km = ?"; $updateParams[] = $carInfo['km']; }
             if (!empty($carInfo['color'])) { $updateFields[] = "color = ?"; $updateParams[] = $carInfo['color']; }
+            if ($carInfo['engine_size'] !== null) { $updateFields[] = "engine_size = ?"; $updateParams[] = $carInfo['engine_size']; }
+            if ($carInfo['horsepower'] !== null) { $updateFields[] = "horsepower = ?"; $updateParams[] = $carInfo['horsepower']; }
+            if ($carInfo['doors'] !== null) { $updateFields[] = "doors = ?"; $updateParams[] = $carInfo['doors']; }
+            if ($carInfo['passengers'] !== null) { $updateFields[] = "passengers = ?"; $updateParams[] = $carInfo['passengers']; }
 
             $updateParams[] = $existingByDomain[$domain];
             $db->prepare("UPDATE cars SET " . implode(', ', $updateFields) . " WHERE id = ?")->execute($updateParams);
@@ -278,7 +294,7 @@ foreach ($sheetCars as $domain => $carInfo) {
                 }
             }
 
-            $stmt = $db->prepare("INSERT INTO cars (brand, model, year, price, specs, km, transmission, fuel, type, color, city, status, featured, has_photos, domain, home_section) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'disponible', 0, ?, ?, NULL)");
+            $stmt = $db->prepare("INSERT INTO cars (brand, model, year, price, specs, km, transmission, fuel, type, color, engine_size, horsepower, doors, passengers, city, status, featured, has_photos, domain, home_section) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'disponible', 0, ?, ?, NULL)");
             $stmt->execute([
                 $carInfo['brand'],
                 $carInfo['model'],
@@ -290,6 +306,10 @@ foreach ($sheetCars as $domain => $carInfo) {
                 $carInfo['fuel'],
                 $carInfo['type'],
                 $carInfo['color'],
+                $carInfo['engine_size'],
+                $carInfo['horsepower'],
+                $carInfo['doors'],
+                $carInfo['passengers'],
                 'Córdoba Capital',
                 $hasPhotos ? 1 : 0,
                 $domain
@@ -342,8 +362,17 @@ echo json_encode(["success" => true, "stats" => $stats, "log" => $log]);
 
 // ─── HELPER: Download Drive images to local server ───
 function downloadDriveImages($urls, $carId, $uploadDir) {
-    $carDir = $uploadDir . "car_$carId/";
-    if (!is_dir($carDir)) mkdir($carDir, 0755, true);
+    $carDir = $uploadDir . "$carId/";
+    
+    // Cleanup existing images to avoid mixing old low-res/webp with new high-res jpg
+    if (is_dir($carDir)) {
+        $files = glob($carDir . '*');
+        foreach($files as $file) {
+            if(is_file($file)) unlink($file);
+        }
+    } else {
+        mkdir($carDir, 0755, true);
+    }
 
     $saved = [];
     foreach ($urls as $idx => $url) {
@@ -351,11 +380,22 @@ function downloadDriveImages($urls, $carId, $uploadDir) {
         $filename = "img_" . ($idx + 1) . ".$ext";
         $localPath = $carDir . $filename;
 
+        // Convert Drive view links to direct download links for high res
+        if (strpos($url, 'drive.google.com') !== false) {
+            if (strpos($url, 'id=') !== false) {
+                preg_match('/id=([a-zA-Z0-9_-]+)/', $url, $matches);
+                if (isset($matches[1])) $url = "https://lh3.googleusercontent.com/u/0/d/" . $matches[1];
+            } else if (strpos($url, '/d/') !== false) {
+                preg_match('/\/d\/([a-zA-Z0-9_-]+)/', $url, $matches);
+                if (isset($matches[1])) $url = "https://lh3.googleusercontent.com/u/0/d/" . $matches[1];
+            }
+        }
+
         $ctx = stream_context_create(['http' => ['timeout' => 15, 'follow_location' => true]]);
         $imageData = @file_get_contents($url, false, $ctx);
-        if ($imageData && strlen($imageData) > 1000) {
+        if ($imageData && strlen($imageData) > 5000) { // Check size to filter out thumbnails/errors
             file_put_contents($localPath, $imageData);
-            $saved[] = "uploads/car_$carId/$filename";
+            $saved[] = "uploads/cars/$carId/$filename";
         }
     }
     return $saved;

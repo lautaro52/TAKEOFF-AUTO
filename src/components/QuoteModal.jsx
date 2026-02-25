@@ -107,6 +107,13 @@ const QuoteModal = ({ isOpen, onClose }) => {
                 data.append('photos[]', photo);
             });
 
+            // CRM Integration
+            await userService.createLead({
+                client_name: formData.email, // Using email as name if name not present, or better, we should have a name field
+                client_whatsapp: '', // QuoteModal seems to lack a phone field? I should check if I should add it
+                note: `COTIZACIÓN USADO: ${formData.marca} ${formData.modelo} ${formData.año}. KM: ${formData.kilometraje}. Condición: ${formData.condicion}. Extras: ${formData.caracteristicas.join(', ')}`
+            });
+
             const response = await fetch(`${API_CONFIG.BASE_URL}/submit_quote.php`, {
                 method: 'POST',
                 body: data

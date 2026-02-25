@@ -21,8 +21,8 @@ $method = $_SERVER['REQUEST_METHOD'];
 switch ($method) {
     case 'POST':
         $data = json_decode(file_get_contents("php://input"));
-        if (!empty($data->partner_id) && !empty($data->client_name) && !empty($data->client_whatsapp)) {
-            $lead->partner_id = $data->partner_id;
+        if (!empty($data->client_name) && !empty($data->client_whatsapp)) {
+            $lead->partner_id = $data->partner_id ?? null;
             $lead->car_id = $data->car_id ?? null;
             $lead->client_name = $data->client_name;
             $lead->client_whatsapp = $data->client_whatsapp;

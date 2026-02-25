@@ -31,18 +31,46 @@ const Home = () => {
             setLoading(true);
 
             const allCars = await getCars();
-            const availableCars = allCars.filter(car => car.status === 'disponible');
+            const availableCars = allCars.filter(car =>
+                car.status === 'disponible' &&
+                car.images && car.images.length > 0
+            );
 
             const calculatedMinArsPrice = availableCars.length > 0
                 ? Math.min(...availableCars.map(car => car.arsPrice).filter(p => p > 0))
                 : 0;
             setMinArsPrice(calculatedMinArsPrice);
 
-            let sellers = availableCars
-                .filter(car => car.arsPrice >= 1000000) // Focus on regular ARS range or normalized USD
-                .sort((a, b) => a.arsPrice - b.arsPrice) // cheapest first
-                .slice(0, 4);
-            setBestSellers(sellers);
+            // Mix logic for "Most Economical"
+            // We want a mix of types (sedan, hatchback/hatch, etc) if available
+            const sortedByPrice = availableCars
+                .filter(car => car.arsPrice >= 1000000)
+                .sort((a, b) => a.arsPrice - b.arsPrice);
+
+            let sellers = [];
+            const typesNeeded = ['hatchback', 'sedan', 'suv'];
+            const usedIds = new Set();
+
+            // Try to pick one of each type first
+            typesNeeded.forEach(type => {
+                const found = sortedByPrice.find(c => c.type?.toLowerCase().includes(type) && !usedIds.has(c.id));
+                if (found) {
+                    sellers.push(found);
+                    usedIds.add(found.id);
+                }
+            });
+
+            // Fill the rest with cheapest available
+            for (const car of sortedByPrice) {
+                if (sellers.length >= 4) break;
+                if (!usedIds.has(car.id)) {
+                    sellers.push(car);
+                    usedIds.add(car.id);
+                }
+            }
+
+            // Final sort by price for the selected mix
+            setBestSellers(sellers.sort((a, b) => a.arsPrice - b.arsPrice));
 
             let featured = availableCars.filter(car => car.home_section === 'destacados');
             if (featured.length === 0) featured = availableCars.filter(car => car.featured).slice(0, 4);

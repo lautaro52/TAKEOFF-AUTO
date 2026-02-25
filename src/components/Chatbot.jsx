@@ -1,19 +1,66 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { MessageCircle, X, Send } from 'lucide-react';
+import { MessageCircle, X, Send, Calendar, Gauge, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { API_CONFIG, OPENAI_CONFIG } from '../config';
 import './Chatbot.css';
 
-const N8N_WEBHOOK_URL = 'https://n8n-turin-n8n.fcimcq.easypanel.host/webhook/Paginabot';
-
 const Chatbot = () => {
-    const [isOpen, setIsOpen] = useState(false);
+    // Claves para localStorage
+    const STORAGE_KEY_MESSAGES = 'takeoff_chat_messages';
+    const STORAGE_KEY_IS_OPEN = 'takeoff_chat_is_open';
+    const STORAGE_KEY_LAST_ACTIVE = 'takeoff_chat_last_active';
+    const INACTIVITY_LIMIT = 15 * 60 * 1000; // 15 minutos en ms
+
+    const [isOpen, setIsOpen] = useState(() => {
+        const saved = localStorage.getItem(STORAGE_KEY_IS_OPEN);
+        return saved === 'true';
+    });
+
     const [messages, setMessages] = useState([]);
     const [inputValue, setInputValue] = useState('');
     const [isTyping, setIsTyping] = useState(false);
     const messagesEndRef = useRef(null);
     const navigate = useNavigate();
 
-    // Scroll automático al último mensaje
+    const AGENT_URL = `${API_CONFIG.BASE_URL}/chatbot_agent.php`;
+
+    // 1. Cargar mensajes iniciales y verificar tiempo de inactividad
+    useEffect(() => {
+        const checkSession = () => {
+            const lastActive = localStorage.getItem(STORAGE_KEY_LAST_ACTIVE);
+            const savedMessages = localStorage.getItem(STORAGE_KEY_MESSAGES);
+
+            if (lastActive && savedMessages) {
+                const timeDiff = Date.now() - parseInt(lastActive);
+                if (timeDiff > INACTIVITY_LIMIT) {
+                    // Sesión expirada: Limpiar chat
+                    localStorage.removeItem(STORAGE_KEY_MESSAGES);
+                    localStorage.removeItem(STORAGE_KEY_IS_OPEN);
+                    localStorage.removeItem(STORAGE_KEY_LAST_ACTIVE);
+                    setMessages([]);
+                } else {
+                    // Sesión válida: Cargar mensajes
+                    setMessages(JSON.parse(savedMessages));
+                }
+            }
+        };
+
+        checkSession();
+
+        const handleOpen = () => setIsOpen(true);
+        window.addEventListener('open-chatbot', handleOpen);
+        return () => window.removeEventListener('open-chatbot', handleOpen);
+    }, []);
+
+    // 2. Guardar estado y actualizar timestamp de actividad
+    useEffect(() => {
+        localStorage.setItem(STORAGE_KEY_MESSAGES, JSON.stringify(messages));
+        localStorage.setItem(STORAGE_KEY_IS_OPEN, isOpen);
+        if (messages.length > 0) {
+            localStorage.setItem(STORAGE_KEY_LAST_ACTIVE, Date.now().toString());
+        }
+    }, [messages, isOpen]);
+
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
@@ -22,28 +69,12 @@ const Chatbot = () => {
         scrollToBottom();
     }, [messages, isTyping]);
 
-    // Mensaje de bienvenida al abrir el chat
-    useEffect(() => {
-        if (isOpen && messages.length === 0) {
-            setTimeout(() => {
-                addBotMessage('¡Hola! 👋 Bienvenido a TAKEOFF AUTO. Soy tu asistente virtual. ¿En qué puedo ayudarte hoy?');
-            }, 500);
-        }
-    }, [isOpen]);
-
-    // Listen for custom event to open chatbot
-    useEffect(() => {
-        const handleOpen = () => setIsOpen(true);
-        window.addEventListener('open-chatbot', handleOpen);
-        return () => window.removeEventListener('open-chatbot', handleOpen);
-    }, []);
-
-    const addBotMessage = (text, action = null) => {
+    const addBotMessage = (text, carData = null) => {
         setMessages(prev => [...prev, {
             text,
             sender: 'bot',
             timestamp: new Date(),
-            action
+            carData
         }]);
     };
 
@@ -55,81 +86,74 @@ const Chatbot = () => {
         }]);
     };
 
-    // Enviar mensaje al webhook de n8n y obtener respuesta
-    const getBotResponseFromN8N = async (userMessage) => {
+    // Estados para el buffer de mensajes
+    const [pendingBatch, setPendingBatch] = useState([]);
+    const timerRef = useRef(null);
+
+    const getBotResponse = async (userMessage) => {
         try {
-            const response = await fetch(N8N_WEBHOOK_URL, {
+            // Enviamos el mensaje actual o el lote acumulado
+            const response = await fetch(AGENT_URL, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     message: userMessage,
-                    sessionId: 'web-chat-' + Date.now(),
+                    history: messages.slice(-10).map(m => ({ text: m.text, sender: m.sender })),
+                    openai_api_key: OPENAI_CONFIG.API_KEY
                 }),
             });
 
-            if (!response.ok) {
-                throw new Error(`Error ${response.status}`);
-            }
-
             const data = await response.json();
-
-            // n8n puede devolver la respuesta en diferentes formatos
-            // Intentamos los más comunes
-            const botText = data.output
-                || data.response
-                || data.message
-                || data.text
-                || data.reply
-                || (typeof data === 'string' ? data : JSON.stringify(data));
-
-            return botText;
+            if (data.success) {
+                return { text: data.reply, carData: data.car_data };
+            }
+            return { text: 'Perdón, tuve un problema. ¿Podés repetir?' };
         } catch (error) {
-            console.error('Error al contactar al agente:', error);
-            return 'Lo siento, tuve un problema al procesar tu mensaje. Por favor intentá de nuevo en unos segundos.';
+            console.error(error);
+            return { text: 'No puedo conectarme ahora mismo.' };
         }
     };
 
-    const handleSendMessage = async () => {
-        if (inputValue.trim() === '' || isTyping) return;
+    const processBatch = async (batch) => {
+        if (batch.length === 0) return;
 
-        // Agregar mensaje del usuario
+        setIsTyping(true);
+        // Unimos los mensajes del lote con saltos de línea
+        const fullMessage = batch.join('\n');
+        const response = await getBotResponse(fullMessage);
+
+        setIsTyping(false);
+        addBotMessage(response.text, response.carData);
+        setPendingBatch([]); // Limpiar lote procesado
+    };
+
+    const handleSendMessage = async () => {
+        if (inputValue.trim() === '') return;
+
         const userMsg = inputValue;
         addUserMessage(userMsg);
         setInputValue('');
 
-        // Mostrar indicador de "escribiendo..."
-        setIsTyping(true);
+        // Limpiar temporizador previo
+        if (timerRef.current) clearTimeout(timerRef.current);
 
-        // Llamar al webhook de n8n
-        const botResponse = await getBotResponseFromN8N(userMsg);
+        // Agregar al lote actual
+        const newBatch = [...pendingBatch, userMsg];
+        setPendingBatch(newBatch);
 
-        setIsTyping(false);
-        addBotMessage(botResponse);
+        // Iniciar cuenta regresiva de 5 segundos
+        timerRef.current = setTimeout(() => {
+            processBatch(newBatch);
+        }, 5000);
     };
 
-    const handleKeyPress = (e) => {
-        if (e.key === 'Enter') {
-            handleSendMessage();
-        }
-    };
-
-    const handleQuickAction = (message, link) => {
-        if (link) {
-            navigate(link);
-            setIsOpen(false);
-        }
-    };
-
-    // Quick buttons que envían al webhook de n8n
-    const handleQuickButton = async (displayText) => {
+    const handleQuickButton = async (text) => {
         if (isTyping) return;
-        addUserMessage(displayText);
+        addUserMessage(text);
         setIsTyping(true);
-        const botResponse = await getBotResponseFromN8N(displayText);
+        const response = await getBotResponse(text);
         setIsTyping(false);
-        addBotMessage(botResponse);
+        addBotMessage(response.text, response.carData);
     };
 
     return (
@@ -141,38 +165,57 @@ const Chatbot = () => {
             )}
 
             {isOpen && (
-                <div className="chat-window">
+                <div className="chat-window shadow-xl">
                     <div className="chat-header">
                         <div className="chat-title">
-                            <div className="chat-avatar">T</div>
+                            <div className="chat-status-dot active"></div>
                             <div className="chat-info">
-                                <h4>Auto Asistente</h4>
-                                <p>TAKEOFF AUTO • En línea</p>
+                                <h4>Daniel</h4>
+                                <p>Asistente Comercial • Online</p>
                             </div>
                         </div>
-                        <button className="chat-close" onClick={() => setIsOpen(false)} title="Cerrar chat">
-                            <X size={20} color="white" />
+                        <button className="chat-close-btn" onClick={() => setIsOpen(false)}>
+                            <X size={20} />
                         </button>
                     </div>
 
                     <div className="chat-body">
+                        {messages.length === 0 && (
+                            <div className="chat-welcome-box">
+                                <div className="welcome-avatar">D</div>
+                                <p>¡Hola! Soy <strong>Daniel</strong>. Estoy aquí para ayudarte a encontrar tu próximo compañero de ruta. ¿Qué tenés en mente hoy?</p>
+                            </div>
+                        )}
+
                         {messages.map((message, index) => (
-                            <div key={index}>
-                                <div className={`message ${message.sender === 'bot' ? 'bot-message' : 'user-message'}`}>
+                            <div key={index} className={`message-wrapper ${message.sender}`}>
+                                <div className={`message-bubble ${message.sender}`}>
                                     {message.text}
                                 </div>
-                                {message.action && (
-                                    <button
-                                        className="quick-action-btn"
-                                        onClick={() => handleQuickAction(message.action.text, message.action.link)}
-                                    >
-                                        {message.action.text} →
-                                    </button>
+
+                                {message.carData && Array.isArray(message.carData) && (
+                                    <div className="car-recommendations-list">
+                                        {message.carData.map((car, carIdx) => (
+                                            <div key={carIdx} className="car-card-compact" onClick={() => navigate(car.url)}>
+                                                <div className="car-card-img">
+                                                    <img src={`${API_CONFIG.IMAGE_BASE_URL}${car.image}`} alt={car.model} />
+                                                    <div className="car-card-price">${car.price.toLocaleString('es-AR')}</div>
+                                                </div>
+                                                <div className="car-card-content">
+                                                    <h5>{car.brand} {car.model}</h5>
+                                                    <div className="car-card-meta">
+                                                        <span><Calendar size={12} /> {car.year}</span>
+                                                        <ChevronRight size={14} className="ml-auto" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
                                 )}
                             </div>
                         ))}
                         {isTyping && (
-                            <div className="message bot-message typing-indicator">
+                            <div className="message-bubble bot typing">
                                 <span className="dot"></span>
                                 <span className="dot"></span>
                                 <span className="dot"></span>
@@ -182,18 +225,22 @@ const Chatbot = () => {
                     </div>
 
                     <div className="chat-footer">
-
-                        <div className="chat-input-area">
+                        {messages.length < 4 && (
+                            <div className="chat-suggested">
+                                <button onClick={() => handleQuickButton('¿Qué financiaciones tienen?')}>Financiación</button>
+                                <button onClick={() => handleQuickButton('Busco un usado familiar')}>Familiar</button>
+                                <button onClick={() => handleQuickButton('¿Toman mi auto en parte de pago?')}>Permutas</button>
+                            </div>
+                        )}
+                        <div className="chat-input-row">
                             <input
-                                type="text"
-                                placeholder="Escribe un mensaje..."
+                                placeholder="Escribí aquí..."
                                 value={inputValue}
                                 onChange={(e) => setInputValue(e.target.value)}
-                                onKeyPress={handleKeyPress}
-                                disabled={isTyping}
+                                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                             />
-                            <button className="btn-send" onClick={handleSendMessage} disabled={isTyping}>
-                                <Send size={18} />
+                            <button className="send-btn" onClick={handleSendMessage} disabled={isTyping}>
+                                <Send size={20} />
                             </button>
                         </div>
                     </div>

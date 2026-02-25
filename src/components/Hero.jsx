@@ -33,9 +33,10 @@ const Hero = () => {
             setFilteredCars([]);
             return;
         }
-        const filtered = allCars.filter(c =>
-            `${c.brand} ${c.model} ${c.version || ''}`.toLowerCase().includes(searchValue.toLowerCase())
-        ).slice(0, 5);
+        const filtered = allCars.filter(c => {
+            const searchString = `${c.brand || ''} ${c.model || ''} ${c.version || ''}`.toLowerCase();
+            return searchString.includes(searchValue.toLowerCase());
+        }).slice(0, 5);
         setFilteredCars(filtered);
     }, [searchValue, allCars]);
 
@@ -95,27 +96,33 @@ const Hero = () => {
                             />
                         </div>
 
-                        {showResults && filteredCars.length > 0 && (
+                        {showResults && searchValue.trim() && (
                             <div className="hero-search-results">
-                                {filteredCars.map(car => (
-                                    <Link
-                                        key={car.id}
-                                        to={`/car/${car.id}`}
-                                        className="hero-search-item"
-                                        onClick={() => setShowResults(false)}
-                                    >
-                                        <div className="hero-search-item-thumb">
-                                            <img src={getImageUrl(car.images?.[0])} alt={car.model} />
-                                        </div>
-                                        <div className="hero-search-item-info">
-                                            <div className="hero-search-item-name">{car.brand} {car.model}</div>
-                                            <div className="hero-search-item-meta">
-                                                {car.year} • {Number(car.km).toLocaleString('es-AR')} km • ${Number(car.price).toLocaleString('es-AR')}
+                                {filteredCars.length > 0 ? (
+                                    filteredCars.map(car => (
+                                        <Link
+                                            key={car.id}
+                                            to={`/car/${car.id}`}
+                                            className="hero-search-item"
+                                            onClick={() => setShowResults(false)}
+                                        >
+                                            <div className="hero-search-item-thumb">
+                                                <img src={getImageUrl(car.images?.[0])} alt={car.model} />
                                             </div>
-                                        </div>
-                                        <ChevronRight size={16} className="hero-search-arrow" />
-                                    </Link>
-                                ))}
+                                            <div className="hero-search-item-info">
+                                                <div className="hero-search-item-name">{(car.brand || '')} {(car.model || '')}</div>
+                                                <div className="hero-search-item-meta">
+                                                    {car.year} • {Number(car.km || 0).toLocaleString('es-AR')} km • ${Number(car.price || 0).toLocaleString('es-AR')}
+                                                </div>
+                                            </div>
+                                            <ChevronRight size={16} className="hero-search-arrow" />
+                                        </Link>
+                                    ))
+                                ) : (
+                                    <div className="hero-search-no-results">
+                                        No se encontraron vehículos que coincidan con tu búsqueda.
+                                    </div>
+                                )}
                             </div>
                         )}
 

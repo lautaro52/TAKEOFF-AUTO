@@ -24,6 +24,7 @@ const CarDetail = () => {
     const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
     const [isPriceInquiryOpen, setIsPriceInquiryOpen] = useState(false);
     const [isFavorite, setIsFavorite] = useState(false);
+    const [isLightboxOpen, setIsLightboxOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [showSearchResults, setShowSearchResults] = useState(false);
     const [filteredCars, setFilteredCars] = useState([]);
@@ -88,7 +89,8 @@ const CarDetail = () => {
             return;
         }
         const filtered = allCars.filter(c =>
-            `${c.brand} ${c.model} ${c.version || ''}`.toLowerCase().includes(searchQuery.toLowerCase())
+            `${c.brand} ${c.model} ${c.version || ''}`.toLowerCase().includes(searchQuery.toLowerCase()) &&
+            c.images && c.images.length > 0
         ).slice(0, 5); // Limit to top 5 results
         setFilteredCars(filtered);
     }, [searchQuery, allCars]);
@@ -167,9 +169,9 @@ const CarDetail = () => {
 
     const images = car.images && car.images.length > 0 ? car.images : [''];
 
-    // Get similar cars (same brand, different id)
+    // Get similar cars (same brand, different id, must have photos)
     const similarCars = allCars
-        .filter(c => c.brand === car.brand && c.id !== car.id)
+        .filter(c => c.brand === car.brand && c.id !== car.id && c.images && c.images.length > 0)
         .slice(0, 4);
 
     // Get recommended cars for sidebar
@@ -186,20 +188,28 @@ const CarDetail = () => {
         { label: 'Bluetooth', field: 'bluetooth' },
         { label: 'Radio AM/FM', field: 'am_fm_radio' },
         { label: 'Reproductor MP3', field: 'mp3_player' },
-        { label: 'Porta vasos', field: 'cup_holders' }
+        { label: 'Porta vasos', field: 'cup_holders' },
+        { label: 'Control de tracción', field: 'traction_control' }
     ];
 
     const carFeatures = featureMapping
         .filter(f => {
             const val = car[f.field];
-            if (f.isBoolean === false) return val && val !== '0' && val !== 'No';
-            return val === 1 || val === true || val === '1';
+            if (f.isBoolean === false) return val && val !== '0' && val !== 'No' && val !== 'null';
+            // Broad truthy check for boolean-like fields
+            return val === 1 || val === true || val === '1' ||
+                (typeof val === 'string' && (val.toLowerCase() === 'si' || val.toLowerCase() === 'yes'));
         })
         .map(f => f.label);
 
-    const getVal = (val, suffix = '') => {
-        if (val === null || val === undefined || val === '' || val === 0 || val === '0') return '-';
+    const getVal = (val, suffix = '', fallback = '-') => {
+        if (val === null || val === undefined || val === '' || val === 0 || val === '0' || val === 'null' || val === '-') return fallback;
         return `${val}${suffix}`;
+    };
+
+    const formatLabel = (str) => {
+        if (!str) return '';
+        return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
     };
 
     return (
@@ -252,26 +262,37 @@ const CarDetail = () => {
                     <div className="takeoff-gallery-top">
                         <div className="takeoff-gallery">
                             <div className="takeoff-gallery-main-v2">
-                                <img
-                                    src={getImageUrl(images[activeImage])}
-                                    alt={`${car.brand} ${car.model}`}
-                                    className="takeoff-main-image"
-                                />
-                                {images.length > 1 && (
+                                {car.images && car.images.length > 0 ? (
                                     <>
-                                        <button
-                                            className="takeoff-gallery-nav prev"
-                                            onClick={() => setActiveImage(prev => prev > 0 ? prev - 1 : images.length - 1)}
-                                        >
-                                            <ChevronLeft size={24} />
-                                        </button>
-                                        <button
-                                            className="takeoff-gallery-nav next"
-                                            onClick={() => setActiveImage(prev => prev < images.length - 1 ? prev + 1 : 0)}
-                                        >
-                                            <ChevronRight size={24} />
-                                        </button>
+                                        <img
+                                            src={getImageUrl(images[activeImage])}
+                                            alt={`${car.brand} ${car.model}`}
+                                            className="takeoff-main-image pointer"
+                                            onClick={() => setIsLightboxOpen(true)}
+                                        />
+                                        {images.length > 1 && (
+                                            <>
+                                                <button
+                                                    className="takeoff-gallery-nav prev"
+                                                    onClick={() => setActiveImage(prev => prev > 0 ? prev - 1 : images.length - 1)}
+                                                >
+                                                    <ChevronLeft size={24} />
+                                                </button>
+                                                <button
+                                                    className="takeoff-gallery-nav next"
+                                                    onClick={() => setActiveImage(prev => prev < images.length - 1 ? prev + 1 : 0)}
+                                                >
+                                                    <ChevronRight size={24} />
+                                                </button>
+                                            </>
+                                        )}
                                     </>
+                                ) : (
+                                    <div className="takeoff-no-photo-message">
+                                        <div className="no-photo-box">
+                                            <p>Imagen temporalmente no disponible, solicitar cotización para contactar un asesor</p>
+                                        </div>
+                                    </div>
                                 )}
                             </div>
 
@@ -305,52 +326,90 @@ const CarDetail = () => {
                                 <div className="takeoff-spec-item">
                                     <Settings2 className="takeoff-spec-icon" />
                                     <div className="takeoff-spec-info">
-                                        <div className="takeoff-spec-value">{car.transmission === 'automatico' ? 'Automática' : (car.transmission === 'manual' ? 'Manual' : '-')}</div>
+                                        <div className="takeoff-spec-value">{formatLabel(car.transmission)}</div>
                                         <div className="takeoff-spec-label">Transmisión</div>
                                     </div>
                                 </div>
                                 <div className="takeoff-spec-item">
                                     <Fuel className="takeoff-spec-icon" />
                                     <div className="takeoff-spec-info">
-                                        <div className="takeoff-spec-value">{getVal(car.fuel)}</div>
+                                        <div className="takeoff-spec-value">{formatLabel(car.fuel)}</div>
                                         <div className="takeoff-spec-label">Combustible</div>
                                     </div>
                                 </div>
-                                <div className="takeoff-spec-item">
-                                    <Settings2 className="takeoff-spec-icon" />
-                                    <div className="takeoff-spec-info">
-                                        <div className="takeoff-spec-value">{getVal(car.engine_size, ' L')}</div>
-                                        <div className="takeoff-spec-label">Motor</div>
+                                {car.engine_size && car.engine_size !== '-' && car.engine_size !== '0' && (
+                                    <div className="takeoff-spec-item">
+                                        <Settings2 className="takeoff-spec-icon" />
+                                        <div className="takeoff-spec-info">
+                                            <div className="takeoff-spec-value">{getVal(car.engine_size, ' L')}</div>
+                                            <div className="takeoff-spec-label">Motor</div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="takeoff-spec-item">
-                                    <Users className="takeoff-spec-icon" />
-                                    <div className="takeoff-spec-info">
-                                        <div className="takeoff-spec-value">{getVal(car.passengers)}</div>
-                                        <div className="takeoff-spec-label">Pasajeros</div>
+                                )}
+                                {car.doors && car.doors !== '-' && car.doors !== 0 && car.doors !== '0' && (
+                                    <div className="takeoff-spec-item">
+                                        <DoorClosed className="takeoff-spec-icon" />
+                                        <div className="takeoff-spec-info">
+                                            <div className="takeoff-spec-value">{getVal(car.doors)}</div>
+                                            <div className="takeoff-spec-label">Puertas</div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="takeoff-spec-item">
-                                    <DoorClosed className="takeoff-spec-icon" />
-                                    <div className="takeoff-spec-info">
-                                        <div className="takeoff-spec-value">{getVal(car.doors)}</div>
-                                        <div className="takeoff-spec-label">Puertas</div>
+                                )}
+                                {car.passengers && car.passengers !== '-' && car.passengers !== 0 && car.passengers !== '0' && (
+                                    <div className="takeoff-spec-item">
+                                        <Users className="takeoff-spec-icon" />
+                                        <div className="takeoff-spec-info">
+                                            <div className="takeoff-spec-value">{getVal(car.passengers)}</div>
+                                            <div className="takeoff-spec-label">Pasajeros</div>
+                                        </div>
                                     </div>
-                                </div>
+                                )}
+                                {car.type && car.type !== '-' && (
+                                    <div className="takeoff-spec-item">
+                                        <PackageCheck className="takeoff-spec-icon" />
+                                        <div className="takeoff-spec-info">
+                                            <div className="takeoff-spec-value">{getVal(formatLabel(car.type))}</div>
+                                            <div className="takeoff-spec-label">Tipo</div>
+                                        </div>
+                                    </div>
+                                )}
+                                {car.color && car.color !== '-' && (
+                                    <div className="takeoff-spec-item">
+                                        <Settings2 className="takeoff-spec-icon" />
+                                        <div className="takeoff-spec-info">
+                                            <div className="takeoff-spec-value">{getVal(formatLabel(car.color))}</div>
+                                            <div className="takeoff-spec-label">Color</div>
+                                        </div>
+                                    </div>
+                                )}
+                                {car.horsepower && car.horsepower !== '0' && (
+                                    <div className="takeoff-spec-item">
+                                        <Gauge className="takeoff-spec-icon" />
+                                        <div className="takeoff-spec-info">
+                                            <div className="takeoff-spec-value">{getVal(car.horsepower, ' HP')}</div>
+                                            <div className="takeoff-spec-label">Potencia</div>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </section>
 
-                        {/* 1c. Características (Relocated below Descripción General) */}
                         <section className="takeoff-section-gallery">
                             <h2 className="takeoff-section-title-small">Características del {car.brand} {car.model}</h2>
-                            <div className="takeoff-features-checklist">
-                                {carFeatures.map((feature, index) => (
-                                    <div key={index} className="takeoff-feature-check">
-                                        <Check size={18} className="takeoff-check-blue" />
-                                        <span>{feature}</span>
-                                    </div>
-                                ))}
-                            </div>
+                            {carFeatures.length > 0 ? (
+                                <div className="takeoff-features-checklist">
+                                    {carFeatures.map((feature, index) => (
+                                        <div key={index} className="takeoff-feature-check">
+                                            <Check size={18} className="takeoff-check-blue" />
+                                            <span>{feature}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="takeoff-specs-text-fallback">
+                                    <p>{cleanText(car.specs || car.description || 'Consulta las características con un asesor.')}</p>
+                                </div>
+                            )}
                         </section>
                     </div>
 
@@ -395,7 +454,7 @@ const CarDetail = () => {
                                         </div>
 
                                         <div className="takeoff-price-box credit">
-                                            <div className="takeoff-price-box-label">Llevatelo hoy por tan solo:</div>
+                                            <div className="takeoff-price-box-label">Llevatelo hoy entregando tan solo:</div>
                                             <div className="takeoff-price-box-amount">
                                                 ${(Number(car.price) * 0.20).toLocaleString('es-AR')}
                                                 {car.isUSD && <span className="usd-label-inline" style={{ marginLeft: '4px', opacity: 0.8 }}>USD</span>}
@@ -422,17 +481,7 @@ const CarDetail = () => {
                                 )}
                             </div>
 
-                            {(car.description || car.specs || typeof car.stock === 'number') && (
-                                <div className="takeoff-ai-description">
-                                    {(car.description || car.specs) && <p>{cleanText(car.description || car.specs)}</p>}
-                                    {typeof car.stock === 'number' && (
-                                        <span className={`takeoff-ai-stock ${car.stock > 0 ? 'available' : 'unavailable'}`}>
-                                            <PackageCheck size={16} />
-                                            {car.stock > 0 ? `Stock disponible: ${car.stock}` : 'Sin stock disponible'}
-                                        </span>
-                                    )}
-                                </div>
-                            )}
+                            {/* Description/Specs moved/removed as per user request */}
 
                             {/* Trade-in Box */}
                             <div className="takeoff-tradein-box">
@@ -464,27 +513,6 @@ const CarDetail = () => {
                                 </button>
                             )}
 
-                            {/* Right Column Specs List */}
-                            <div className="takeoff-specs-list">
-                                <div className="takeoff-spec-list-item">
-                                    <div className="takeoff-spec-list-left">
-                                        <span className="takeoff-spec-list-label">Año</span>
-                                        <span className="takeoff-spec-list-value">{car.year}</span>
-                                    </div>
-                                </div>
-                                <div className="takeoff-spec-list-item">
-                                    <div className="takeoff-spec-list-left">
-                                        <span className="takeoff-spec-list-label">Versión</span>
-                                        <span className="takeoff-spec-list-value">{car.version || car.model?.toUpperCase()}</span>
-                                    </div>
-                                </div>
-                                <div className="takeoff-spec-list-item">
-                                    <div className="takeoff-spec-list-left">
-                                        <span className="takeoff-spec-list-label">Transmisión</span>
-                                        <span className="takeoff-spec-list-value">{car.transmission === 'automatico' ? 'Automático' : 'Manual'}</span>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -576,6 +604,15 @@ const CarDetail = () => {
                 onClose={() => setIsPriceInquiryOpen(false)}
                 car={car}
             />
+
+            {isLightboxOpen && (
+                <div className="takeoff-lightbox" onClick={() => setIsLightboxOpen(false)}>
+                    <div className="takeoff-lightbox-content">
+                        <img src={getImageUrl(images[activeImage])} alt="Expanded view" />
+                        <button className="takeoff-lightbox-close">&times;</button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import PriceInquiryModal from './PriceInquiryModal';
 import './ZeroKmShowcase.css';
 
-const CarouselSection = ({ title, cars, brandLogo }) => {
+const CarouselSection = ({ title, cars, brandLogo, onCarClick }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [carsPerView, setCarsPerView] = useState(3);
 
@@ -59,8 +60,9 @@ const CarouselSection = ({ title, cars, brandLogo }) => {
                         {cars.map((car, index) => (
                             <div
                                 key={index}
-                                className="carousel-card"
+                                className="carousel-card clickable"
                                 style={{ minWidth: `${100 / carsPerView}%` }}
+                                onClick={() => onCarClick(car)}
                             >
                                 <div className="carousel-image-wrapper">
                                     <img src={car.image} alt={car.name} className="carousel-image" />
@@ -84,6 +86,19 @@ const CarouselSection = ({ title, cars, brandLogo }) => {
 };
 
 const ZeroKmShowcase = () => {
+    const [selectedCar, setSelectedCar] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleCarClick = (car) => {
+        setSelectedCar({
+            brand: car.name.split(' ')[0],
+            model: car.name.split(' ').slice(1).join(' '),
+            year: 2024,
+            home_section: '0km'
+        });
+        setIsModalOpen(true);
+    };
+
     const fiatCars = [
         { name: 'FIAT 600', image: '/images/0km/fiat-600.jpg' },
         { name: 'TITANO', image: '/images/0km/fiat-titano.jpg' },
@@ -131,25 +146,37 @@ const ZeroKmShowcase = () => {
                 title="ELEGÍ TU VEHÍCULO FIAT 0KM"
                 cars={fiatCars}
                 brandLogo={<span className="brand-text">FIAT</span>}
+                onCarClick={handleCarClick}
             />
 
             <CarouselSection
                 title="ELEGÍ TU VEHÍCULO JEEP 0KM"
                 cars={jeepCars}
                 brandLogo={<span className="brand-text">Jeep</span>}
+                onCarClick={handleCarClick}
             />
 
             <CarouselSection
                 title="ELEGÍ TU VEHÍCULO RAM 0KM"
                 cars={ramCars}
                 brandLogo={<span className="brand-text">RAM</span>}
+                onCarClick={handleCarClick}
             />
 
             <CarouselSection
                 title="ELEGÍ TU VEHÍCULO KIA 0KM"
                 cars={kiaCars}
                 brandLogo={<span className="brand-text">KIA</span>}
+                onCarClick={handleCarClick}
             />
+
+            {isModalOpen && (
+                <PriceInquiryModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    car={selectedCar}
+                />
+            )}
         </div>
     );
 };

@@ -14,6 +14,7 @@ import {
     Users,
     Car,
 } from "lucide-react";
+import AdvisorModal from '../components/AdvisorModal';
 
 // ── IMÁGENES ──────────────────────────────────────────────────────────────
 import heroShowroom from '../assets/nosotros/hero-showroom.jpg';
@@ -589,10 +590,8 @@ const CTA = () => (
                             EXPLORAR CATÁLOGO
                         </Link>
 
-                        <a
-                            href={API_CONFIG.WHATSAPP_LINK}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                        <button
+                            onClick={() => setIsAdvisorModalOpen(true)}
                             style={{
                                 display: 'inline-flex',
                                 alignItems: 'center',
@@ -604,17 +603,19 @@ const CTA = () => (
                                 borderRadius: '1.5rem',
                                 fontWeight: 1000,
                                 fontSize: '13px',
+                                border: 'none',
                                 textDecoration: 'none',
                                 textTransform: 'uppercase',
                                 letterSpacing: '-0.02em',
                                 boxShadow: '0 10px 30px rgba(0,0,0,0.2)',
                                 transition: 'transform 0.2s',
+                                cursor: 'pointer'
                             }}
                             onMouseOver={e => e.currentTarget.style.transform = 'scale(1.03)'}
                             onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}
                         >
                             HABLAR CON UN ASESOR
-                        </a>
+                        </button>
                     </div>
                 </div>
             </motion.div>
@@ -626,6 +627,7 @@ const CTA = () => (
 // PAGE
 // ─────────────────────────────────────────────
 export default function Nosotros() {
+    const [isAdvisorModalOpen, setIsAdvisorModalOpen] = React.useState(false);
     return (
         <div className="nosotros-page w-full min-h-screen bg-white font-sans selection:bg-takeoff-blue selection:text-white">
             <Hero />
@@ -633,6 +635,10 @@ export default function Nosotros() {
             <Pillars />
             <Transparency />
             <CTA />
+            <AdvisorModal
+                isOpen={isAdvisorModalOpen}
+                onClose={() => setIsAdvisorModalOpen(false)}
+            />
         </div>
     );
 }

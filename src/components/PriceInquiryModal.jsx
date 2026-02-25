@@ -23,6 +23,14 @@ const PriceInquiryModal = ({ isOpen, onClose, car }) => {
         e.preventDefault();
         setLoading(true);
         try {
+            // CRM Integration
+            await import('../services/userService').then(m => m.userService.createLead({
+                client_name: formData.name,
+                client_whatsapp: formData.phone,
+                car_id: car?.id,
+                note: `Consulta de precio: ${vehicleLabel}. Email: ${formData.email}. Mensaje: ${formData.message}`
+            }));
+
             const res = await fetch(`${API_CONFIG.BASE_URL}/api/price_inquiry.php`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

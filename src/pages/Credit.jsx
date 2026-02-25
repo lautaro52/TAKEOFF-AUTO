@@ -11,7 +11,8 @@ import loanVisual from '../assets/loan-visual.png';
 import creditHero from '../assets/credit-hero.jpg';
 import videoCredit from '../assets/video-credit.mp4';
 import creditPoster from '../assets/credit-poster.jpg';
-import Reveal from '../components/Reveal';
+import AdvisorModal from '../components/AdvisorModal';
+import PriceInquiryModal from '../components/PriceInquiryModal';
 
 const Credit = () => {
     const navigate = useNavigate();
@@ -19,6 +20,23 @@ const Credit = () => {
     const [activeTab, setActiveTab] = useState('usados'); // 'usados' o '0km'
     const [openFaq, setOpenFaq] = useState(null);
     const [carouselIndex, setCarouselIndex] = useState(0);
+    const [financingCars, setFinancingCars] = useState([]);
+    const [isAdvisorModalOpen, setIsAdvisorModalOpen] = useState(false);
+    const [isPriceModalOpen, setIsPriceModalOpen] = useState(false);
+
+    // Load dynamic cars for financing preview
+    useEffect(() => {
+        const loadCars = async () => {
+            const all = await getCars();
+            // Get 3 cheap cars with photos
+            const cheapWithPhotos = all
+                .filter(c => c.images && c.images.length > 0 && c.status === 'disponible')
+                .sort((a, b) => a.arsPrice - b.arsPrice)
+                .slice(0, 3);
+            setFinancingCars(cheapWithPhotos);
+        };
+        loadCars();
+    }, []);
 
     // Initial check for tab in URL
     useEffect(() => {
@@ -260,108 +278,44 @@ const Credit = () => {
                             </Reveal>
 
                             <div className="financing-staggered-grid">
-                                <Reveal direction="left" duration={0.85} delay={0.5}>
-                                    <div className="financing-staggered-card">
+                                {financingCars.map((car, idx) => (
+                                    <Reveal key={car.id} direction={idx === 0 ? "left" : (idx === 1 ? "up" : "right")} duration={0.85} delay={0.5 + (idx * 0.2)}>
+                                        <div className={`financing-staggered-card ${idx === 1 ? 'featured' : ''}`} onClick={() => navigate(`/car/${car.id}`)} style={{ cursor: 'pointer' }}>
+                                            <div className="car-top-label">Usado Certificado</div>
+                                            <div className="staggered-img-container">
+                                                <img src={car.images[0].startsWith('http') ? car.images[0] : `${API_CONFIG.IMAGE_BASE_URL}${car.images[0]}`} alt={`${car.brand} ${car.model}`} />
+                                            </div>
+                                            <div className="staggered-info">
+                                                <div className="staggered-title">{car.brand} {car.model} {car.year} • ${Number(car.price).toLocaleString('es-AR')}</div>
+                                                <div className="staggered-monthly">
+                                                    <span className="monthly-val">$ {(car.arsPrice / 48).toLocaleString('es-AR')}/mes</span>
+                                                </div>
+                                                <div className="staggered-footer">
+                                                    Págalo en <span className="blue-link-text">48 meses</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </Reveal>
+                                ))}
+
+                                {/* === CLONES FOR INFINITE LOOP (mobile only) === */}
+                                {financingCars.map((car) => (
+                                    <div key={`dup-${car.id}`} className="financing-staggered-card financing-carousel-dup" aria-hidden="true">
                                         <div className="car-top-label">Usado Certificado</div>
                                         <div className="staggered-img-container">
-                                            <img src="/images/site/car-meses-1.png" alt="Fiat Cronos Drive 2021" />
+                                            <img src={car.images[0].startsWith('http') ? car.images[0] : `${API_CONFIG.IMAGE_BASE_URL}${car.images[0]}`} alt="" />
                                         </div>
                                         <div className="staggered-info">
-                                            <div className="staggered-title">Fiat Cronos Drive 2021 • $21.560.000</div>
+                                            <div className="staggered-title">{car.brand} {car.model} {car.year} • ${Number(car.price).toLocaleString('es-AR')}</div>
                                             <div className="staggered-monthly">
-                                                <span className="monthly-val">$ 475.998/mes</span>
+                                                <span className="monthly-val">$ {(car.arsPrice / 48).toLocaleString('es-AR')}/mes</span>
                                             </div>
                                             <div className="staggered-footer">
-                                                Págalo en <span className="blue-link-text">60 meses</span>
+                                                Págalo en <span className="blue-link-text">48 meses</span>
                                             </div>
                                         </div>
                                     </div>
-                                </Reveal>
-
-                                <Reveal direction="up" duration={0.85} delay={0.7}>
-                                    <div className="financing-staggered-card featured">
-                                        <div className="car-top-label">Usado Certificado</div>
-                                        <div className="staggered-img-container">
-                                            <img src="/images/site/car-meses-2.png" alt="Fiat Toro Freedom 2021" />
-                                        </div>
-                                        <div className="staggered-info">
-                                            <div className="staggered-title">Fiat Toro Freedom 2021 • $32.340.000</div>
-                                            <div className="staggered-monthly">
-                                                <span className="monthly-val">$ 952.150/mes</span>
-                                            </div>
-                                            <div className="staggered-footer">
-                                                Págalo en <span className="blue-link-text">72 meses (Tasa 0%)</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </Reveal>
-
-                                <Reveal direction="right" duration={0.85} delay={0.9}>
-                                    <div className="financing-staggered-card">
-                                        <div className="car-top-label">Usado Certificado</div>
-                                        <div className="staggered-img-container">
-                                            <img src="/images/site/car-meses-3.png" alt="Volkswagen Gol Power 2013" />
-                                        </div>
-                                        <div className="staggered-info">
-                                            <div className="staggered-title">Volkswagen Gol Power 2013 • $11.760.000</div>
-                                            <div className="staggered-monthly">
-                                                <span className="monthly-val">$ 291.577/mes</span>
-                                            </div>
-                                            <div className="staggered-footer">
-                                                Págalo en <span className="blue-link-text">48 meses (Línea UVA)</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </Reveal>
-
-                                {/* === CLONES FOR INFINITE LOOP (mobile only, hidden on desktop) === */}
-                                <div className="financing-staggered-card financing-carousel-dup" aria-hidden="true">
-                                    <div className="car-top-label">Usado Certificado</div>
-                                    <div className="staggered-img-container">
-                                        <img src="/images/site/car-meses-1.png" alt="" />
-                                    </div>
-                                    <div className="staggered-info">
-                                        <div className="staggered-title">Fiat Cronos Drive 2021 • $21.560.000</div>
-                                        <div className="staggered-monthly">
-                                            <span className="monthly-val">$ 475.998/mes</span>
-                                        </div>
-                                        <div className="staggered-footer">
-                                            Págalo en <span className="blue-link-text">60 meses</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="financing-staggered-card featured financing-carousel-dup" aria-hidden="true">
-                                    <div className="car-top-label">Usado Certificado</div>
-                                    <div className="staggered-img-container">
-                                        <img src="/images/site/car-meses-2.png" alt="" />
-                                    </div>
-                                    <div className="staggered-info">
-                                        <div className="staggered-title">Fiat Toro Freedom 2021 • $32.340.000</div>
-                                        <div className="staggered-monthly">
-                                            <span className="monthly-val">$ 952.150/mes</span>
-                                        </div>
-                                        <div className="staggered-footer">
-                                            Págalo en <span className="blue-link-text">72 meses (Tasa 0%)</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="financing-staggered-card financing-carousel-dup" aria-hidden="true">
-                                    <div className="car-top-label">Usado Certificado</div>
-                                    <div className="staggered-img-container">
-                                        <img src="/images/site/car-meses-3.png" alt="" />
-                                    </div>
-                                    <div className="staggered-info">
-                                        <div className="staggered-title">Volkswagen Gol Power 2013 • $11.760.000</div>
-                                        <div className="staggered-monthly">
-                                            <span className="monthly-val">$ 291.577/mes</span>
-                                        </div>
-                                        <div className="staggered-footer">
-                                            Págalo en <span className="blue-link-text">48 meses (Línea UVA)</span>
-                                        </div>
-                                    </div>
-                                </div>
+                                ))}
                             </div>
 
                             {/* Carousel Indicators (Mobile Only) */}
@@ -419,7 +373,7 @@ const Credit = () => {
                             <Reveal direction="up" duration={0.85}>
                                 <div className="benefits-header">
                                     <h2>Las ventajas de nuestros Usados Certificados</h2>
-                                    <a href="#" className="link-white">Más información <ChevronRight size={16} /></a>
+                                    <button className="link-white-btn" onClick={() => setIsAdvisorModalOpen(true)}>Más información <ChevronRight size={16} /></button>
                                 </div>
                             </Reveal>
                             <div className="benefits-row">
@@ -461,7 +415,7 @@ const Credit = () => {
 
                             <Reveal direction="up" duration={0.85} delay={0.7}>
                                 <div className="center-btn" style={{ marginTop: '20px' }}>
-                                    <button className="btn-primary-k big-blue" onClick={() => window.open(`${API_CONFIG.WHATSAPP_LINK}?text=Hola,%20quiero%20un%20Auto%200km`, '_blank')}>Consulta el Mejor Plan</button>
+                                    <button className="btn-primary-k big-blue" onClick={() => setIsPriceModalOpen(true)}>Consulta el Mejor Plan</button>
                                 </div>
                             </Reveal>
                         </div>
@@ -509,7 +463,7 @@ const Credit = () => {
                         <div className="container">
                             <div className="benefits-header">
                                 <h2>Beneficios de comprar tu 0km con TAKEOFF</h2>
-                                <a href="#" className="link-white">Más información <ChevronRight size={16} /></a>
+                                <button className="link-white-btn" onClick={() => setIsPriceModalOpen(true)}>Más información <ChevronRight size={16} /></button>
                             </div>
                             <div className="benefits-row">
                                 <div className="benefit-col">
@@ -590,6 +544,18 @@ const Credit = () => {
                     </Reveal>
                 </div>
             </section>
+
+            <AdvisorModal
+                isOpen={isAdvisorModalOpen}
+                onClose={() => setIsAdvisorModalOpen(false)}
+            />
+            {isPriceModalOpen && (
+                <PriceInquiryModal
+                    isOpen={isPriceModalOpen}
+                    onClose={() => setIsPriceModalOpen(false)}
+                    car={{ brand: 'Consulta', model: 'General 0km', year: 2024, home_section: '0km' }}
+                />
+            )}
         </div>
     );
 };

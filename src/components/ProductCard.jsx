@@ -125,10 +125,6 @@ const ProductCard = ({ car }) => {
                     </div>
                 )}
 
-                {descriptionSnippet && (
-                    <p className="car-card-description-snippet">{descriptionSnippet}</p>
-                )}
-
                 <div className="car-card-pricing">
                     {Number(car.price) > 0 ? (
                         <>

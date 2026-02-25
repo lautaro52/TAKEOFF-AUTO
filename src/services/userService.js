@@ -92,5 +92,20 @@ export const userService = {
             console.error('Get activities error:', error);
             throw error;
         }
+    },
+
+    // Create a new lead in CRM
+    async createLead(leadData) {
+        try {
+            const response = await fetch(`${BACKEND_URL}/leads.php`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(leadData)
+            });
+            return await response.json();
+        } catch (error) {
+            console.error('Create lead error:', error);
+            throw error;
+        }
     }
 };

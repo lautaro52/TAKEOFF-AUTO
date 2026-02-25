@@ -159,6 +159,16 @@ Precio del auto: $${price.toLocaleString('es-AR')}`;
 
         // 2. Try sending Email (Silent failure to allow WhatsApp to proceed)
         try {
+            // CRM Integration
+            await userService.createLead({
+                client_name: leadData.name,
+                client_whatsapp: leadData.whatsapp,
+                car_id: car.id,
+                partner_id: car.partner_id || null, // If car has a partner, associate it
+                note: `Interés en financiación: ${selectedBank.toUpperCase()}, Plazo: ${term} meses, Cuota: $${currentInstallment.toLocaleString('es-AR')}. Email: ${leadData.email}. DNI: ${leadData.dni}`
+            });
+
+            // Email Notification
             await fetch(`${API_CONFIG.BASE_URL}/send_financing_lead.php`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -173,7 +183,7 @@ Precio del auto: $${price.toLocaleString('es-AR')}`;
                 })
             });
         } catch (error) {
-            console.error('Email notification failed:', error);
+            console.error('Lead ingestion or Email notification failed:', error);
             // We proceed to WhatsApp anyway as requested by the user
         }
 

@@ -399,43 +399,21 @@
     padding: 16px;
 }
 
-.takeoff-ai-description {
-    background: linear-gradient(135deg, #eef4ff, #ffffff);
-    border: 1px solid #dae5ff;
+/* Fallback description when structured data is missing */
+.takeoff-specs-text-fallback {
+    background: #f8faff;
+    border: 1px solid #eef2ff;
     border-radius: 12px;
-    padding: 18px;
-    margin-bottom: 18px;
-    box-shadow: 0 10px 24px rgba(27, 76, 224, 0.06);
+    padding: 20px;
+    margin-top: 10px;
 }
 
-.takeoff-ai-description p {
-    font-size: 14px;
-    line-height: 1.6;
-    color: #1a2750;
+.takeoff-specs-text-fallback p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #444;
     margin: 0;
-}
-
-.takeoff-ai-stock {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 14px;
-    padding: 6px 14px;
-    border-radius: 999px;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.4px;
-    text-transform: uppercase;
-}
-
-.takeoff-ai-stock.available {
-    background: rgba(16, 112, 40, 0.12);
-    color: #0f7028;
-}
-
-.takeoff-ai-stock.unavailable {
-    background: rgba(198, 40, 40, 0.12);
-    color: #c62828;
+    white-space: pre-line;
 }
 
 .takeoff-price-box-label {
@@ -929,5 +907,132 @@
     100% {
         transform: scale(1);
         box-shadow: 0 4px 12px rgba(255, 77, 77, 0.3);
+    }
+}
+
+/* Final Mobile Touch & Practicality Pass */
+@media (max-width: 767px) {
+    .takeoff-search-bar-container {
+        margin: 20px auto;
+        padding: 0 16px;
+    }
+
+    .takeoff-model-large {
+        font-size: 24px;
+        text-align: center;
+    }
+
+    .takeoff-meta-small {
+        align-items: center;
+    }
+
+    .takeoff-price-box-amount {
+        justify-content: center;
+        font-size: 28px;
+    }
+
+    .takeoff-price-box-label {
+        text-align: center;
+    }
+
+    .takeoff-main-cta.blue-btn {
+        padding: 20px;
+        font-size: 16px;
+        border-radius: 12px;
+        margin-top: 20px;
+    }
+
+    .takeoff-ai-description {
+        padding: 20px;
+        text-align: center;
+    }
+
+    .takeoff-ai-stock {
+        justify-content: center;
+        width: 100%;
+    }
+
+    .advisor-modal-content {
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+}
+
+/* Lightbox */
+.takeoff-lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 20px;
+    cursor: zoom-out;
+}
+
+.takeoff-lightbox-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.takeoff-lightbox-content img {
+    max-width: 100%;
+    max-height: 90vh;
+    border-radius: 8px;
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+    object-fit: contain;
+}
+
+.takeoff-lightbox-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    font-size: 40px;
+    color: white;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* No photo message styles */
+.takeoff-no-photo-message {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+    padding: 20px;
+}
+
+.no-photo-box {
+    text-align: center;
+    max-width: 400px;
+}
+
+.no-photo-box p {
+    font-size: 1.1rem;
+    color: #444;
+    font-weight: 600;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.takeoff-main-image.pointer {
+    cursor: zoom-in;
+}
+
+@media (max-width: 768px) {
+    .takeoff-lightbox-close {
+        top: -30px;
+        right: 0;
     }
 }
